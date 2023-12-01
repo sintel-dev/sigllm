@@ -20,6 +20,15 @@ def get_model_response(message, gpt_model=GPT_model):
     )
     return completion.choices[0].message.content
 
+def get_message_zero_shot(seq_query, seq_ex, ano_ind_ex, system_prompt_file='system_prompt.txt'):
+    messages = []
+    
+    messages.append({"role": "system", "content":load_system_prompt(system_prompt_file)})
+
+    # final prompt
+    messages.append({"role": "user", "content": f"Sequence: {seq_query}"})
+    return messages
+
 
 def get_message_with_example(seq_query, seq_ex, ano_ind_ex, system_prompt_file='system_prompt.txt'):
     messages = []
@@ -55,8 +64,10 @@ def create_str_ind(start, stop):
         res += ', '
     return res
 
-def create_list_ind(answer): 
+def create_list_ind(answer):
     ans = answer.replace(" ", "")
+    ans = ans.replace("[", "")
+    ans = ans.replace("]", "")
     in_list = ans.split(",")
     ind_list = [int(i) for i in in_list]
     return ind_list
