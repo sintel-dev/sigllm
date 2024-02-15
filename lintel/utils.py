@@ -102,11 +102,9 @@ def LLMresponse_to_list(answer, start, stop):
     Returns: 
         List of anomalous indices corresponding to the original signal
     """
-    #remove space between digits
-    ans = answer.replace(" ", "")
-    #remove square brackets
-    ans = ans.replace("[", "")
-    ans = ans.replace("]", "")
+    #Remove all characters from answer except the digits and ,
+    ans = ''.join(i for i in answer if (i.isdigit() or i == ','))
+    
     #remove the extra comma at the end
     if ans[-1] == ",": 
         ans = ans[:-1]
@@ -127,14 +125,14 @@ def get_final_anomalous_list(res_list, threshold = 1):
     Get the final list of anomalous indices from multiple LLM responses
     
     Args:
-        res_list (list of list of int): list of LLM responses 
-        threshold (int): how many votes an index needs to be included in final list
+        res_list (list of list of int): list of lists of anomous indices output by LLM 
+        threshold (int): how many votes an index need to have to be included in final list
     Returns: 
         List of final anomalous indices
     """
     combine_list = [i for l in res_list for i in l]
     cnt = Counter(combine_list)
-    return [k for k, v in cnt.items() if v > threshold]
+    return [k for k, v in cnt.items() if v >= threshold]
 
 def indices_to_timestamp(sequence, ind_list): 
     """
@@ -162,3 +160,57 @@ def evaluate(ground_truth, anomalies, start, end):
     """
     return {"accuracy": point_accuracy(ground_truth, anomalies, start=start, end=end), 
             "f-1 score": point_f1_score(ground_truth, anomalies, start=start, end=end)}
+
+def rolling_LLM_prediction(signal, size, step, create_message_func = create_message_zero_shot,
+                           space = True, digit_round = 2, threshold = 1, num_iters = 1): 
+    """
+    Truncate the signal into rolling windows and get LLM response for each window
+    
+    Args:
+        signal (pandas series): signal to detect anomalies
+        size (int): size of rolling window
+        step (int): step of rolling
+        num_iters (int): number of iteration to run LLM model on each window
+        create_message_func (func): function to create message for LLM
+    Returns:
+        List of lists of anomalous indices
+    """
+    combine_res = []
+    
+    #Rolling windows truncate
+    for start in range(0, len(signal)-size, step): 
+        stop = start + size
+        trunc_signal_str = signal_to_str(signal, start, stop, digit_round = digit_round, space = space)
+        m = create_message_func(trunc_signal_str)
+        
+        #Get num_iters anomaly predictions
+        window_ano = []
+        for i in range(num_iters):
+            ans = get_model_response(m)
+            try:
+                l = LLMresponse_to_list(ans, start, stop)
+            except ValueError: 
+                print(ans)
+            window_ano.append(l)
+            
+        #Get final anomaly prediction
+        final_ano = get_final_anomalous_list(window_ano, threshold = threshold)
+        
+        #Convert indices to timestamps
+        t = indices_to_timestamp(signal, final_ano)
+        combine_res.append(t)
+    return combine_res
+
+def rolling_filter_prediction(res, size, step): 
+    """
+    Get the final list of anomalous indices from results of rolling windows
+    
+    Args: 
+        res (list of lists): result from rolling_LLM_prediction func
+        size
+        step
+    Returns: 
+        List of anomalous indices of the entire sequence.
+    """
+    raise NotImplementedError
+    
