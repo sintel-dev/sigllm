@@ -62,7 +62,7 @@ lint: ## check style with flake8 and isort
 	invoke lint
 
 .PHONY: lint-sigllm
-lint: ## check style with flake8 and isort
+lint-sigllm: ## check style with flake8 and isort
 	flake8 sigllm tests
 	isort -c --recursive sigllm tests
 

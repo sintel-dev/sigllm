@@ -12,6 +12,7 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
     history = history_file.read()
 
 install_requires = [
+    'numpy',
 ]
 
 setup_requires = [
