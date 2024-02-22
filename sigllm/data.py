@@ -3,18 +3,52 @@
 """
 Data preprocessing module.
 
-This module contains functions to help parse time series into
-text, preparing it for a language model.
+This module contains functions that help convert timeseries into string, preparing it for a language model.
 """
 
 import numpy as np
+
+def rolling_window_sequences(X, index, window_size, step_size):
+    """Create rolling window sequences out of time series data.
+
+    The function creates an array of input sequences and an array of target sequences by rolling
+    over the input sequence with a specified window.
+    Optionally, certain values can be dropped from the sequences.
+
+    Args:
+        X (ndarray):
+            The sequence to iterate over.
+        index (ndarray):
+            Array containing the index values of X.
+        window_size (int):
+            Length of window.
+        step_size (int):
+            Indicating the number of steps to move the window forward each round.
+
+    Returns:
+        ndarray, ndarray:
+            * rolling window sequences.
+            * first index value of each input sequence.
+    """
+    out_X = list()
+    X_index = list()
+
+    start = 0
+    max_start = len(X) - window_size + 1
+    while start < max_start:
+        end = start + window_size
+        out_X.append(X[start:end])
+        X_index.append(index[start])
+        start = start + step_size
+
+    return np.asarray(out_X), np.asarray(X_index)
 
 
 def sig2str(values, sep=',', space=False, decimal=0):
     """Convert a signal to a string.
 
-    Convert a 1-dimensional time series into text by casting it
-    to integer values then into a string.
+    Convert a 1-dimensional time series into text by casting and rescaling it
+    to nonnegative integer values then into a string.
 
     Args:
         values (numpy.ndarray):
@@ -34,30 +68,12 @@ def sig2str(values, sep=',', space=False, decimal=0):
     values = np.abs(values)
 
     sequence = sign * (values * 10**decimal).astype(int)
+    
+    #Rescale all elements to be nonnegative
+    sequence = sequence - min(sequence)
 
     res = sep.join([str(num) for num in sequence])
     if space:
         res = ' '.join(res)
 
     return res
-
-
-def str2sig(text, sep=',', decimal=0):
-    """Convert a text string to a signal.
-
-    Convert a string containing digits into an array of numbers.
-
-    Args:
-        text (str):
-            A string containing signal values.
-        sep (str):
-            String that was used to separate each element in text, Default to `","`.
-        decimal (int):
-            Number of decimal points to shift each element in text to. Default to `0`.
-
-    Returns:
-        numpy.ndarray:
-            A 1-dimensional array containing parsed elements in `text`.
-    """
-    values = np.fromstring(text, dtype=float, sep=sep)
-    return values * 10**(-decimal)
