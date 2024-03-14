@@ -3,17 +3,16 @@
 """
 Data preprocessing module.
 
-This module contains functions that help convert timeseries into string, preparing it for a language model.
+This module contains functions that prepare timeseries for a language model.
 """
 
 import numpy as np
 
+
 def rolling_window_sequences(X, index, window_size, step_size):
     """Create rolling window sequences out of time series data.
 
-    The function creates an array of input sequences and an array of target sequences by rolling
-    over the input sequence with a specified window.
-    Optionally, certain values can be dropped from the sequences.
+    The function creates an array of sequences by rolling over the input sequence.
 
     Args:
         X (ndarray):
@@ -44,21 +43,23 @@ def rolling_window_sequences(X, index, window_size, step_size):
     return np.asarray(out_X), np.asarray(X_index)
 
 
-def sig2str(values, sep=',', space=False, decimal=0):
+def sig2str(values, sep=',', space=False, decimal=0, rescale=True):
     """Convert a signal to a string.
 
     Convert a 1-dimensional time series into text by casting and rescaling it
-    to nonnegative integer values then into a string.
+    to nonnegative integer values then into a string (optional).
 
     Args:
         values (numpy.ndarray):
             A sequence of signal values.
         sep (str):
-            String to separate each element in values, Default to `","`.
+            String to separate each element in values. Default to `","`.
         space (bool):
             Whether to add space between each digit in the result. Default to `False`.
         decimal (int):
             Number of decimal points to keep from the float representation. Default to `0`.
+        rescale(bool):
+            Whether to rescale the time series. Default to `True`
 
     Returns:
         str:
@@ -68,9 +69,10 @@ def sig2str(values, sep=',', space=False, decimal=0):
     values = np.abs(values)
 
     sequence = sign * (values * 10**decimal).astype(int)
-    
-    #Rescale all elements to be nonnegative
-    sequence = sequence - min(sequence)
+
+    # Rescale all elements to be nonnegative
+    if rescale:
+        sequence = sequence - min(sequence)
 
     res = sep.join([str(num) for num in sequence])
     if space:
