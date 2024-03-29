@@ -97,3 +97,16 @@ class Signal2StringTest(unittest.TestCase):
         assert converter.rescale == False
 
         np.testing.assert_equal(output, expected)
+
+
+    def test_transform_reverse_transform(self):
+        converter = Signal2String()
+
+        data = np.array([
+            1, 2, 3, 4, 5
+        ])
+        expected = data
+        
+        output = converter.reverse_transform(converter.transform(data))
+
+        np.testing.assert_equal(output, expected)
