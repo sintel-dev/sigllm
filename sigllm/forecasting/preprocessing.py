@@ -16,7 +16,7 @@ class Signal2String:
 
     Args:
         sep (str):
-            String to separate each element in values. Default to `","`.
+            String to separate each element in values. Default to `','`.
         space (bool):
             Whether to add space between each digit in the result. Default to `False`.
         decimal (int):
