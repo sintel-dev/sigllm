@@ -20,7 +20,8 @@ install_requires = [
     'scikit-learn',
     'tiktoken',
     'transformers',
-    'torch'
+    'torch',
+    'accelerate'
 ]
 
 setup_requires = [

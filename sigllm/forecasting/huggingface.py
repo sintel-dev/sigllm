@@ -4,6 +4,7 @@ import json
 import logging
 import os
 
+import numpy as np
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -64,7 +65,7 @@ class HF:
         
         self.model.eval()
     
-    def forecast(self, text, steps=1, temp=1, top_p=1, raw=False, samples=1):
+    def forecast(self, text, steps=1, temp=1, top_p=1, raw=False, samples=1, padding=0):
         """Use GPT to forecast a signal.
     
         Args:
@@ -82,6 +83,9 @@ class HF:
                 Whether to return the raw output or not. Defaults to `False`.
             samples (int):
                 Number of forecasts to generate for each input message. Default to `1`.
+            padding (int):
+                Additional padding token to forecast to reduce short horizon predictions. 
+                Default to `0`.
             
         Returns:
             list, list:
@@ -92,10 +96,10 @@ class HF:
             [text], 
             return_tensors="pt"
         ).to("cuda")
-    
+
         input_length = tokenized_input['input_ids'].shape[1]
-        average_length = (input_length + 1) // len(text.split(','))
-        max_tokens = average_length * steps
+        average_length = input_length / len(text.split(','))
+        max_tokens = (average_length + padding) * steps
 
         generate_ids = self.model.generate(
             **tokenized_input,
