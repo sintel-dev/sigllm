@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import json
 import logging
-import os
 
-import numpy as np
 import torch
+
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 LOGGER = logging.getLogger(__name__)
@@ -19,6 +17,7 @@ VALID_NUMBERS = list("0123456789+-")
 
 DEFAULT_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
 
+
 class HF:
     """Prompt Pretrained models on HuggingFace to forecast a time series.
 
@@ -28,6 +27,7 @@ class HF:
         sep (str):
             String to separate each element in values. Default to `','`.
     """
+
     def __init__(self, name=DEFAULT_MODEL, sep=','):
         self.name = name
         self.sep = sep
@@ -44,30 +44,31 @@ class HF:
             special_tokens_dict["unk_token"] = DEFAULT_UNK_TOKEN
         if self.tokenizer.pad_token is None:
             special_tokens_dict["pad_token"] = DEFAULT_PAD_TOKEN
-        
+
         self.tokenizer.add_special_tokens(special_tokens_dict)
-        self.tokenizer.pad_token = self.tokenizer.eos_token # indicate the end of the time series
+        self.tokenizer.pad_token = self.tokenizer.eos_token  # indicate the end of the time series
 
         # invalid tokens
         valid_tokens = []
         for number in VALID_NUMBERS:
             token = self.tokenizer.convert_tokens_to_ids(number)
             valid_tokens.append(token)
-            
+
         valid_tokens.append(self.tokenizer.convert_tokens_to_ids(self.sep))
-        self.invalid_tokens = [[i] for i in range(len(self.tokenizer)-1) if i not in valid_tokens]
+        self.invalid_tokens = [[i]
+                               for i in range(len(self.tokenizer) - 1) if i not in valid_tokens]
 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.name,
             device_map="auto",
             torch_dtype=torch.float16,
         )
-        
+
         self.model.eval()
-    
+
     def forecast(self, text, steps=1, temp=1, top_p=1, raw=False, samples=1, padding=0):
         """Use GPT to forecast a signal.
-    
+
         Args:
             text (str):
                 A string containing signal values.
@@ -76,24 +77,24 @@ class HF:
             temp (float):
                 The value used to modulate the next token probabilities. Default to `1`.
             top_p (float):
-                 If set to float < 1, only the smallest set of most probable tokens with 
-                 probabilities that add up to `top_p` or higher are kept for generation. 
+                 If set to float < 1, only the smallest set of most probable tokens with
+                 probabilities that add up to `top_p` or higher are kept for generation.
                  Default to `1`.
             raw (bool):
                 Whether to return the raw output or not. Defaults to `False`.
             samples (int):
                 Number of forecasts to generate for each input message. Default to `1`.
             padding (int):
-                Additional padding token to forecast to reduce short horizon predictions. 
+                Additional padding token to forecast to reduce short horizon predictions.
                 Default to `0`.
-            
+
         Returns:
             list, list:
                 * List of forecasted signal values.
-                * Optionally, a list of dictionaries for raw output. 
+                * Optionally, a list of dictionaries for raw output.
         """
         tokenized_input = self.tokenizer(
-            [text], 
+            [text],
             return_tensors="pt"
         ).to("cuda")
 
@@ -105,20 +106,20 @@ class HF:
             **tokenized_input,
             do_sample=True,
             max_new_tokens=max_tokens,
-            temperature=temp, 
-            top_p=top_p, 
+            temperature=temp,
+            top_p=top_p,
             bad_words_ids=self.invalid_tokens,
             renormalize_logits=True,
             num_return_sequences=samples
         )
-        
+
         responses = self.tokenizer.batch_decode(
             generate_ids[:, input_length:],
-            skip_special_tokens=True, 
+            skip_special_tokens=True,
             clean_up_tokenization_spaces=False
         )
 
         if raw:
             return responses, generate_ids
-            
+
         return responses

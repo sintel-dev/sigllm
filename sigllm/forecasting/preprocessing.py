@@ -6,7 +6,7 @@ Preprocessing module for time series forecasting.
 """
 
 import numpy as np
-import pandas as pd
+
 
 class Signal2String:
     """Convert a signal into a string.
@@ -24,54 +24,53 @@ class Signal2String:
         rescale(bool):
             Whether to rescale the time series. Default to `False`.
     """
+
     def __init__(self, sep=',', space=False, decimal=0, rescale=False):
         self.sep = sep
         self.space = space
         self.decimal = decimal
         self.rescale = rescale
 
-    
     def transform(self, values):
         """Convert a signal to a string.
-    
+
         Convert a 1-dimensional time series into text by casting and rescaling it
         to nonnegative integer values then into a string.
-    
+
         Args:
             values (numpy.ndarray):
                 A sequence of signal values.
-    
+
         Returns:
             str:
                 Text containing the elements of `values`.
         """
         sign = 1 * (values >= 0) - 1 * (values < 0)
         values = np.abs(values)
-    
+
         sequence = sign * (values * 10**self.decimal).astype(int)
-    
+
         # rescale all elements to be nonnegative
         if self.rescale:
             sequence = sequence - min(sequence)
-    
+
         res = self.sep.join(list(map(str, sequence)))
         if self.space:
             res = ' '.join(res)
-    
+
         return res
 
-    
     def reverse_transform(self, text, trunc=None):
         """Convert a text string to a signal.
-    
+
         Convert a string containing digits into an array of numbers.
-    
+
         Args:
             text (str):
                 A string containing signal values.
             trunc (int):
                 Whether to truncate the text to a specific length. Default `None`.
-                
+
         Returns:
             numpy.ndarray:
                 A 1-dimensional array containing parsed elements in `text`.
@@ -82,4 +81,3 @@ class Signal2String:
 
         values = np.array(list(map(float, values)))
         return values * 10**(-self.decimal)
-        

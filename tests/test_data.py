@@ -126,7 +126,7 @@ def test_rolling_window_sequences(values, indices, window_size, step_size):
                           [2.345, 1.501, 5.903],
                           [1.501, 5.903, 9.116],
                           [5.903, 9.116, 3.068],
-                          [9.116, 3.068, 4.678],]),
+                          [9.116, 3.068, 4.678], ]),
                 np.array([0, 1, 2, 3, 4]))
 
     result = rolling_window_sequences(values, indices, window_size, step_size)
