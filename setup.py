@@ -31,7 +31,7 @@ setup_requires = [
 tests_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
-    'rundoc>=0.4.3',
+    'rundoc>=0.4.3,<0.5',
 ]
 
 development_requires = [
@@ -41,26 +41,27 @@ development_requires = [
     'watchdog>=0.8.3',
 
     # docs
-    'm2r>=0.2.0,<0.3',
-    'Sphinx>=1.7.1,<3',
+    'm2r2>=0.2.5,<0.3',
+    'Sphinx>=3,<3.3',
     'sphinx_rtd_theme>=0.2.4,<0.5',
     'autodocsumm>=0.1.10',
 
     # style check
-    'flake8>=3.7.7',
-    'isort>=4.3.4',
+    'flake8>=3.7.7,<4',
+    'isort>=4.3.4,<5',
 
     # fix style issues
-    'autoflake>=1.2',
-    'autopep8>=1.4.3',
+    'autoflake>=1.2,<2',
+    'autopep8>=1.4.3,<2',
+    'importlib-metadata<5',
 
     # distribute on PyPI
-    'twine>=1.10.0',
+    'twine>=1.10.0,<4',
     'wheel>=0.30.0',
 
     # Advanced testing
-    'coverage>=4.5.1',
-    'tox>=2.9.1',
+    'coverage>=4.5.1,<6',
+    'tox>=2.9.1,<4',
     'invoke',
 ]
 
