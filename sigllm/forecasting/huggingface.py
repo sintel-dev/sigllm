@@ -3,7 +3,6 @@
 import logging
 
 import torch
-
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 LOGGER = logging.getLogger(__name__)
