@@ -13,7 +13,7 @@ PROMPT_PATH = os.path.join(
 
 PROMPTS = json.load(open(PROMPT_PATH))
 
-VALID_NUMBERS = list("0123456789+- ")
+VALID_NUMBERS = list("0123456789 ")
 BIAS = 30
 
 

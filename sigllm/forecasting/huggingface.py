@@ -12,7 +12,7 @@ DEFAULT_EOS_TOKEN = "</s>"
 DEFAULT_UNK_TOKEN = "<unk>"
 DEFAULT_PAD_TOKEN = "<pad>"
 
-VALID_NUMBERS = list("0123456789+-")
+VALID_NUMBERS = list("0123456789")
 
 DEFAULT_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
 
