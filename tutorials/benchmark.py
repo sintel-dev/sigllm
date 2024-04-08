@@ -8,6 +8,7 @@ import warnings
 import pickle
 from datetime import datetime
 from functools import partial
+from glob import glob
 
 import pandas as pd
 import numpy as np
@@ -28,7 +29,7 @@ warnings.simplefilter('ignore')
 
 LOGGER = logging.getLogger(__name__)
 
-BUCKET = 'sintel-orion'
+BUCKET = 'sintel-orion-benchmark'
 S3_URL = 'https://{}.s3.amazonaws.com/{}'
 
 BENCHMARK_DATA = pd.read_csv(S3_URL.format(
@@ -41,13 +42,14 @@ BENCHMARK_PATH = os.path.join(
 
 os.makedirs(BENCHMARK_PATH, exist_ok=True)
 
+DONE = glob(BENCHMARK_PATH + '*.csv')
 
 BENCHMARK_DATA = {
-    "MSL": BENCHMARK_DATA["MSL"],
-    "SMAP": BENCHMARK_DATA["SMAP"]
+    "artificialWithAnomaly": BENCHMARK_DATA["artificialWithAnomaly"],
+    "realAWSCloudwatch": BENCHMARK_DATA["realAWSCloudwatch"]
 }
 
-test_split = True
+test_split = False
 MAX = 2
 
 
@@ -180,6 +182,11 @@ def run_experiment(signal_name):
 if __name__ == "__main__":
     for dataset, signals in BENCHMARK_DATA.items():
         for i, signal in enumerate(signals):
+            file_name = os.path.join(BENCHMARK_PATH, f'{name_to_keep}_{signal}_{dataset}_{temp}_{samples}')
+            if file_name + '_scores.csv' in DONE:
+                LOGGER.info(f'Skipping {signal}')
+                continue
+
             LOGGER.info(f'{i}/{len(signals)} Running experiment for {signal}')
             print(f'{i}/{len(signals)} Running experiment for {signal}')
             run_experiment(signal)
