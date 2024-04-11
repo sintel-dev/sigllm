@@ -1,0 +1,5 @@
+{
+    "system_message": "You are a helpful assistant that performs time series predictions. The user will provide a sequence and you will predict the remaining sequence. The sequence is represented by decimal strings separated by commas.",
+    "user_message": "Please continue the following sequence without producing any additional text. Do not say anything like 'the next terms in the sequence are', just return the numbers. Sequence:\n",
+    "citation": "https://arxiv.org/pdf/2310.07820.pdf"
+}

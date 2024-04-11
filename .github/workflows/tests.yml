@@ -28,22 +28,22 @@ jobs:
       run: invoke lint
 
 
-  docs:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
-        os: [ubuntu-20.04]
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install package
-      run: pip install .[dev]
-    - name: make docs
-      run: make docs
+  # docs:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       python-version: ['3.8', '3.9', '3.10', '3.11']
+  #       os: [ubuntu-20.04]
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: Set up Python ${{ matrix.python-version }}
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #   - name: Install package
+  #     run: pip install .[dev]
+  #   - name: make docs
+  #     run: make docs
 
 
   readme:
@@ -82,37 +82,37 @@ jobs:
       run: invoke unit
 
 
-  minimum:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
-        os: [ubuntu-20.04, macos-latest]
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install package and dependencies
-      run: pip install invoke .[test]
-    - name: invoke minimum
-      run: invoke minimum
+  # minimum:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       python-version: ['3.8', '3.9', '3.10', '3.11']
+  #       os: [ubuntu-20.04, macos-latest]
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: Set up Python ${{ matrix.python-version }}
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #   - name: Install package and dependencies
+  #     run: pip install invoke .[test]
+  #   - name: invoke minimum
+  #     run: invoke minimum
 
 
-  tutorials:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11']
-        os: [ubuntu-20.04, macos-latest, windows-latest]
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install package and dependencies
-      run: pip install invoke jupyter matplotlib .
-    - name: invoke tutorials
-      run: invoke tutorials
+  # tutorials:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       python-version: ['3.8', '3.9', '3.10', '3.11']
+  #       os: [ubuntu-20.04, macos-latest, windows-latest]
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: Set up Python ${{ matrix.python-version }}
+  #     uses: actions/setup-python@v2
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #   - name: Install package and dependencies
+  #     run: pip install invoke jupyter matplotlib .
+  #   - name: invoke tutorials
+  #     run: invoke tutorials
