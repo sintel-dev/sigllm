@@ -3,8 +3,8 @@
 import json
 import os
 
-import openai
 import tiktoken
+from openai import OpenAI
 
 PROMPT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -34,14 +34,15 @@ class GPT:
         self.chat = chat
         self.sep = sep
 
+        self.client = OpenAI()
         self.tokenizer = tiktoken.encoding_for_model(self.name)
 
         valid_tokens = []
         for number in VALID_NUMBERS:
             token = self.tokenizer.encode(number)
-            valid_tokens.append(token)
+            valid_tokens.extend(token)
 
-        valid_tokens.append(self.tokenizer.encode(self.sep))
+        valid_tokens.extend(self.tokenizer.encode(self.sep))
         self.logit_bias = {token: BIAS for token in valid_tokens}
 
     def forecast(self, text, steps=1, temp=1, top_p=1, logprobs=False, top_logprobs=None,
@@ -83,8 +84,8 @@ class GPT:
         max_tokens = average_length * steps
 
         if self.chat:
-            message = ' '.join(PROMPTS['user_message'], text, self.sep)
-            response = openai.ChatCompletion.create(
+            message = ' '.join([PROMPTS['user_message'], text, self.sep])
+            response = self.client.chat.completions.create(
                 model=self.name,
                 messages=[
                     {"role": "system", "content": PROMPTS['system_message']},

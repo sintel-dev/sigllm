@@ -75,6 +75,9 @@ class Signal2String:
             numpy.ndarray:
                 A 1-dimensional array containing parsed elements in `text`.
         """
+        if self.space:
+            text = text.replace(" ", "")
+            
         values = list(filter(None, text.split(self.sep)))
         if trunc:
             values = values[:trunc]
