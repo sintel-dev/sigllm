@@ -22,7 +22,6 @@ from orion.evaluation import CONTEXTUAL_METRICS as METRICS
 from orion.evaluation import contextual_confusion_matrix
 from orion.benchmark import _parse_confusion_matrix, _load_signal
 
-from sigllm import GPT
 from sigllm.forecasting import Signal2String, HF, GPT
 
 
@@ -30,7 +29,7 @@ warnings.simplefilter('ignore')
 
 LOGGER = logging.getLogger(__name__)
 
-BUCKET = 'sintel-orion-benchmark'
+BUCKET = 'sintel-orion'
 S3_URL = 'https://{}.s3.amazonaws.com/{}'
 
 BENCHMARK_DATA = pd.read_csv(S3_URL.format(
