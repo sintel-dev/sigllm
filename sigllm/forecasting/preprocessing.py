@@ -77,7 +77,7 @@ class Signal2String:
         """
         if self.space:
             text = text.replace(" ", "")
-            
+
         values = list(filter(None, text.split(self.sep)))
         if trunc:
             values = values[:trunc]
