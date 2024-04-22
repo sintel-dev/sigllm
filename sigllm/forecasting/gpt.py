@@ -101,7 +101,7 @@ class GPT:
 
         else:
             message = ' '.join(text, self.sep)
-            response = openai.Completion.create(
+            response = self.client.completions.create(
                 model=self.name,
                 prompt=message,
                 max_tokens=max_tokens,
