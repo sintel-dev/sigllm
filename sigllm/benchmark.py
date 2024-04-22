@@ -22,7 +22,7 @@ from orion.primitives.timeseries_errors import regression_errors
 from sklearn.preprocessing import MinMaxScaler
 from tqdm import tqdm
 
-from sigllm.forecasting import GPT, Signal2String
+from sigllm.forecasting import Signal2String, HF, GPT
 
 warnings.simplefilter('ignore')
 
