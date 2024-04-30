@@ -21,7 +21,8 @@ install_requires = [
     'tiktoken',
     'transformers',
     'torch',
-    'accelerate'
+    'accelerate',
+    'sentencepiece'
 ]
 
 setup_requires = [
@@ -80,6 +81,12 @@ setup(
         'Programming Language :: Python :: 3.11',
     ],
     description='Signals plus LLMs',
+    entry_points={
+        'mlblocks': [
+            'primitives=sigllm:MLBLOCKS_PRIMITIVES',
+            'pipelines=sigllm:MLBLOCKS_PIPELINES'
+        ]
+    },
     extras_require={
         'test': tests_require,
         'dev': development_requires + tests_require,
