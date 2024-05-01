@@ -23,7 +23,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install package
-      run: pip install invoke .[dev]
+      run: |
+          python -m pip install --upgrade pip
+          python -m pip install invoke .[dev]
     - name: invoke lint
       run: invoke lint
 
@@ -59,7 +61,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install package and dependencies
-      run: pip install invoke rundoc .
+      run: |
+          python -m pip install --upgrade pip
+          python -m pip install invoke rundoc .
     - name: invoke readme
       run: invoke readme
 
@@ -77,7 +81,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install package and dependencies
-      run: pip install invoke .[test]
+      run: |
+          python -m pip install --upgrade pip
+          python -m pip install invoke .[test]
     - name: invoke unit
       run: invoke unit
 
