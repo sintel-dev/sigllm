@@ -1,0 +1,28 @@
+sigllm.primitives package
+=========================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   sigllm.primitives.forecasting
+   sigllm.primitives.prompting
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   sigllm.primitives.postprocessing
+   sigllm.primitives.preprocessing
+
+Module contents
+---------------
+
+.. automodule:: sigllm.primitives
+   :members:
+   :undoc-members:
+   :show-inheritance:

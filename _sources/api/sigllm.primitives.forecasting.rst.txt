@@ -1,0 +1,19 @@
+sigllm.primitives.forecasting package
+=====================================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   sigllm.primitives.forecasting.gpt
+   sigllm.primitives.forecasting.huggingface
+
+Module contents
+---------------
+
+.. automodule:: sigllm.primitives.forecasting
+   :members:
+   :undoc-members:
+   :show-inheritance:

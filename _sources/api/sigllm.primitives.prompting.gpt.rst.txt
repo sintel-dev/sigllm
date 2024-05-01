@@ -1,0 +1,7 @@
+sigllm.primitives.prompting.gpt module
+======================================
+
+.. automodule:: sigllm.primitives.prompting.gpt
+   :members:
+   :undoc-members:
+   :show-inheritance:

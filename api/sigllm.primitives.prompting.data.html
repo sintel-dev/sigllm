@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>sigllm.primitives.prompting.data module &#8212; sigllm 0.0.1.dev0 documentation</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sigllm.primitives.prompting.gpt module" href="sigllm.primitives.prompting.gpt.html" />
+    <link rel="prev" title="sigllm.primitives.prompting.anomalies module" href="sigllm.primitives.prompting.anomalies.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="../index.html">
+    
+      <img src="../_static/dai-logo-white-200.png" class="logo" alt="logo" />
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../readme.html">Install from source</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item active">
+            <a class="nav-link" href="sigllm.html">API Reference</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../contributing.html">Contributing</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../authors.html">Credits</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../history.html">History</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/sintel-dev/sigllm" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+        
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-sigllm.primitives.prompting.data">
+<span id="sigllm-primitives-prompting-data-module"></span><h1>sigllm.primitives.prompting.data module<a class="headerlink" href="#module-sigllm.primitives.prompting.data" title="Permalink to this headline">¶</a></h1>
+<p>Data preprocessing module.</p>
+<p>This module contains functions that prepare timeseries for a language model.</p>
+<dl class="py function">
+<dt id="sigllm.primitives.prompting.data.rolling_window_sequences">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.data.</code><code class="sig-name descname">rolling_window_sequences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">index</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">step_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/data.html#rolling_window_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.data.rolling_window_sequences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create rolling window sequences out of time series data.</p>
+<p>The function creates an array of sequences by rolling over the input sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>ndarray</em>) – The sequence to iterate over.</p></li>
+<li><p><strong>index</strong> (<em>ndarray</em>) – Array containing the index values of X.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em>) – Length of window.</p></li>
+<li><p><strong>step_size</strong> (<em>int</em>) – Indicating the number of steps to move the window forward each round.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>rolling window sequences.</p></li>
+<li><p>first index value of each input sequence.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray, ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="sigllm.primitives.prompting.data.sig2str">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.data.</code><code class="sig-name descname">sig2str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">decimal</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rescale</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/data.html#sig2str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.data.sig2str" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a signal to a string.</p>
+<p>Convert a 1-dimensional time series into text by casting and rescaling it
+to nonnegative integer values then into a string (optional).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> (<em>numpy.ndarray</em>) – A sequence of signal values.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>“,”</cite>.</p></li>
+<li><p><strong>space</strong> (<em>bool</em>) – Whether to add space between each digit in the result. Default to <cite>False</cite>.</p></li>
+<li><p><strong>decimal</strong> (<em>int</em>) – Number of decimal points to keep from the float representation. Default to <cite>0</cite>.</p></li>
+<li><p><strong>rescale</strong> (<em>bool</em>) – Whether to rescale the time series. Default to <cite>True</cite></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Text containing the elements of <cite>values</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="sigllm.primitives.prompting.anomalies.html" title="previous page">sigllm.primitives.prompting.anomalies module</a>
+    <a class='right-next' id="next-link" href="sigllm.primitives.prompting.gpt.html" title="next page">sigllm.primitives.prompting.gpt module</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, MIT Data To AI Lab.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

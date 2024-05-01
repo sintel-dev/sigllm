@@ -1,0 +1,7 @@
+sigllm.primitives.prompting.anomalies module
+============================================
+
+.. automodule:: sigllm.primitives.prompting.anomalies
+   :members:
+   :undoc-members:
+   :show-inheritance:

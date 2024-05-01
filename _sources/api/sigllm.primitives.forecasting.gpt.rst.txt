@@ -1,0 +1,7 @@
+sigllm.primitives.forecasting.gpt module
+========================================
+
+.. automodule:: sigllm.primitives.forecasting.gpt
+   :members:
+   :undoc-members:
+   :show-inheritance:

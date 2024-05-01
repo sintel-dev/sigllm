@@ -1,0 +1,20 @@
+sigllm.primitives.prompting package
+===================================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   sigllm.primitives.prompting.anomalies
+   sigllm.primitives.prompting.data
+   sigllm.primitives.prompting.gpt
+
+Module contents
+---------------
+
+.. automodule:: sigllm.primitives.prompting
+   :members:
+   :undoc-members:
+   :show-inheritance:

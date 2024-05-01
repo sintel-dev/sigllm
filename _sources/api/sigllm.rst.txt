@@ -1,0 +1,26 @@
+sigllm package
+==============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   sigllm.primitives
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   sigllm.core
+
+Module contents
+---------------
+
+.. automodule:: sigllm
+   :members:
+   :undoc-members:
+   :show-inheritance:

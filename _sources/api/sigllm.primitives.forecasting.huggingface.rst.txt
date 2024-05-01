@@ -1,0 +1,7 @@
+sigllm.primitives.forecasting.huggingface module
+================================================
+
+.. automodule:: sigllm.primitives.forecasting.huggingface
+   :members:
+   :undoc-members:
+   :show-inheritance:
