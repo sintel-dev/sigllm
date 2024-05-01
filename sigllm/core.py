@@ -5,8 +5,8 @@ Main module.
 
 This module contains functions that get LLM's anomaly detection results.
 """
-from anomalies import get_anomaly_list_within_seq, str2idx
-from data import sig2str
+from sigllm.primitives.prompting.anomalies import get_anomaly_list_within_seq, str2idx
+from sigllm.primitives.prompting.data import sig2str
 
 
 def get_anomalies(seq, msg_func, model_func, num_iters=1, alpha=0.5):
