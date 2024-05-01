@@ -10,7 +10,7 @@ import os
 
 _BASE_PATH = os.path.abspath(os.path.dirname(__file__))
 MLBLOCKS_PRIMITIVES = os.path.join(_BASE_PATH, 'primitives', 'jsons')
-MLBLOCKS_PIPELINES = tuple(
+MLBLOCKS_PIPELINES = tuple([
     os.path.join(_BASE_PATH, 'pipelines', 'prompter'),
     os.path.join(_BASE_PATH, 'pipelines', 'detector')
-)
+])

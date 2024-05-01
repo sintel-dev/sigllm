@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from pytest import fixture
 
-from sigllm.anomalies import (
+from sigllm.primitives.prompting.anomalies import (
     get_anomaly_list_within_seq, idx2time, merge_anomaly_seq, str2idx, str2sig,)
 
 

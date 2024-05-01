@@ -3,7 +3,7 @@
 import numpy as np
 from pytest import fixture
 
-from sigllm.data import rolling_window_sequences, sig2str
+from sigllm.primitives.prompting.data import rolling_window_sequences, sig2str
 
 
 @fixture
