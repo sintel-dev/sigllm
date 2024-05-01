@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from sigllm.forecasting.preprocessing import Signal2String
+from sigllm.primitives.preprocessing import Signal2String
 
 
 class Signal2StringTest(unittest.TestCase):

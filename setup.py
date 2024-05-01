@@ -12,16 +12,16 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
     history = history_file.read()
 
 install_requires = [
-    'numpy',
+    'numpy>=1.17.5,<2.15',
     'openai',
-    'pandas',
-    'orion-ml',
-    'matplotlib',
-    'scikit-learn',
+    'pandas>=1,<2',
+    'orion-ml>=0.5,<0.8',
+    'scikit-learn>=0.22,<1.2',
     'tiktoken',
     'transformers',
-    'torch',
-    'accelerate'
+    'torch>=1.4',
+    'accelerate',
+    'sentencepiece'
 ]
 
 setup_requires = [
@@ -41,10 +41,23 @@ development_requires = [
     'watchdog>=0.8.3',
 
     # docs
+    'docutils>=0.12,<0.18',
     'm2r2>=0.2.5,<0.3',
+    'nbsphinx>=0.5.0,<0.7',
     'Sphinx>=3,<3.3',
-    'sphinx_rtd_theme>=0.2.4,<0.5',
-    'autodocsumm>=0.1.10',
+    'pydata-sphinx-theme<0.5',
+    'markupsafe<2.1.0',
+    'ipython>=6.5,<9',
+    'Jinja2>=2,<3',
+
+    # fails on Sphinx < v3.4
+    'alabaster<=0.7.12',
+    # fails on Sphins < v5.0
+    'sphinxcontrib-applehelp<1.0.8',
+    'sphinxcontrib-devhelp<1.0.6',
+    'sphinxcontrib-htmlhelp<2.0.5',
+    'sphinxcontrib-serializinghtml<1.1.10',
+    'sphinxcontrib-qthelp<1.0.7',
 
     # style check
     'flake8>=3.7.7,<4',
@@ -80,6 +93,12 @@ setup(
         'Programming Language :: Python :: 3.11',
     ],
     description='Signals plus LLMs',
+    entry_points={
+        'mlblocks': [
+            'primitives=sigllm:MLBLOCKS_PRIMITIVES',
+            'pipelines=sigllm:MLBLOCKS_PIPELINES'
+        ]
+    },
     extras_require={
         'test': tests_require,
         'dev': development_requires + tests_require,
