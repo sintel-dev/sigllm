@@ -12,15 +12,14 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
     history = history_file.read()
 
 install_requires = [
-    'numpy',
+    'numpy>=1.17.5,<2.15',
     'openai',
-    'pandas',
-    'orion-ml',
-    'matplotlib',
-    'scikit-learn',
+    'pandas>=1,<2',
+    'orion-ml>=0.5,<0.8',
+    'scikit-learn>=0.22,<1.2',
     'tiktoken',
     'transformers',
-    'torch',
+    'torch>=1.4',
     'accelerate',
     'sentencepiece'
 ]
