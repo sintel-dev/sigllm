@@ -1,0 +1,42 @@
+{
+    "name": "sigllm.primitives.transformation.format_as_string",
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>",
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Transform an ndarray of scalar values to an ndarray of string.",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "tranformer"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.transformation.format_as_string",
+    "produce": {
+        "method": "format_as_string",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "sep": {
+                "type": "string",
+                "default": ","
+            },
+            "space": {
+                "type": "bool",
+                "default": false
+            }
+        }
+    }
+}
+
