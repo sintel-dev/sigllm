@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>sigllm.primitives.transformation module &#8212; sigllm 0.0.1.dev0 documentation</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sigllm.core module" href="sigllm.core.html" />
+    <link rel="prev" title="sigllm.primitives.postprocessing module" href="sigllm.primitives.postprocessing.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="../index.html">
+    
+      <img src="../_static/dai-logo-white-200.png" class="logo" alt="logo" />
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../readme.html">Install from source</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item active">
+            <a class="nav-link" href="sigllm.html">API Reference</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../contributing.html">Contributing</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../authors.html">Credits</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../history.html">History</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/sintel-dev/sigllm" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+        
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="module-sigllm.primitives.transformation">
+<span id="sigllm-primitives-transformation-module"></span><h1>sigllm.primitives.transformation module<a class="headerlink" href="#module-sigllm.primitives.transformation" title="Permalink to this headline">¶</a></h1>
+<p>Transformation module.</p>
+<dl class="py class">
+<dt id="sigllm.primitives.transformation.Float2Scalar">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">Float2Scalar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">decimal</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">rescale</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Float2Scalar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Float2Scalar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Convert an array of float values to scalar.</p>
+<p>Transforms an array of floats to an array integers. With the
+option to rescale such that the minimum value becomes zero
+and you can keep certain decimal points.</p>
+<blockquote>
+<div><p>1.05, 2., 3.1, 4.8342, 5, 0 -&gt; 105, 200, 310, 483, 500, 0</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>decimal</strong> (<em>int</em>) – Number of decimal points to keep from the float representation. Default to <cite>2</cite>.</p></li>
+<li><p><strong>rescale</strong> (<em>bool</em>) – Whether to rescale the array such that the minimum value becomes 0. Default to <cite>True</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="sigllm.primitives.transformation.Float2Scalar.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Float2Scalar.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Float2Scalar.fit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.transformation.Float2Scalar.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Float2Scalar.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Float2Scalar.transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sigllm.primitives.transformation.Scalar2Float">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">Scalar2Float</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">decimal</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Scalar2Float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Scalar2Float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Convert an array of integer values to float.</p>
+<p>Transforms an array of integers to an array floats.
+Shift values by minimum and include a predetermined
+number of decimal points.</p>
+<blockquote>
+<div><p>105, 200, 310, 483, 500, 0 -&gt; 1.05, 2., 3.1, 4.8342, 5, 0</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>decimal</strong> (<em>int</em>) – Number of decimal points to keep from the float representation. Default to <cite>2</cite>.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="sigllm.primitives.transformation.Scalar2Float.transform">
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">minimum</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Scalar2Float.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Scalar2Float.transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="sigllm.primitives.transformation.format_as_integer">
+<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">strings</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'ignore'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format a nested list of text into an array of integers.</p>
+<p>Transforms a list of list pf string input as 2-D array of integers,
+seperated by the indicated seperator and truncated based on <cite>trunc</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>‘,’</cite>.</p></li>
+<li><p><strong>trunc</strong> (<em>int</em>) – How many values to keep from the ndarray. Default to <cite>None</cite>,
+which retains all values.</p></li>
+<li><p><strong>errors</strong> (<em>str</em>) – Strategy to deal with erroneous values (not digits). Default
+to <cite>‘ignore’</cite>.
+- If ‘ignore’, then invalid values will be ignored in the result.
+- If ‘filter’, then invalid values will be filtered out of the string.
+- If ‘raise’, then encountering invalud values will raise an exception.
+- If ‘coerce’, then invalid values will be set as NaN.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An array of digits values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="sigllm.primitives.transformation.format_as_string">
+<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format values to a list of string.</p>
+<p>Transform a 2-D array of integers to a list of strings,
+seperated by the indicated seperator and space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>‘,’</cite>.</p></li>
+<li><p><strong>space</strong> (<em>bool</em>) – Whether to add space between each digit in the result. Default to <cite>False</cite>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of string representation of each row.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="sigllm.primitives.postprocessing.html" title="previous page">sigllm.primitives.postprocessing module</a>
+    <a class='right-next' id="next-link" href="sigllm.core.html" title="next page">sigllm.core module</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, MIT Data To AI Lab.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

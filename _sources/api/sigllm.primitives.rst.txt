@@ -17,7 +17,7 @@ Submodules
    :maxdepth: 4
 
    sigllm.primitives.postprocessing
-   sigllm.primitives.preprocessing
+   sigllm.primitives.transformation
 
 Module contents
 ---------------
