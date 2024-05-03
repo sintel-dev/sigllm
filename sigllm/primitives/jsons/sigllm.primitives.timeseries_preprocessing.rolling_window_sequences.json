@@ -1,0 +1,42 @@
+{
+    "name": "sigllm.primitives.timeseries_preprocessing.rolling_window_sequences",
+    "contributors": ["Linh Nguyen <linhnk@mit.edu>"],
+    "description": "Create rolling windows",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "rolling windows"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.timeseries_preprocessing.rolling_window_sequences",
+    "produce": {
+        "method": "detect",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            },
+            {
+                "name": "index",
+                "type": "ndarray"
+            },
+            {
+                "name": "window_size",
+                "type": "int"
+            }, 
+            {
+                "name": "step_size",
+                "type": "int"
+            }
+        ],
+        "output": [
+            {
+                "name": "out_X",
+                "type": "ndarray"
+            },
+            {
+                "name": "X_index",
+                "type": "ndarray"
+            }
+        ]
+    }
+}

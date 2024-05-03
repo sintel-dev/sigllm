@@ -1,0 +1,4 @@
+{
+    "system_message": "You are an exceptionally intelligent assistant that detect anomalies in time series data by listing all the anomalies.",
+    "user_message": "Below is a [SEQUENCE], please return the anomalies in that sequence in [RESPONSE]. Only return the numbers. [SEQUENCE]"
+}
