@@ -63,7 +63,7 @@ def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
     else:
         raise KeyError(f"Unknown errors strategy {errors}.")
 
-    clean = np.array(clean).astype(float)
+    clean = np.array(clean, dtype=float)
 
     if trunc:
         clean = clean[:trunc]
@@ -74,7 +74,7 @@ def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
 def format_as_integer(strings, sep=',', trunc=None, errors='ignore'):
     """Format a nested list of text into an array of integers.
 
-    Transforms a list of list pf string input as 2-D array of integers,
+    Transforms a list of list of string input as 3-D array of integers,
     seperated by the indicated seperator and truncated based on `trunc`.
 
     Args:
@@ -98,18 +98,17 @@ def format_as_integer(strings, sep=',', trunc=None, errors='ignore'):
     result = list()
     for string_list in strings:
         sample = list()
-        string = string_list
-        if not isinstance(string, list):
-            string = [string]
+        if not isinstance(string_list, list):
+            raise ValueError("Input is not a list of lists.")
 
-        for text in string:
+        for text in string_list:
             scalar = _from_string_to_integer(text, sep, trunc, errors)
-            sample.extend(scalar)
+            sample.append(scalar)
 
         result.append(sample)
 
     output = np.array(result, dtype=object)
-    if output.ndim >= 2:
+    if output.ndim >= 3:
         output = output.astype(float)
 
     return output
