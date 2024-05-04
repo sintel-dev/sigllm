@@ -1,7 +1,7 @@
 {
     "name": "sigllm.primitives.postprocessing.aggregate_rolling_window",
     "contributors": [
-        "Sarah Alnegheimish <smish@mit.edu>",
+        "Sarah Alnegheimish <smish@mit.edu>"
     ],
     "description": "Aggregate rolling window sequences into a flat time series.",
     "classifiers": {
@@ -11,7 +11,6 @@
     "modalities": [],
     "primitive": "sigllm.primitives.postprocessing.aggregate_rolling_window",
     "produce": {
-        "method": "forecast",
         "args": [
             {
                 "name": "y",

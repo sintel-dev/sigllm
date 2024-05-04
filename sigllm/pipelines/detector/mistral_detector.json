@@ -5,10 +5,10 @@
         "mlstars.custom.timeseries_preprocessing.rolling_window_sequences",
         "sigllm.primitives.transformation.format_as_string",
         "sigllm.primitives.forecasting.huggingface.HF",
-        "orion.primitives.transformation.format_as_integer",
-        "orion.primitives.transformation.Scalar2Float",
-        "sigllm.primitives.postprocessing.aggregate_rolling_window"
-        "orion.primitives.timeseries_errors.regression_errors"
+        "sigllm.primitives.transformation.format_as_integer",
+        "sigllm.primitives.transformation.Scalar2Float",
+        "sigllm.primitives.postprocessing.aggregate_rolling_window",
+        "orion.primitives.timeseries_errors.regression_errors",
         "orion.primitives.timeseries_anomalies.find_anomalies"
     ],
     "init_params": {

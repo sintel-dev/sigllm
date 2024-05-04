@@ -69,9 +69,9 @@ class GPT:
         valid_tokens = []
         for number in VALID_NUMBERS:
             token = self.tokenizer.encode(number)
-            valid_tokens.append(token)
+            valid_tokens.extend(token)
 
-        valid_tokens.append(self.tokenizer.encode(self.sep))
+        valid_tokens.extend(self.tokenizer.encode(self.sep))
         self.logit_bias = {token: BIAS for token in valid_tokens}
 
     def forecast(self, X, **kwargs):

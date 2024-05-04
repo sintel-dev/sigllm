@@ -1,5 +1,5 @@
 {
-    "name": "sigllm.primitives.transformation.Scaler2Float",
+    "name": "sigllm.primitives.transformation.Scalar2Float",
     "contributors": [
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
@@ -10,7 +10,7 @@
         "subtype": "transformer"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.transformation.Scaler2Float",
+    "primitive": "sigllm.primitives.transformation.Scalar2Float",
     "produce": {
         "method": "transform",
         "args": [

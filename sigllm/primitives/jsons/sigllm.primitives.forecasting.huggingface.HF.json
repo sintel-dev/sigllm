@@ -1,7 +1,7 @@
 {
     "name": "sigllm.primitives.forecasting.huggingface.HF",
     "contributors": [
-        "Sarah Alnegheimish <smish@mit.edu>",
+        "Sarah Alnegheimish <smish@mit.edu>"
     ],
     "description": "Prompt any HF model to forecast time series.",
     "classifiers": {
@@ -25,7 +25,7 @@
             },
             {
                 "name": "logprob",
-                "type": "ndarray"
+                "type": "ndarray",
                 "default": null
             }
         ]
