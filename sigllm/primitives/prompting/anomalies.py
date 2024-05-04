@@ -15,15 +15,15 @@ def val2idx(vals, windows):
     in the input sequence that have those values. 
     
     Args: 
-        vals (List[ndarray]]): 
-            A list nd array containing detected anomalous values from different
-            responses of one window in one sample response. 
+        vals (ndarray): 
+            A 3d array containing detected anomalous values from different
+            responses of each window.
         windows (ndarray):
             rolling window sequences.      
     Returns: 
         List([ndarray]):
-            A list of nd array containing detected anomalous indices from different
-            responses of one window in one sample response.
+            A 3d array containing detected anomalous indices from different
+            responses of each window.
     """
 
     idx_list = []
@@ -33,8 +33,9 @@ def val2idx(vals, windows):
             mask = np.isin(seq, anomalies)
             indices = np.where(mask)[0]
             idx_win_list.append(indices)
-        idx_win_list = np.array(idx_win_list)
+        #idx_win_list = np.array(idx_win_list)
         idx_list.append(idx_win_list)
+        idx_list = np.array(idx_list)
     return idx_list
 
 def ano_within_windows(idx_win_list, alpha=0.5):
@@ -43,15 +44,15 @@ def ano_within_windows(idx_win_list, alpha=0.5):
     Choose anomalous index in the sequence based on multiple LLM responses
 
     Args:
-        idx_win_list (List[List[numpy.ndarray]]):
-            A list of lists of 1d array containing detected anomalous indices of
-            one window in one sample response.
+        idx_win_list (ndarray):
+            A 3d array containing detected anomalous values from different
+            responses of each window.
         alpha (float):
             Percentage of votes needed for an index to be deemed anomalous. Default to `0.5`.
 
     Returns:
-        List[numpy.ndarray]:
-            A list of 1-dimensional array containing final anomalous indices of each windows.
+        ndarray:
+            A 2-dimensional array containing final anomalous indices of each windows.
     """
     
     idx_list = []
@@ -65,15 +66,15 @@ def ano_within_windows(idx_win_list, alpha=0.5):
         final_list = unique_elements[counts >= min_vote]
 
         idx_list.append(final_list)
-
+    idx_list = np.vstack(idx_list)
     return idx_list
 
 def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5):
     """Get the final list of anomalous indices of a sequence when merging all rolling windows
 
     Args:
-        anomalies (List[numpy.ndarray]):
-            A list of 1-dimensional array containing anomous indices of each window.
+        anomalies (ndarray):
+            A 2-dimensional array containing anomous indices of each window.
         start_indices (numpy.ndarray):
             A 1-dimensional array contaning the first index of each window.
         window_size (int):

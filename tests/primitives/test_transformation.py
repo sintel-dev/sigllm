@@ -202,7 +202,6 @@ def test_format_as_integer_2d_trunc():
 
     np.testing.assert_equal(output, expected)
 
-
 class Float2ScalarTest(unittest.TestCase):
 
     def test_transform_default(self):
