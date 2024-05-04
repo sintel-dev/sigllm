@@ -169,7 +169,6 @@ class Scalar2Float:
         self.decimal = decimal
 
     def transform(self, X, minimum=0):
-        values = np.array(X).astype(float)
-        values = values * 10**(-self.decimal)
+        values = X * 10**(-self.decimal)
 
         return values + minimum
