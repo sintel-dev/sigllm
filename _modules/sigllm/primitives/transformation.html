@@ -223,7 +223,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown errors strategy </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 
-    <span class="n">clean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">clean</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">clean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">trunc</span><span class="p">:</span>
         <span class="n">clean</span> <span class="o">=</span> <span class="n">clean</span><span class="p">[:</span><span class="n">trunc</span><span class="p">]</span>
@@ -234,7 +234,7 @@
 <div class="viewcode-block" id="format_as_integer"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_integer">[docs]</a><span class="k">def</span> <span class="nf">format_as_integer</span><span class="p">(</span><span class="n">strings</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a nested list of text into an array of integers.</span>
 
-<span class="sd">    Transforms a list of list pf string input as 2-D array of integers,</span>
+<span class="sd">    Transforms a list of list of string input as 3-D array of integers,</span>
 <span class="sd">    seperated by the indicated seperator and truncated based on `trunc`.</span>
 
 <span class="sd">    Args:</span>
@@ -258,18 +258,17 @@
     <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">string_list</span> <span class="ow">in</span> <span class="n">strings</span><span class="p">:</span>
         <span class="n">sample</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-        <span class="n">string</span> <span class="o">=</span> <span class="n">string_list</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="n">string</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input is not a list of lists.&quot;</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">string_list</span><span class="p">:</span>
             <span class="n">scalar</span> <span class="o">=</span> <span class="n">_from_string_to_integer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">trunc</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
-            <span class="n">sample</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">scalar</span><span class="p">)</span>
+            <span class="n">sample</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scalar</span><span class="p">)</span>
 
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
 
     <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
         <span class="n">output</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">output</span></div>
