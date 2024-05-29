@@ -1,0 +1,33 @@
+{
+    "name": "sigllm.primitives.prompting.anomalies.idx2time",
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>",
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Convert list of indices into list of timestamp",
+    "classifiers": {
+        "type": "postprocessor",
+        "subtype": "converter"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.anomalies.idx2time",
+    "produce": {
+        "method": "idx2time",
+        "args": [
+            {
+                "name": "sequence",
+                "type": "DataFrame"
+            }, 
+            {
+                "name": "idx_list",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "timestamp_list",
+                "type": "ndarray"
+            }
+        ]
+    }
+}

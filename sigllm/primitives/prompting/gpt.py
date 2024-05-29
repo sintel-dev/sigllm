@@ -27,9 +27,18 @@ class GPT:
             String to separate each element in values. Default to `','`.
     """
 
-    def __init__(self, name='gpt-3.5-turbo', sep=','):
+    def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent = 0.5, temp=1, top_p=1, logprobs=False, top_logprobs=None,
+                 samples=10, seed=None):
         self.name = name
         self.sep = sep
+        self.anomalous_percent = anomalous_percent
+        self.temp = temp
+        self.top_p = top_p
+        self.logprobs = logprobs
+        self.top_logprobs = top_logprobs
+        self.samples = samples
+        self.seed = seed
+
 
         self.tokenizer = tiktoken.encoding_for_model(self.name)
 
@@ -41,8 +50,7 @@ class GPT:
         valid_tokens.append(self.tokenizer.encode(self.sep))
         self.logit_bias = {token: BIAS for token in valid_tokens}
 
-    def detect(self, text, anomalous_percent = 0.5, temp=1, top_p=1, logprobs=False, top_logprobs=None,
-                 samples=10, seed=None):
+    def detect(self, X, **kwargs):
         """Use GPT to forecast a signal.
 
         Args:
@@ -75,8 +83,8 @@ class GPT:
                 * List of detected anomalous values.
                 * Optionally, a list of the output tokens' log probabilities.
         """
-        input_length = len(self.tokenizer.encode(text))
-        max_tokens = input_length * anomalous_percent
+        input_length = len(self.tokenizer.encode(X[0]))
+        max_tokens = input_length * self.anomalous_percent
 
         message = ' '.join(PROMPTS['user_message'], text, self.sep)
         response = openai.ChatCompletion.create(
@@ -86,13 +94,13 @@ class GPT:
                 {"role": "user", "content": message}
             ],
             max_tokens=max_tokens,
-            temperature=temp,
-            logprobs=logprobs,
-            top_logprobs=top_logprobs,
-            n=samples,
+            temperature=self.temp,
+            logprobs=self.logprobs,
+            top_logprobs=self.top_logprobs,
+            n=self.samples,
         )
         responses = [choice.message.content for choice in response.choices]
-        if logprobs:
+        if self.logprobs:
             probs = [choice.logprobs for choice in response.choices]
             return responses, probs
 
@@ -115,67 +123,3 @@ class GPT:
 
 
 
-
-
-
-
-
-
-
-
-
-
-import os
-
-from openai import OpenAI
-
-
-def load_system_prompt(file_path):
-    with open(file_path) as f:
-        system_prompt = f.read()
-    return system_prompt
-
-
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-
-ZERO_SHOT_FILE = 'gpt_system_prompt_zero_shot.txt'
-ONE_SHOT_FILE = 'gpt_system_prompt_one_shot.txt'
-
-ZERO_SHOT_DIR = os.path.join(CURRENT_DIR, "..", "template", ZERO_SHOT_FILE)
-ONE_SHOT_DIR = os.path.join(CURRENT_DIR, "..", "template", ONE_SHOT_FILE)
-
-
-GPT_model = "gpt-4"  # "gpt-4-0125-preview" #  #  #"gpt-3.5-turbo" #
-client = OpenAI()
-
-
-def get_gpt_model_response(message, gpt_model=GPT_model):
-    completion = client.chat.completions.create(
-        model=gpt_model,
-        messages=message,
-    )
-    return completion.choices[0].message.content
-
-
-def create_message_zero_shot(seq_query, system_prompt_file=ZERO_SHOT_DIR):
-    messages = []
-
-    messages.append({"role": "system", "content": load_system_prompt(system_prompt_file)})
-
-    # final prompt
-    messages.append({"role": "user", "content": f"Sequence: {seq_query}"})
-    return messages
-
-
-def create_message_one_shot(seq_query, seq_ex, ano_idx_ex, system_prompt_file=ONE_SHOT_DIR):
-    messages = []
-
-    messages.append({"role": "system", "content": load_system_prompt(system_prompt_file)})
-
-    # one shot
-    messages.append({"role": "user", "content": f"Sequence: {seq_ex}"})
-    messages.append({"role": "assistant", "content": ano_idx_ex})
-
-    # final prompt
-    messages.append({"role": "user", "content": f"Sequence: {seq_query}"})
-    return messages

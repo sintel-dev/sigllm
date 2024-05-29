@@ -1,6 +1,9 @@
 {
     "name": "sigllm.primitives.timeseries_preprocessing.rolling_window_sequences",
-    "contributors": ["Linh Nguyen <linhnk@mit.edu>"],
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>",
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
     "description": "Create rolling windows",
     "classifiers": {
         "type": "preprocessor",
@@ -9,7 +12,7 @@
     "modalities": [],
     "primitive": "sigllm.primitives.timeseries_preprocessing.rolling_window_sequences",
     "produce": {
-        "method": "detect",
+        "method": "rolling_window_sequences",
         "args": [
             {
                 "name": "X",

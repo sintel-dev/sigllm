@@ -35,11 +35,11 @@ def val2idx(vals, windows):
             idx_win_list.append(indices)
         #idx_win_list = np.array(idx_win_list)
         idx_list.append(idx_win_list)
-        idx_list = np.array(idx_list)
+    idx_list = np.array(idx_list, dtype=object)
     return idx_list
 
 def ano_within_windows(idx_win_list, alpha=0.5):
-    """Get the final list of anomalous indices of a sequence
+    """Get the final list of anomalous indices of each window
 
     Choose anomalous index in the sequence based on multiple LLM responses
 
@@ -58,15 +58,16 @@ def ano_within_windows(idx_win_list, alpha=0.5):
     idx_list = []
     for samples in idx_win_list:
         min_vote = np.ceil(alpha * len(samples))
+        #print(type(samples.tolist()))
 
-        flattened_res = np.flatten(samples)
+        flattened_res = np.concatenate(samples.tolist())
 
         unique_elements, counts = np.unique(flattened_res, return_counts=True)
 
         final_list = unique_elements[counts >= min_vote]
 
         idx_list.append(final_list)
-    idx_list = np.vstack(idx_list)
+    idx_list = np.array(idx_list, dtype = object)
     return idx_list
 
 def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5):
@@ -75,7 +76,7 @@ def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5
     Args:
         anomalies (ndarray):
             A 2-dimensional array containing anomous indices of each window.
-        start_indices (numpy.ndarray):
+        start_indices (ndarray):
             A 1-dimensional array contaning the first index of each window.
         window_size (int):
             Length of each window.
@@ -85,7 +86,7 @@ def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5
             Percentage of containing windows needed for index to be deemed anomalous. Default to `0.5`.
 
     Return:
-        numpy.ndarray:
+        ndarray:
             A 1-dimensional array containing final anomalous indices.
     """
     anomalies = [arr + first_idx for (arr, first_idx) in zip(anomalies, start_indices)]
@@ -104,24 +105,25 @@ def idx2time(sequence, idx_list):
     """Convert list of indices into list of timestamp
 
     Args:
-        sequence (pandas.Dataframe):
+        sequence (DataFrame):
             Signal with timestamps and values.
-        idx_list (numpy.ndarray):
+        idx_list (ndarray):
             A 1-dimensional array of indices.
 
     Returns:
-        numpy.ndarray:
+        ndarray:
             A 1-dimensional array containing timestamps.
     """
-    return sequence.iloc[idx_list].timestamp.to_numpy()
+    timestamp_list = sequence.iloc[idx_list].timestamp.to_numpy()
+    return timestamp_list
 
 def timestamp2interval(timestamp_list, interval, start, end, padding_size = 50): 
     """Convert list of timestamps to list of intervals by padding to both sides
     and merge overlapping 
     
     Args: 
-        timestamp_list (List[timestamp]): 
-            A list of point timestamps.
+        timestamp_list (ndarray): 
+            A 1d array of point timestamps.
         interval (int):
             The fixed gap between two consecutive timestamps of the time series.
         start (timestamp): 
@@ -129,12 +131,15 @@ def timestamp2interval(timestamp_list, interval, start, end, padding_size = 50):
         end (timestamp): 
             The end timestamp of the time series.
         padding_size (int): 
-            Number of steps to pad on both sides of a timestamp point.
+            Number of steps to pad on both sides of a timestamp point. Default to `50`.
+             
+    Returns:
+        List[Tuple(start, end)]:
+            A list of intervals.
     """
     intervals = []
     for timestamp in timestamp_list: 
         intervals.append((max(start, timestamp-padding_size*interval), min(end, timestamp+padding_size*interval)))
-
     if not intervals:
         return []
 
