@@ -114,7 +114,7 @@ class HF:
                 input_length = tokenized_input['input_ids'].shape[1]
                 average_length = input_length / len(x[0].split(','))
                 self.max_tokens = (average_length + self.padding) * self.steps
-    
+
             generate_ids = self.model.generate(
                 **tokenized_input,
                 do_sample=True,
@@ -125,7 +125,7 @@ class HF:
                 renormalize_logits=True,
                 num_return_sequences=self.samples
             )
-    
+
             responses = self.tokenizer.batch_decode(
                 generate_ids[:, self.input_length:],
                 skip_special_tokens=True,
