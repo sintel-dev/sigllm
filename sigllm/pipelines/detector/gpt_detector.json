@@ -37,7 +37,7 @@
             "trunc": 1
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
-            "aggregation": "median"
+            "agg": "median"
         },
         "orion.primitives.timeseries_anomalies.find_anomalies#1": {
             "window_size_portion": 0.33,

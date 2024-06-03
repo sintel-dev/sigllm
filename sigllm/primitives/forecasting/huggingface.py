@@ -3,6 +3,7 @@
 import logging
 
 import torch
+from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 LOGGER = logging.getLogger(__name__)
@@ -52,6 +53,8 @@ class HF:
         self.raw = raw
         self.samples = samples
         self.padding = padding
+        self.max_tokens = None
+        self.input_length = None
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.name, use_fast=False)
 
@@ -99,33 +102,40 @@ class HF:
                 * List of forecasted signal values.
                 * Optionally, a list of dictionaries for raw output.
         """
-        tokenized_input = self.tokenizer(
-            X,
-            return_tensors="pt"
-        ).to("cuda")
+        all_responses, all_probs = [], []
+        for text in tqdm(X):
+            x = text.flatten().tolist()
+            tokenized_input = self.tokenizer(
+                x,
+                return_tensors="pt"
+            ).to("cuda")
 
-        input_length = tokenized_input['input_ids'].shape[1]
-        average_length = input_length / len(X[0].split(','))
-        max_tokens = (average_length + padding) * self.steps
+            if self.max_tokens is None or self.input_length is None:
+                input_length = tokenized_input['input_ids'].shape[1]
+                average_length = input_length / len(x[0].split(','))
+                self.max_tokens = (average_length + self.padding) * self.steps
+    
+            generate_ids = self.model.generate(
+                **tokenized_input,
+                do_sample=True,
+                max_new_tokens=self.max_tokens,
+                temperature=self.temp,
+                top_p=self.top_p,
+                bad_words_ids=self.invalid_tokens,
+                renormalize_logits=True,
+                num_return_sequences=self.samples
+            )
+    
+            responses = self.tokenizer.batch_decode(
+                generate_ids[:, self.input_length:],
+                skip_special_tokens=True,
+                clean_up_tokenization_spaces=False
+            )
 
-        generate_ids = self.model.generate(
-            **tokenized_input,
-            do_sample=True,
-            max_new_tokens=max_tokens,
-            temperature=self.temp,
-            top_p=self.top_p,
-            bad_words_ids=self.invalid_tokens,
-            renormalize_logits=True,
-            num_return_sequences=self.samples
-        )
-
-        responses = self.tokenizer.batch_decode(
-            generate_ids[:, input_length:],
-            skip_special_tokens=True,
-            clean_up_tokenization_spaces=False
-        )
+            all_responses.append(responses)
+            all_probs.append(generate_ids)
 
         if self.raw:
-            return responses, generate_ids
+            return all_responses, all_probs
 
-        return responses
+        return all_responses

@@ -71,7 +71,7 @@ def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
     return clean
 
 
-def format_as_integer(strings, sep=',', trunc=None, errors='ignore'):
+def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
     """Format a nested list of text into an array of integers.
 
     Transforms a list of list pf string input as 2-D array of integers,
@@ -96,7 +96,7 @@ def format_as_integer(strings, sep=',', trunc=None, errors='ignore'):
             An array of digits values.
     """
     result = list()
-    for string_list in strings:
+    for string_list in X:
         sample = list()
         string = string_list
         if not isinstance(string, list):

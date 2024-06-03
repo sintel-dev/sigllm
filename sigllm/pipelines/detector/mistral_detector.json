@@ -27,7 +27,7 @@
             "target_size": 1
         },
         "sigllm.primitives.transformation.format_as_string#1": {
-            "space": true
+            "space": false
         },
         "sigllm.primitives.forecasting.huggingface.HF#1": {
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
@@ -37,7 +37,7 @@
             "trunc": 1
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
-            "method": "median"
+            "agg": "median"
         },
         "orion.primitives.timeseries_anomalies.find_anomalies#1": {
             "window_size_portion": 0.33,
@@ -48,6 +48,12 @@
     "input_names": {
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
             "y": "y_hat"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "X": "y_hat"
+        },
+        "sigllm.primitives.transformation.Scalar2Float#1": {
+            "X": "y_hat"
         }
     },
     "output_names": {
@@ -56,10 +62,16 @@
             "target_index": "y_index"
         },
         "sigllm.primitives.forecasting.huggingface.HF#1": {
-            "y": "yhat"
+            "y": "y_hat"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
-            "y": "yhat"
+            "y": "y_hat"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "X": "y_hat"
+        },
+        "sigllm.primitives.transformation.Scalar2Float#1": {
+            "X": "y_hat"
         }
     }
 }
