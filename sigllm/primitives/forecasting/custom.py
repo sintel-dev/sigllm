@@ -2,7 +2,6 @@
 
 import numpy as np
 
-
 def rolling_window_sequences(X, y, index, window_size, target_size, step_size, target_column):
     """Create rolling window sequences out of time series data.
 
