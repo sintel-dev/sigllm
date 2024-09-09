@@ -89,6 +89,8 @@ class HF:
         )
 
         self.model.eval()
+        self.model.generation_config.pad_token_id = self.tokenizer.pad_token_id
+
 
     def forecast(self, X, **kwargs):
         """Use GPT to forecast a signal.
@@ -111,8 +113,8 @@ class HF:
             ).to("cuda")
 
             if self.max_tokens is None or self.input_length is None:
-                input_length = tokenized_input['input_ids'].shape[1]
-                average_length = input_length / len(x[0].split(','))
+                self.input_length = tokenized_input['input_ids'].shape[1]
+                average_length = self.input_length / len(x[0].split(','))
                 self.max_tokens = (average_length + self.padding) * self.steps
 
             generate_ids = self.model.generate(

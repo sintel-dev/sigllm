@@ -2,7 +2,7 @@
 import numpy as np
 
 
-def aggregate_rolling_window(y, agg="median"):
+def aggregate_rolling_window(y, step_size=1, agg="median"):
     """Aggregate a rolling window sequence.
 
     Convert a rolling window sequence into a flattened time series.
@@ -11,6 +11,8 @@ def aggregate_rolling_window(y, agg="median"):
     Args:
         y (ndarray):
             Windowed sequences. Each timestamp has multiple predictions.
+        step_size (int):
+            Stride size used when creating the rolling windows.
         agg (string):
             String denoting the aggregation method to use. Default is "median".
 
@@ -18,10 +20,18 @@ def aggregate_rolling_window(y, agg="median"):
         ndarray:
             Flattened sequence.
     """
-    num_windows = y.shape[0]
-    window_size = y.shape[1]
+    num_windows, num_samples, pred_length = y.shape
+    num_errors = pred_length + step_size * (num_windows - 1)
 
     method = getattr(np, agg)
+    signal = []
 
-    signal = [method(y[::-1, :].diagonal(i)) for i in range(-num_windows + 1, window_size)]
+    for i in range(num_errors):
+        intermediate = []
+        for j in range(max(0, i - num_errors + pred_length), min(i + 1, pred_length)):
+            for k in range(num_samples):
+                intermediate.append(y[i - j, k, j])
+
+        signal.append(method(np.asarray(intermediate)))
+
     return np.array(signal)

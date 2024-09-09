@@ -104,7 +104,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
 
         for text in string:
             scalar = _from_string_to_integer(text, sep, trunc, errors)
-            sample.extend(scalar)
+            sample.append(scalar)
 
         result.append(sample)
 
