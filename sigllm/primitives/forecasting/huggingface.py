@@ -91,7 +91,6 @@ class HF:
         self.model.eval()
         self.model.generation_config.pad_token_id = self.tokenizer.pad_token_id
 
-
     def forecast(self, X, **kwargs):
         """Use GPT to forecast a signal.
 

@@ -5,10 +5,14 @@ Main module.
 
 This is an extension to Orion's core module
 """
+from typing import Union
+
 from orion import Orion
+from mlblocks import MLPipeline
 
 from sigllm.primitives.prompting.anomalies import get_anomaly_list_within_seq, str2idx
 from sigllm.primitives.prompting.data import sig2str
+
 
 class SigLLM(Orion):
     """SigLLM Class.
@@ -28,16 +32,18 @@ class SigLLM(Orion):
             Size of the input window.
         steps (int):
             Number of steps ahead to forecast.
-        
+
         hyperparameters (dict):
             Additional hyperparameters to set to the Pipeline.
     """
+
     def __init__(self, pipeline: Union[str, dict, MLPipeline] = None,
                  hyperparameters: dict = None):
         self._pipeline = pipeline or self.DEFAULT_PIPELINE
         self._hyperparameters = hyperparameters
         self._mlpipeline = self._get_mlpipeline()
         self._fitted = False
+
 
 def get_anomalies(seq, msg_func, model_func, num_iters=1, alpha=0.5):
     """Get LLM anomaly detection results.
