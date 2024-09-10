@@ -12,7 +12,7 @@ with open('HISTORY.md', encoding='utf-8') as history_file:
     history = history_file.read()
 
 install_requires = [
-    'numpy>=1.17.5,<2.15',
+    'numpy>=1.17.5,<2',
     'openai',
     'pandas>=1,<2',
     'orion-ml>=0.5,<0.8',
