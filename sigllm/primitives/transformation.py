@@ -109,7 +109,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
         result.append(sample)
 
     output = np.array(result, dtype=object)
-    if output.ndim >= 2:
+    if output.ndim >= 3:
         output = output.astype(float)
 
     return output

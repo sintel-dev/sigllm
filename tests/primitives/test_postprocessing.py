@@ -13,7 +13,7 @@ class FormatAsStringTest(unittest.TestCase):
             [1, 2, 3, 4, 5]
         ]])
         expected = np.array(
-            [3]
+            [1, 2, 3, 4, 5]
         )
 
         output = aggregate_rolling_window(data)
@@ -28,7 +28,7 @@ class FormatAsStringTest(unittest.TestCase):
             [3, 4, 5, 6, 7]
         ]])
         expected = np.array(
-            [3, 4, 5]
+            [2, 3, 4, 5, 6]
         )
 
         output = aggregate_rolling_window(data)
@@ -45,7 +45,7 @@ class FormatAsStringTest(unittest.TestCase):
             [5]
         ]])
         expected = np.array(
-            [1, 2, 3, 4, 5]
+            [3]
         )
 
         output = aggregate_rolling_window(data)
@@ -60,7 +60,7 @@ class FormatAsStringTest(unittest.TestCase):
             [[3, 4, 5, 6, 7]]
         ])
         expected = np.array(
-            [3, 4, 5]
+            [1, 2, 3, 4, 5, 6, 7]
         )
 
         output = aggregate_rolling_window(data)
@@ -75,7 +75,7 @@ class FormatAsStringTest(unittest.TestCase):
             [[3, 4, 5, 6, 7], [4, 5, 6, 7, 8]]
         ])
         expected = np.array(
-            [3, 4, 5, 6]
+            [1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5]
         )
 
         output = aggregate_rolling_window(data)
