@@ -7,8 +7,8 @@ This is an extension to Orion's core module
 """
 from typing import Union
 
-from orion import Orion
 from mlblocks import MLPipeline
+from orion import Orion
 
 from sigllm.primitives.prompting.anomalies import get_anomaly_list_within_seq, str2idx
 from sigllm.primitives.prompting.data import sig2str
