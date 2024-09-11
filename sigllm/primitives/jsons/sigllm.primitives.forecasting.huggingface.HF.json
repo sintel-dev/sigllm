@@ -1,0 +1,70 @@
+{
+    "name": "sigllm.primitives.forecasting.huggingface.HF",
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>"
+    ],
+    "description": "Prompt any HF model to forecast time series.",
+    "classifiers": {
+        "type": "estimator",
+        "subtype": "regressor"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.forecasting.huggingface.HF",
+    "produce": {
+        "method": "forecast",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            },
+            {
+                "name": "logprob",
+                "type": "ndarray",
+                "default": null
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "name": {
+                "type": "str",
+                "default": "mistralai/Mistral-7B-Instruct-v0.2"
+            },
+            "sep": {
+                "type": "str",
+                "default": ","
+            },
+            "steps": {
+                "type": "int",
+                "default": 1
+            },
+            "temp": {
+                "type": "float",
+                "default": 1
+            },
+            "top_p": {
+                "type": "float",
+                "default": 1
+            },
+            "raw": {
+                "type": "bool",
+                "default": false
+            },
+            "samples": {
+                "type": "int",
+                "default": 1
+            },
+            "padding": {
+                "type": "int",
+                "default": 0
+            }
+        }
+    }
+}
+

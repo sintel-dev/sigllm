@@ -151,19 +151,19 @@ class FromStringToIntegerTest(unittest.TestCase):
             _from_string_to_integer(data, errors='unknown')
 
 
-def test_format_as_integer_one_list():
-    data = ['1,2,3,4,5', '6,7,8,9,10']
+def test_format_as_integer_one():
+    data = ['1,2,3,4,5']
 
     with pytest.raises(ValueError):
         format_as_integer(data)
 
 
-def test_format_as_integer_list_of_list():
-    data = [['1,2,3,4,5', '6,7,8,9,10']]
+def test_format_as_integer_list():
+    data = [['1,2,3,4,5']]
 
-    expected = np.array([
-        [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
-    ])
+    expected = np.array([[[
+        1, 2, 3, 4, 5
+    ]]])
 
     output = format_as_integer(data)
 
