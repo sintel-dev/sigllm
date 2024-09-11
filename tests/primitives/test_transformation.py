@@ -151,8 +151,8 @@ class FromStringToIntegerTest(unittest.TestCase):
             _from_string_to_integer(data, errors='unknown')
 
 
-def test_format_as_integer_one():
-    data = ['1,2,3,4,5']
+def test_format_as_integer_one_list():
+    data = ['1,2,3,4,5', '6,7,8,9,10']
 
     expected = np.array([[[
         1, 2, 3, 4, 5
@@ -163,8 +163,8 @@ def test_format_as_integer_one():
     np.testing.assert_equal(output, expected)
 
 
-def test_format_as_integer_list():
-    data = [['1,2,3,4,5']]
+def test_format_as_integer_list_of_list():
+    data = [['1,2,3,4,5', '6,7,8,9,10']]
 
     expected = np.array([[[
         1, 2, 3, 4, 5
@@ -179,15 +179,15 @@ def test_format_as_integer_2d_shape_mismatch():
     data = [['1,2,3,4,5'], ['1, 294., 3 , j34,5'], ['!232, 23,3,4,5']]
 
     expected = np.array([
-        [[1, 2, 3, 4, 5]],
-        [[1, 3, 5]],
-        [[23, 3, 4, 5]]
+        [np.array([1., 2, 3, 4, 5])],
+        [np.array([1., 3, 5])],
+        [np.array([23., 3, 4, 5])]
     ], dtype=object)
 
     output = format_as_integer(data)
 
-    for o_list, e_list in zip(output, expected):
-        for o, e in zip(o_list, e_list):
+    for out, exp in list(zip(output, expected)):
+        for o, e in list(zip(out, exp)):
             np.testing.assert_equal(o, e)
 
 
@@ -201,6 +201,22 @@ def test_format_as_integer_2d_trunc():
     ])
 
     output = format_as_integer(data, trunc=2)
+
+    np.testing.assert_equal(output, expected)
+
+
+def test_format_as_integer_3d():
+    data = [
+        ['1,2,3,4,5', '6,7,8,9,10'],
+        ['11,12,13,14,15', '16,17,18,19,20']
+    ]
+
+    expected = np.array([
+        [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]],
+        [[11, 12, 13, 14, 15], [16, 17, 18, 19, 20]]
+    ])
+
+    output = format_as_integer(data)
 
     np.testing.assert_equal(output, expected)
 
