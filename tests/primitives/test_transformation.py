@@ -154,10 +154,6 @@ class FromStringToIntegerTest(unittest.TestCase):
 def test_format_as_integer_one():
     data = ['1,2,3,4,5']
 
-    expected = np.array([[[
-        1, 2, 3, 4, 5
-    ]]])
-
     with pytest.raises(ValueError):
         format_as_integer(data)
 
