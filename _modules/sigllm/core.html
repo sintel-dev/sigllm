@@ -163,10 +163,46 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Main module.</span>
 
-<span class="sd">This module contains functions that get LLM&#39;s anomaly detection results.</span>
+<span class="sd">This is an extension to Orion&#39;s core module</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
+<span class="kn">from</span> <span class="nn">orion</span> <span class="kn">import</span> <span class="n">Orion</span>
+
 <span class="kn">from</span> <span class="nn">sigllm.primitives.prompting.anomalies</span> <span class="kn">import</span> <span class="n">get_anomaly_list_within_seq</span><span class="p">,</span> <span class="n">str2idx</span>
 <span class="kn">from</span> <span class="nn">sigllm.primitives.prompting.data</span> <span class="kn">import</span> <span class="n">sig2str</span>
+
+
+<div class="viewcode-block" id="SigLLM"><a class="viewcode-back" href="../../api/sigllm.core.html#sigllm.core.SigLLM">[docs]</a><span class="k">class</span> <span class="nc">SigLLM</span><span class="p">(</span><span class="n">Orion</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;SigLLM Class.</span>
+
+<span class="sd">    The SigLLM Class provides the main anomaly detection functionalities</span>
+<span class="sd">    of SigLLM and is responsible for the interaction with the underlying</span>
+<span class="sd">    MLBlocks pipelines.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pipeline (str, dict or MLPipeline):</span>
+<span class="sd">            Pipeline to use. It can be passed as:</span>
+<span class="sd">                * An ``str`` with a path to a JSON file.</span>
+<span class="sd">                * An ``str`` with the name of a registered pipeline.</span>
+<span class="sd">                * An ``MLPipeline`` instance.</span>
+<span class="sd">                * A ``dict`` with an ``MLPipeline`` specification.</span>
+<span class="sd">        window_size (int):</span>
+<span class="sd">            Size of the input window.</span>
+<span class="sd">        steps (int):</span>
+<span class="sd">            Number of steps ahead to forecast.</span>
+
+<span class="sd">        hyperparameters (dict):</span>
+<span class="sd">            Additional hyperparameters to set to the Pipeline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">MLPipeline</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PIPELINE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="o">=</span> <span class="n">hyperparameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mlpipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mlpipeline</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fitted</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="get_anomalies"><a class="viewcode-back" href="../../api/sigllm.core.html#sigllm.core.get_anomalies">[docs]</a><span class="k">def</span> <span class="nf">get_anomalies</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">msg_func</span><span class="p">,</span> <span class="n">model_func</span><span class="p">,</span> <span class="n">num_iters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>

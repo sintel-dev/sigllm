@@ -1,0 +1,7 @@
+sigllm.primitives.forecasting.custom module
+===========================================
+
+.. automodule:: sigllm.primitives.forecasting.custom
+   :members:
+   :undoc-members:
+   :show-inheritance:

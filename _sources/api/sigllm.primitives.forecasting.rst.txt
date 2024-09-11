@@ -7,6 +7,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   sigllm.primitives.forecasting.custom
    sigllm.primitives.forecasting.gpt
    sigllm.primitives.forecasting.huggingface
 

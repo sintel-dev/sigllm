@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>sigllm.core module &#8212; sigllm 0.0.1.dev0 documentation</title>
+    <title>sigllm.primitives.forecasting.custom module &#8212; sigllm 0.0.1.dev0 documentation</title>
     
   <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -40,8 +40,8 @@
     <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Contributing" href="../contributing.html" />
-    <link rel="prev" title="sigllm.primitives.transformation module" href="sigllm.primitives.transformation.html" />
+    <link rel="next" title="sigllm.primitives.forecasting.gpt module" href="sigllm.primitives.forecasting.gpt.html" />
+    <link rel="prev" title="sigllm.primitives.forecasting package" href="sigllm.primitives.forecasting.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
   </head>
@@ -162,60 +162,38 @@
               
               <div>
                 
-  <section id="module-sigllm.core">
-<span id="sigllm-core-module"></span><h1>sigllm.core module<a class="headerlink" href="#module-sigllm.core" title="Permalink to this headline">¶</a></h1>
-<p>Main module.</p>
-<p>This is an extension to Orion’s core module</p>
-<dl class="py class">
-<dt id="sigllm.core.SigLLM">
-<em class="property">class </em><code class="sig-prename descclassname">sigllm.core.</code><code class="sig-name descname">SigLLM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pipeline</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/core.html#SigLLM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.core.SigLLM" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">orion.core.Orion</span></code></p>
-<p>SigLLM Class.</p>
-<p>The SigLLM Class provides the main anomaly detection functionalities
-of SigLLM and is responsible for the interaction with the underlying
-MLBlocks pipelines.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline</strong> (<em>str</em><em>, </em><em>dict</em><em> or </em><em>MLPipeline</em>) – <dl class="simple">
-<dt>Pipeline to use. It can be passed as:</dt><dd><ul>
-<li><p>An <code class="docutils literal notranslate"><span class="pre">str</span></code> with a path to a JSON file.</p></li>
-<li><p>An <code class="docutils literal notranslate"><span class="pre">str</span></code> with the name of a registered pipeline.</p></li>
-<li><p>An <code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code> instance.</p></li>
-<li><p>A <code class="docutils literal notranslate"><span class="pre">dict</span></code> with an <code class="docutils literal notranslate"><span class="pre">MLPipeline</span></code> specification.</p></li>
-</ul>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>window_size</strong> (<em>int</em>) – Size of the input window.</p></li>
-<li><p><strong>steps</strong> (<em>int</em>) – Number of steps ahead to forecast.</p></li>
-<li><p><strong>hyperparameters</strong> (<em>dict</em>) – Additional hyperparameters to set to the Pipeline.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="module-sigllm.primitives.forecasting.custom">
+<span id="sigllm-primitives-forecasting-custom-module"></span><h1>sigllm.primitives.forecasting.custom module<a class="headerlink" href="#module-sigllm.primitives.forecasting.custom" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="sigllm.core.get_anomalies">
-<code class="sig-prename descclassname">sigllm.core.</code><code class="sig-name descname">get_anomalies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">seq</span></em>, <em class="sig-param"><span class="n">msg_func</span></em>, <em class="sig-param"><span class="n">model_func</span></em>, <em class="sig-param"><span class="n">num_iters</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/core.html#get_anomalies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.core.get_anomalies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get LLM anomaly detection results.</p>
-<p>The function get the LLM’s anomaly detection and converts them into an 1D array</p>
+<dt id="sigllm.primitives.forecasting.custom.rolling_window_sequences">
+<code class="sig-prename descclassname">sigllm.primitives.forecasting.custom.</code><code class="sig-name descname">rolling_window_sequences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">index</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">target_size</span></em>, <em class="sig-param"><span class="n">step_size</span></em>, <em class="sig-param"><span class="n">target_column</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/forecasting/custom.html#rolling_window_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.forecasting.custom.rolling_window_sequences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create rolling window sequences out of time series data.</p>
+<p>The function creates an array of input sequences and an array of target sequences by rolling
+over the input sequence with a specified window.
+Optionally, certain values can be dropped from the sequences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>seq</strong> (<em>ndarray</em>) – The sequence to detect anomalies.</p></li>
-<li><p><strong>msg_func</strong> (<em>func</em>) – Function to create message prompt.</p></li>
-<li><p><strong>model_func</strong> (<em>func</em>) – Function to get LLM answer.</p></li>
-<li><p><strong>num_iters</strong> (<em>int</em>) – Number of times to run the same query.</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) – Percentage of total number of votes that an index needs to have to be
-considered anomalous. Default: 0.5</p></li>
+<li><p><strong>X</strong> (<em>ndarray</em>) – N-dimensional input sequence to iterate over.</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – N-dimensional target sequence to iterate over.</p></li>
+<li><p><strong>index</strong> (<em>ndarray</em>) – Array containing the index values of X.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em>) – Length of the input sequences.</p></li>
+<li><p><strong>target_size</strong> (<em>int</em>) – Length of the target sequences.</p></li>
+<li><p><strong>step_size</strong> (<em>int</em>) – Indicating the number of steps to move the window forward each round.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Indicating which column of X is the target.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>1D array containing anomalous indices of the sequence.</p>
+<dd class="field-even"><p><ul class="simple">
+<li><p>input sequences.</p></li>
+<li><p>target sequences.</p></li>
+<li><p>first index value of each input sequence.</p></li>
+<li><p>first index value of each target sequence.</p></li>
+</ul>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ndarray</p>
+<dd class="field-odd"><p>ndarray, ndarray, ndarray, ndarray</p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,8 +206,8 @@ considered anomalous. Default: 0.5</p></li>
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="sigllm.primitives.transformation.html" title="previous page">sigllm.primitives.transformation module</a>
-    <a class='right-next' id="next-link" href="../contributing.html" title="next page">Contributing</a>
+    <a class='left-prev' id="prev-link" href="sigllm.primitives.forecasting.html" title="previous page">sigllm.primitives.forecasting package</a>
+    <a class='right-next' id="next-link" href="sigllm.primitives.forecasting.gpt.html" title="next page">sigllm.primitives.forecasting.gpt module</a>
 
               </div>
               

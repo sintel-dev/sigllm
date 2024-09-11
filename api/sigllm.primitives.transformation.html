@@ -221,7 +221,7 @@ number of decimal points.</p>
 
 <dl class="py function">
 <dt id="sigllm.primitives.transformation.format_as_integer">
-<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">strings</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'ignore'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'ignore'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format a nested list of text into an array of integers.</p>
 <p>Transforms a list of list of string input as 3-D array of integers,
 seperated by the indicated seperator and truncated based on <cite>trunc</cite>.</p>
@@ -250,14 +250,14 @@ to <cite>‘ignore’</cite>.
 
 <dl class="py function">
 <dt id="sigllm.primitives.transformation.format_as_string">
-<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format values to a list of string.</p>
+<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format X to a list of string.</p>
 <p>Transform a 2-D array of integers to a list of strings,
 seperated by the indicated seperator and space.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>‘,’</cite>.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in X. Default to <cite>‘,’</cite>.</p></li>
 <li><p><strong>space</strong> (<em>bool</em>) – Whether to add space between each digit in the result. Default to <cite>False</cite>.</p></li>
 </ul>
 </dd>

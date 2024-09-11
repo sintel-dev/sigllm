@@ -162,8 +162,53 @@
               
               <div>
                 
-  <section id="sigllm-primitives-forecasting-huggingface-module">
-<h1>sigllm.primitives.forecasting.huggingface module<a class="headerlink" href="#sigllm-primitives-forecasting-huggingface-module" title="Permalink to this headline">¶</a></h1>
+  <section id="module-sigllm.primitives.forecasting.huggingface">
+<span id="sigllm-primitives-forecasting-huggingface-module"></span><h1>sigllm.primitives.forecasting.huggingface module<a class="headerlink" href="#module-sigllm.primitives.forecasting.huggingface" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="sigllm.primitives.forecasting.huggingface.HF">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.forecasting.huggingface.</code><code class="sig-name descname">HF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'mistralai/Mistral-7B-Instruct-v0.2'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">steps</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">temp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">top_p</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">raw</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">padding</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/forecasting/huggingface.html#HF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.forecasting.huggingface.HF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Prompt Pretrained models on HuggingFace to forecast a time series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Model name. Default to <cite>‘mistralai/Mistral-7B-Instruct-v0.2’</cite>.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>‘,’</cite>.</p></li>
+<li><p><strong>steps</strong> (<em>int</em>) – Number of steps ahead to forecast. Default <cite>1</cite>.</p></li>
+<li><p><strong>temp</strong> (<em>float</em>) – The value used to modulate the next token probabilities. Default to <cite>1</cite>.</p></li>
+<li><p><strong>top_p</strong> (<em>float</em>) – If set to float &lt; 1, only the smallest set of most probable tokens with
+probabilities that add up to <cite>top_p</cite> or higher are kept for generation.
+Default to <cite>1</cite>.</p></li>
+<li><p><strong>raw</strong> (<em>bool</em>) – Whether to return the raw output or not. Defaults to <cite>False</cite>.</p></li>
+<li><p><strong>samples</strong> (<em>int</em>) – Number of forecasts to generate for each input message. Default to <cite>1</cite>.</p></li>
+<li><p><strong>padding</strong> (<em>int</em>) – Additional padding token to forecast to reduce short horizon predictions.
+Default to <cite>0</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="sigllm.primitives.forecasting.huggingface.HF.forecast">
+<code class="sig-name descname">forecast</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/forecasting/huggingface.html#HF.forecast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.forecasting.huggingface.HF.forecast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use GPT to forecast a signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>List of forecasted signal values.</p></li>
+<li><p>Optionally, a list of dictionaries for raw output.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list, list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
