@@ -36,7 +36,8 @@
             "steps": 5
         },
         "sigllm.primitives.transformation.format_as_integer#1": {
-            "trunc": 1
+            "trunc": 1,
+            "errors": "coerce"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
             "agg": "median"
@@ -60,9 +61,9 @@
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
             "y": "y_hat"
         },
-	"numpy.reshape#1": {
-	    "X": "y_hat"
-	},
+        "numpy.reshape#1": {
+            "X": "y_hat"
+        },
         "orion.primitives.timeseries_anomalies.find_anomalies#1": {
             "index": "target_index"
         }
