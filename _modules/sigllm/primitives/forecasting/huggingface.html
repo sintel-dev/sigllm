@@ -213,8 +213,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_tokens</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_length</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -265,21 +263,19 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">all_responses</span><span class="p">,</span> <span class="n">all_probs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
             <span class="n">tokenized_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span>
-                <span class="n">x</span><span class="p">,</span>
+                <span class="p">[</span><span class="n">text</span><span class="p">],</span>
                 <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span>
             <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_tokens</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">input_length</span> <span class="o">=</span> <span class="n">tokenized_input</span><span class="p">[</span><span class="s1">&#39;input_ids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">average_length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_length</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">max_tokens</span> <span class="o">=</span> <span class="p">(</span><span class="n">average_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span>
+            <span class="n">input_length</span> <span class="o">=</span> <span class="n">tokenized_input</span><span class="p">[</span><span class="s1">&#39;input_ids&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">average_length</span> <span class="o">=</span> <span class="n">input_length</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+            <span class="n">max_tokens</span> <span class="o">=</span> <span class="p">(</span><span class="n">average_length</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">padding</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">steps</span>
 
             <span class="n">generate_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
                 <span class="o">**</span><span class="n">tokenized_input</span><span class="p">,</span>
                 <span class="n">do_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">max_new_tokens</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_tokens</span><span class="p">,</span>
+                <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
                 <span class="n">temperature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
                 <span class="n">top_p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_p</span><span class="p">,</span>
                 <span class="n">bad_words_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span><span class="p">,</span>
@@ -288,7 +284,7 @@
             <span class="p">)</span>
 
             <span class="n">responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">(</span>
-                <span class="n">generate_ids</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_length</span><span class="p">:],</span>
+                <span class="n">generate_ids</span><span class="p">[:,</span> <span class="n">input_length</span><span class="p">:],</span>
                 <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">False</span>
             <span class="p">)</span>
