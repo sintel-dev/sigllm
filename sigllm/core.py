@@ -18,6 +18,7 @@ INTERVAL_PRIMITIVE = "mlstars.custom.timeseries_preprocessing.time_segments_aggr
 DECIMAL_PRIMITIVE = "sigllm.primitives.transformation.Float2Scalar#1"
 WINDOW_SIZE_PRIMITIVE = "sigllm.primitives.forecasting.custom.rolling_window_sequences#1"
 
+
 class SigLLM(Orion):
     """SigLLM Class.
 
@@ -55,8 +56,7 @@ class SigLLM(Orion):
         if value:
             self._hyperparameters[primitive][key] = value
 
-
-    def __init__(self, pipeline: Union[str, dict, MLPipeline] = None, interval:int = None,
+    def __init__(self, pipeline: Union[str, dict, MLPipeline] = None, interval: int = None,
                  decimal: int = None, window_size: int = None, hyperparameters: dict = None):
         self._pipeline = pipeline or self.DEFAULT_PIPELINE
         self._hyperparameters = hyperparameters
@@ -70,7 +70,6 @@ class SigLLM(Orion):
         self._augment_hyperparameters(INTERVAL_PRIMITIVE, 'interval', interval)
         self._augment_hyperparameters(DECIMAL_PRIMITIVE, 'decimal', decimal)
         self._augment_hyperparameters(WINDOW_SIZE_PRIMITIVE, 'window_size', window_size)
-
 
     def __repr__(self):
         if isinstance(self._pipeline, MLPipeline):
@@ -96,7 +95,6 @@ class SigLLM(Orion):
             pipeline,
             hyperparameters
         )
-
 
     def detect(self, data: pd.DataFrame, visualization: bool = False, **kwargs) -> pd.DataFrame:
         """Detect anomalies in the given data..
