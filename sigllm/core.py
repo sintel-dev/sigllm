@@ -8,14 +8,15 @@ SigLLM is an extension to Orion's core module
 import logging
 from typing import Union
 
+import pandas as pd
 from mlblocks import MLPipeline
 from orion import Orion
-from orion.evaluation import CONTEXTUAL_METRICS as METRICS
 
 LOGGER = logging.getLogger(__name__)
 
 INTERVAL_PRIMITIVE = "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1"
-WINDOW_SIZE_PRIMITIVE "sigllm.primitives.forecasting.custom.rolling_window_sequences#1"
+DECIMAL_PRIMITIVE = "sigllm.primitives.transformation.Float2Scalar#1"
+WINDOW_SIZE_PRIMITIVE = "sigllm.primitives.forecasting.custom.rolling_window_sequences#1"
 
 class SigLLM(Orion):
     """SigLLM Class.
@@ -33,6 +34,8 @@ class SigLLM(Orion):
                 * A ``dict`` with an ``MLPipeline`` specification.
         interval (int):
             Number of time points between one sample and another.
+        decimal (int):
+            Number of decimal points to keep from the float representation.
         window_size (int):
             Size of the input window.
         hyperparameters (dict):
@@ -49,20 +52,23 @@ class SigLLM(Orion):
             if primitive not in self._hyperparameters:
                 self._hyperparameters[primitive] = {}
 
-        self._hyperparameters[primitive][key] = value
+        if value:
+            self._hyperparameters[primitive][key] = value
 
 
-    def __init__(self, pipeline: Union[str, dict, MLPipeline] = None,
-                 hyperparameters: dict = None):
+    def __init__(self, pipeline: Union[str, dict, MLPipeline] = None, interval:int = None,
+                 decimal: int = None, window_size: int = None, hyperparameters: dict = None):
         self._pipeline = pipeline or self.DEFAULT_PIPELINE
         self._hyperparameters = hyperparameters
         self._mlpipeline = self._get_mlpipeline()
         self._fitted = False
 
         self.interval = interval
+        self.decimal = decimal
         self.window_size = window_size
 
         self._augment_hyperparameters(INTERVAL_PRIMITIVE, 'interval', interval)
+        self._augment_hyperparameters(DECIMAL_PRIMITIVE, 'decimal', decimal)
         self._augment_hyperparameters(WINDOW_SIZE_PRIMITIVE, 'window_size', window_size)
 
 
@@ -90,10 +96,6 @@ class SigLLM(Orion):
             pipeline,
             hyperparameters
         )
-
-
-    def fit(self):
-        raise NotImplementedError("SigLLM does not train models, directly use `detect`.")
 
 
     def detect(self, data: pd.DataFrame, visualization: bool = False, **kwargs) -> pd.DataFrame:
