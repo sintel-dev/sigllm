@@ -22,6 +22,11 @@
                 "name": "minimum",
                 "type": "float",
                 "default": 0
+            },
+            {
+                "name": "decimal",
+                "type": "int",
+                "default": 2
             }
         ],
         "output": [
@@ -30,13 +35,5 @@
                 "type": "ndarray"
             }
         ]
-    },
-    "hyperparameters": {
-        "fixed": {
-            "decimal": {
-                "type": "int",
-                "default": 2
-            }
-        }
     }
 }

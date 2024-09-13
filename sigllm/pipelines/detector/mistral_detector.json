@@ -4,7 +4,7 @@
         "sklearn.impute.SimpleImputer",
         "sigllm.primitives.transformation.Float2Scalar",
         "sigllm.primitives.forecasting.custom.rolling_window_sequences",
-        "sigllm.primitives.transformation.format_as_string",
+	"sigllm.primitives.transformation.format_as_string",
         "sigllm.primitives.forecasting.huggingface.HF",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.transformation.Scalar2Float",
@@ -36,7 +36,8 @@
             "steps": 5
         },
         "sigllm.primitives.transformation.format_as_integer#1": {
-            "trunc": 1
+            "trunc": 1,
+            "errors": "coerce"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
             "agg": "median"
@@ -60,9 +61,9 @@
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
             "y": "y_hat"
         },
-	"numpy.reshape#1": {
-	    "X": "y_hat"
-	},
+        "numpy.reshape#1": {
+            "X": "y_hat"
+        },
         "orion.primitives.timeseries_anomalies.find_anomalies#1": {
             "index": "target_index"
         }
