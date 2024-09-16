@@ -163,15 +163,20 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Main module.</span>
 
-<span class="sd">This is an extension to Orion&#39;s core module</span>
+<span class="sd">SigLLM is an extension to Orion&#39;s core module</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">mlblocks</span> <span class="kn">import</span> <span class="n">MLPipeline</span>
 <span class="kn">from</span> <span class="nn">orion</span> <span class="kn">import</span> <span class="n">Orion</span>
 
-<span class="kn">from</span> <span class="nn">sigllm.primitives.prompting.anomalies</span> <span class="kn">import</span> <span class="n">get_anomaly_list_within_seq</span><span class="p">,</span> <span class="n">str2idx</span>
-<span class="kn">from</span> <span class="nn">sigllm.primitives.prompting.data</span> <span class="kn">import</span> <span class="n">sig2str</span>
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">INTERVAL_PRIMITIVE</span> <span class="o">=</span> <span class="s2">&quot;mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1&quot;</span>
+<span class="n">DECIMAL_PRIMITIVE</span> <span class="o">=</span> <span class="s2">&quot;sigllm.primitives.transformation.Float2Scalar#1&quot;</span>
+<span class="n">WINDOW_SIZE_PRIMITIVE</span> <span class="o">=</span> <span class="s2">&quot;sigllm.primitives.forecasting.custom.rolling_window_sequences#1&quot;</span>
 
 
 <div class="viewcode-block" id="SigLLM"><a class="viewcode-back" href="../../api/sigllm.core.html#sigllm.core.SigLLM">[docs]</a><span class="k">class</span> <span class="nc">SigLLM</span><span class="p">(</span><span class="n">Orion</span><span class="p">):</span>
@@ -188,52 +193,98 @@
 <span class="sd">                * An ``str`` with the name of a registered pipeline.</span>
 <span class="sd">                * An ``MLPipeline`` instance.</span>
 <span class="sd">                * A ``dict`` with an ``MLPipeline`` specification.</span>
+<span class="sd">        interval (int):</span>
+<span class="sd">            Number of time points between one sample and another.</span>
+<span class="sd">        decimal (int):</span>
+<span class="sd">            Number of decimal points to keep from the float representation.</span>
 <span class="sd">        window_size (int):</span>
 <span class="sd">            Size of the input window.</span>
-<span class="sd">        steps (int):</span>
-<span class="sd">            Number of steps ahead to forecast.</span>
-
 <span class="sd">        hyperparameters (dict):</span>
 <span class="sd">            Additional hyperparameters to set to the Pipeline.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">DEFAULT_PIPELINE</span> <span class="o">=</span> <span class="s1">&#39;mistral_detector&#39;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">MLPipeline</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_augment_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">primitive</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">primitive</span><span class="p">:</span> <span class="p">{}</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">primitive</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">[</span><span class="n">primitive</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">MLPipeline</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">decimal</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_PIPELINE</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="o">=</span> <span class="n">hyperparameters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mlpipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mlpipeline</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_fitted</span> <span class="o">=</span> <span class="kc">False</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fitted</span> <span class="o">=</span> <span class="kc">False</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="n">interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decimal</span> <span class="o">=</span> <span class="n">decimal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_size</span> <span class="o">=</span> <span class="n">window_size</span>
 
-<div class="viewcode-block" id="get_anomalies"><a class="viewcode-back" href="../../api/sigllm.core.html#sigllm.core.get_anomalies">[docs]</a><span class="k">def</span> <span class="nf">get_anomalies</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">msg_func</span><span class="p">,</span> <span class="n">model_func</span><span class="p">,</span> <span class="n">num_iters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get LLM anomaly detection results.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_augment_hyperparameters</span><span class="p">(</span><span class="n">INTERVAL_PRIMITIVE</span><span class="p">,</span> <span class="s1">&#39;interval&#39;</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_augment_hyperparameters</span><span class="p">(</span><span class="n">DECIMAL_PRIMITIVE</span><span class="p">,</span> <span class="s1">&#39;decimal&#39;</span><span class="p">,</span> <span class="n">decimal</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_augment_hyperparameters</span><span class="p">(</span><span class="n">WINDOW_SIZE_PRIMITIVE</span><span class="p">,</span> <span class="s1">&#39;window_size&#39;</span><span class="p">,</span> <span class="n">window_size</span><span class="p">)</span>
 
-<span class="sd">    The function get the LLM&#39;s anomaly detection and converts them into an 1D array</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">,</span> <span class="n">MLPipeline</span><span class="p">):</span>
+            <span class="n">pipeline</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">primitive</span><span class="p">)</span> <span class="k">for</span> <span class="n">primitive</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()[</span><span class="s1">&#39;primitives&#39;</span><span class="p">])</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        seq (ndarray):</span>
-<span class="sd">            The sequence to detect anomalies.</span>
-<span class="sd">        msg_func (func):</span>
-<span class="sd">            Function to create message prompt.</span>
-<span class="sd">        model_func (func):</span>
-<span class="sd">            Function to get LLM answer.</span>
-<span class="sd">        num_iters (int):</span>
-<span class="sd">            Number of times to run the same query.</span>
-<span class="sd">        alpha (float):</span>
-<span class="sd">            Percentage of total number of votes that an index needs to have to be</span>
-<span class="sd">            considered anomalous. Default: 0.5</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">pipeline</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">primitive</span><span class="p">)</span> <span class="k">for</span> <span class="n">primitive</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">[</span><span class="s1">&#39;primitives&#39;</span><span class="p">])</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        ndarray:</span>
-<span class="sd">            1D array containing anomalous indices of the sequence.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">message</span> <span class="o">=</span> <span class="n">msg_func</span><span class="p">(</span><span class="n">sig2str</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-    <span class="n">res_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_iters</span><span class="p">):</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">model_func</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-        <span class="n">ano_ind</span> <span class="o">=</span> <span class="n">str2idx</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
-        <span class="n">res_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ano_ind</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">get_anomaly_list_within_seq</span><span class="p">(</span><span class="n">res_list</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span></div>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pipeline</span> <span class="o">=</span> <span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pipeline</span><span class="p">)</span>
+
+        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hyperparameters</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="s1">&#39;    </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="s1">&#39;SigLLM:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+            <span class="s1">&#39;hyperparameters:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">pipeline</span><span class="p">,</span>
+            <span class="n">hyperparameters</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SigLLM.detect"><a class="viewcode-back" href="../../api/sigllm.core.html#sigllm.core.SigLLM.detect">[docs]</a>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">visualization</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect anomalies in the given data..</span>
+
+<span class="sd">        If ``visualization=True``, also return the visualization</span>
+<span class="sd">        outputs from the MLPipeline object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (DataFrame):</span>
+<span class="sd">                Input data, passed as a ``pandas.DataFrame`` containing</span>
+<span class="sd">                exactly two columns: timestamp and value.</span>
+<span class="sd">            visualization (bool):</span>
+<span class="sd">                If ``True``, also capture the ``visualization`` named</span>
+<span class="sd">                output from the ``MLPipeline`` and return it as a second</span>
+<span class="sd">                output.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DataFrame or tuple:</span>
+<span class="sd">                If visualization is ``False``, it returns the events</span>
+<span class="sd">                DataFrame. If visualization is ``True``, it returns a</span>
+<span class="sd">                tuple containing the events DataFrame followed by the</span>
+<span class="sd">                visualization outputs dict.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fitted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mlpipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mlpipeline</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mlpipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">visualization</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fitted</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">result</span></div></div>
 </pre></div>
 
               </div>
