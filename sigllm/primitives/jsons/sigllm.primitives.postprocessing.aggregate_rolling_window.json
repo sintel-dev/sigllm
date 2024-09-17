@@ -29,6 +29,10 @@
             "agg": {
                 "type": "str",
                 "default": "median"
+            },
+            "remove_outliers": {
+                "type": "bool",
+                "default": false
             }
         }
     }
