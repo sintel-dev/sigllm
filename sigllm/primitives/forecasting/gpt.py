@@ -94,7 +94,7 @@ class GPT:
             input_length = len(self.tokenizer.encode(text))
             average_length = (input_length + 1) // len(text.split(','))
             max_tokens = average_length * self.steps
-        
+
             if self.chat:
                 message = ' '.join([PROMPTS['user_message'], text, self.sep])
                 response = self.client.chat.completions.create(

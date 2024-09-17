@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 
+
 def outliers(predictions):
     Q1, Q3 = np.percentile(predictions, [25, 75])
 
     IQR = Q3 - Q1
     lower_bound = Q1 - 1.5 * IQR
     upper_bound = Q3 + 1.5 * IQR
-    
+
     predictions[(predictions < lower_bound) | (predictions > upper_bound)] = np.nan
 
     return predictions
