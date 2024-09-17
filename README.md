@@ -3,91 +3,119 @@
 <i>An open source project from Data to AI Lab at MIT.</i>
 </p>
 
-<!-- Uncomment these lines after releasing the package to PyPI for version and downloads badges -->
-<!--[![PyPI Shield](https://img.shields.io/pypi/v/sigllm.svg)](https://pypi.python.org/pypi/sigllm)-->
-<!--[![Downloads](https://pepy.tech/badge/sigllm)](https://pepy.tech/project/sigllm)-->
-[![Github Actions Shield](https://img.shields.io/github/workflow/status/sintel-dev/sigllm/Run%20Tests)](https://github.com/sintel-dev/sigllm/actions)
+[![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
+[![Python](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://badge.fury.io/py/sigllm) 
+[![PyPi Shield](https://img.shields.io/pypi/v/sigllm.svg)](https://pypi.python.org/pypi/sigllm)
+[![Tests](https://img.shields.io/github/workflow/status/sintel-dev/sigllm/Run%20Tests)](https://github.com/sintel-dev/sigllm/actions?query=workflow%3A%22Run+Tests%22+branch%3Amaster)
+[![Downloads](https://pepy.tech/badge/sigllm)](https://pepy.tech/project/sigllm)
 
 
+# SigLLM
 
-# sigllm
-
-Signals plus LLMs
+Using Large Language Models (LLMs) for time series anomaly detection.
 
 - Documentation: https://sintel-dev.github.io/sigllm
 - Homepage: https://github.com/sintel-dev/sigllm
 
 # Overview
 
-TODO: Provide a short overview of the project here.
+SigLLM is an extension of the Orion library, built to detect anomalies in time series data using LLMs.
+We provide two types of pipelines for anomaly detection:
+* **Prompter**: directly prompting LLMs to find anomalies in time series.
+* **Detector**: using LLMs to forecast time series and finding anomalies through by comparing the real and forecasted signals.
 
-# Install
+For more details on our pipelines, please read our (paper)[https://arxiv.org/pdf/2405.14755].
 
-## Requirements
+# Quickstart
 
-**sigllm** has been developed and tested on [Python 3.8, 3.9, 3.10 and 3.11](https://www.python.org/downloads/)
+## Install with pip
 
-Also, although it is not strictly required, the usage of a [virtualenv](https://virtualenv.pypa.io/en/latest/)
-is highly recommended in order to avoid interfering with other software installed in the system
-in which **sigllm** is run.
-
-These are the minimum commands needed to create a virtualenv using python3.8 for **sigllm**:
-
-```bash
-pip install virtualenv
-virtualenv -p $(which python3.6) sigllm-venv
-```
-
-Afterwards, you have to execute this command to activate the virtualenv:
-
-```bash
-source sigllm-venv/bin/activate
-```
-
-Remember to execute it every time you start a new console to work on **sigllm**!
-
-<!-- Uncomment this section after releasing the package to PyPI for installation instructions
-## Install from PyPI
-
-After creating the virtualenv and activating it, we recommend using
-[pip](https://pip.pypa.io/en/stable/) in order to install **sigllm**:
+The easiest and recommended way to install **SigLLM** is using [pip](https://pip.pypa.io/en/stable/):
 
 ```bash
 pip install sigllm
 ```
+This will pull and install the latest stable release from [PyPi](https://pypi.org/).
 
-This will pull and install the latest stable release from [PyPI](https://pypi.org/).
--->
 
-## Install from source
+In the following example we show how to use one of the **SigLLM Pipelines**.
 
-With your virtualenv activated, you can clone the repository and install it from
-source by running `make install` on the `stable` branch:
+# Detect anomalies using a SigLLM pipeline
 
-```bash
-git clone git@github.com:sintel-dev/sigllm.git
-cd sigllm
-git checkout stable
-make install
+We will load a demo data located in `tutorials/data.csv` for this example:
+
+```python3
+import pandas as pd
+
+data = pd.read_csv('data.csv')
+data.head()
 ```
 
-## Install for Development
+which should show a signal with `timestamp` and `value`.
+```
+     timestamp      value
+0	1222840800	 6.357008
+1	1222862400	12.763547
+2	1222884000	18.204697
+3	1222905600	21.972602
+4	1222927200	23.986643
+5	1222948800	24.906765
+```
 
-If you want to contribute to the project, a few more steps are required to make the project ready
-for development.
+In this example we use `gpt_detector` pipeline and set some hyperparameters. In this case, we don't want to keep any decimal values. We also set the thresholding
+ strategy to dynamic.
 
-Please head to the [Contributing Guide](https://sintel-dev.github.io/sigllm/contributing.html#get-started)
-for more details about this process.
+```python3
+from sigllm import SigLLM
 
-# Quickstart
+hyperparameters = {
+    "sigllm.primitives.transformation.Float2Scalar#1": {
+        "decimal": 0
+    },
+    "orion.primitives.timeseries_anomalies.find_anomalies#1": {
+        "fixed_threshold": False
+    }
+}
 
-In this short tutorial we will guide you through a series of steps that will help you
-getting started with **sigllm**.
+sigllm = SigLLM(
+    pipeline='gpt_detector',
+    hyperparameters=hyperparameters
+)
+```
 
-TODO: Create a step by step guide here.
+Now that we have initialized the pipeline, we are ready to use it to detect anomalies:
 
-# What's next?
+```python3
+anomalies = sigllm.detect(data)
+```
+> :warning: Depending on the length of your timeseries, this might take time to run.
 
-For more details about **sigllm** and all its possibilities
-and features, please check the [documentation site](
-https://sintel-dev.github.io/sigllm/).
+The output of the previous command will be a ``pandas.DataFrame`` containing a table of detected anomalies:
+
+```
+        start         end  severity
+0  1225864800  1227139200  0.625879
+```
+
+# Resources
+
+Additional resources that might be of interest:
+* Learn about [Orion](https://github.com/sintel-dev/Orion).
+* Read our [SigLLM](https://arxiv.org/pdf/2405.14755) paper.
+
+
+# Citation
+
+If you use **SigLLM** for your research, please consider citing the following paper:
+
+Sarah Alnegheimish, Linh Nguyen, Laure Berti-Equille, Kalyan Veeramachaneni. [Can Large Language Models be Anomaly Detectors for Time Series?](https://arxiv.org/pdf/2405.14755).
+
+```
+@inproceedings{alnegheimish2024sigllm,
+  title={Can Large Language Models be Anomaly Detectors for Time Series?},
+  author={Alnegheimish, Sarah and Nguyen, Linh and Berti-Equille, Laure and Veeramachaneni, Kalyan},
+  booktitle={2024 IEEE International Conference on Data Science and Advanced Analytics (IEEE DSAA)},
+  organization={IEEE},
+  year={2024}
+}
+```
