@@ -45,6 +45,9 @@ class SigLLM(Orion):
     DEFAULT_PIPELINE = 'mistral_detector'
 
     def _augment_hyperparameters(self, primitive, key, value):
+        if not value:
+            return
+
         if self._hyperparameters is None:
             self._hyperparameters = {
                 primitive: {}
@@ -53,8 +56,7 @@ class SigLLM(Orion):
             if primitive not in self._hyperparameters:
                 self._hyperparameters[primitive] = {}
 
-        if value:
-            self._hyperparameters[primitive][key] = value
+        self._hyperparameters[primitive][key] = value
 
     def __init__(self, pipeline: Union[str, dict, MLPipeline] = None, interval: int = None,
                  decimal: int = None, window_size: int = None, hyperparameters: dict = None):
