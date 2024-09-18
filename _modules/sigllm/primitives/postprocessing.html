@@ -162,7 +162,19 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="aggregate_rolling_window"><a class="viewcode-back" href="../../../api/sigllm.primitives.postprocessing.html#sigllm.primitives.postprocessing.aggregate_rolling_window">[docs]</a><span class="k">def</span> <span class="nf">aggregate_rolling_window</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">agg</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="outliers"><a class="viewcode-back" href="../../../api/sigllm.primitives.postprocessing.html#sigllm.primitives.postprocessing.outliers">[docs]</a><span class="k">def</span> <span class="nf">outliers</span><span class="p">(</span><span class="n">predictions</span><span class="p">):</span>
+    <span class="n">Q1</span><span class="p">,</span> <span class="n">Q3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">75</span><span class="p">])</span>
+
+    <span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
+    <span class="n">lower_bound</span> <span class="o">=</span> <span class="n">Q1</span> <span class="o">-</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+    <span class="n">upper_bound</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">IQR</span>
+
+    <span class="n">predictions</span><span class="p">[(</span><span class="n">predictions</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">predictions</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="k">return</span> <span class="n">predictions</span></div>
+
+
+<div class="viewcode-block" id="aggregate_rolling_window"><a class="viewcode-back" href="../../../api/sigllm.primitives.postprocessing.html#sigllm.primitives.postprocessing.aggregate_rolling_window">[docs]</a><span class="k">def</span> <span class="nf">aggregate_rolling_window</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">agg</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span> <span class="n">remove_outliers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate a rolling window sequence.</span>
 
 <span class="sd">    Convert a rolling window sequence into a flattened time series.</span>
@@ -175,6 +187,8 @@
 <span class="sd">            Stride size used when creating the rolling windows.</span>
 <span class="sd">        agg (string):</span>
 <span class="sd">            String denoting the aggregation method to use. Default is &quot;median&quot;.</span>
+<span class="sd">        remove_outliers (bool):</span>
+<span class="sd">            Indicator to whether remove outliers from the predictions.</span>
 
 <span class="sd">    Return:</span>
 <span class="sd">        ndarray:</span>
@@ -182,6 +196,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">num_windows</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">,</span> <span class="n">pred_length</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">num_errors</span> <span class="o">=</span> <span class="n">pred_length</span> <span class="o">+</span> <span class="n">step_size</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_windows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">remove_outliers</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">outliers</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 
     <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">np</span><span class="p">,</span> <span class="n">agg</span><span class="p">)</span>
     <span class="n">signal</span> <span class="o">=</span> <span class="p">[]</span>

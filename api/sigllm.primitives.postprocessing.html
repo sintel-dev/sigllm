@@ -166,7 +166,7 @@
 <span id="sigllm-primitives-postprocessing-module"></span><h1>sigllm.primitives.postprocessing module<a class="headerlink" href="#module-sigllm.primitives.postprocessing" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="sigllm.primitives.postprocessing.aggregate_rolling_window">
-<code class="sig-prename descclassname">sigllm.primitives.postprocessing.</code><code class="sig-name descname">aggregate_rolling_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">step_size</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">agg</span><span class="o">=</span><span class="default_value">'median'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/postprocessing.html#aggregate_rolling_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.postprocessing.aggregate_rolling_window" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sigllm.primitives.postprocessing.</code><code class="sig-name descname">aggregate_rolling_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">step_size</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">agg</span><span class="o">=</span><span class="default_value">'median'</span></em>, <em class="sig-param"><span class="n">remove_outliers</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/postprocessing.html#aggregate_rolling_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.postprocessing.aggregate_rolling_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Aggregate a rolling window sequence.</p>
 <p>Convert a rolling window sequence into a flattened time series.
 Use the aggregation specified to make each timestamp a single value.</p>
@@ -176,6 +176,7 @@ Use the aggregation specified to make each timestamp a single value.</p>
 <li><p><strong>y</strong> (<em>ndarray</em>) – Windowed sequences. Each timestamp has multiple predictions.</p></li>
 <li><p><strong>step_size</strong> (<em>int</em>) – Stride size used when creating the rolling windows.</p></li>
 <li><p><strong>agg</strong> (<em>string</em>) – String denoting the aggregation method to use. Default is “median”.</p></li>
+<li><p><strong>remove_outliers</strong> (<em>bool</em>) – Indicator to whether remove outliers from the predictions.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -186,6 +187,11 @@ Use the aggregation specified to make each timestamp a single value.</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt id="sigllm.primitives.postprocessing.outliers">
+<code class="sig-prename descclassname">sigllm.primitives.postprocessing.</code><code class="sig-name descname">outliers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">predictions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/postprocessing.html#outliers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.postprocessing.outliers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </section>
 
