@@ -1,5 +1,5 @@
 {
-    "name": "sigllm.primitives.timeseries_preprocessing.rolling_window_sequences",
+    "name": "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences",
     "contributors": [
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
@@ -10,36 +10,36 @@
         "subtype": "rolling windows"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.timeseries_preprocessing.rolling_window_sequences",
+    "primitive": "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences",
     "produce": {
         "method": "rolling_window_sequences",
         "args": [
             {
                 "name": "X",
                 "type": "ndarray"
-            },
-            {
-                "name": "index",
-                "type": "ndarray"
-            },
-            {
-                "name": "window_size",
-                "type": "int"
-            }, 
-            {
-                "name": "step_size",
-                "type": "int"
             }
         ],
         "output": [
             {
-                "name": "out_X",
+                "name": "X",
                 "type": "ndarray"
             },
             {
-                "name": "X_index",
+                "name": "first_index",
                 "type": "ndarray"
             }
-        ]
+        ], 
+        "hyperparameters": {
+            "fixed": {
+                "window_size": {
+                    "type": "int",
+                    "default": 500
+                },
+                "step_size": {
+                    "type": "int",
+                    "default": 100
+                }
+            }
+        }
     }
 }

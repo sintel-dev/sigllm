@@ -15,17 +15,17 @@
         "method": "val2idx",
         "args": [
             {
-                "name": "vals",
+                "name": "y",
                 "type": "ndarray"
             },
             {
-                "name": "windows",
+                "name": "X",
                 "type": "ndarray"
             }
         ],
         "output": [
             {
-                "name": "idx_list",
+                "name": "y",
                 "type": "ndarray"
             }
         ]

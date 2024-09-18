@@ -15,7 +15,7 @@
         "method": "timestamp2interval",
         "args": [
             {
-                "name": "timestamp_list",
+                "name": "y",
                 "type": "ndarray"
             },
             {
@@ -23,17 +23,13 @@
                 "type": "int"
             },
             {
-                "name": "start",
-                "type": "timestamp"
-            },
-            {
-                "name": "end",
-                "type": "timestamp"
+                "name": "timestamp",
+                "type": "ndarray"
             }
         ],
         "output": [
             {
-                "name": "merged_intervals",
+                "name": "anomalies",
                 "type": "List[Tuple(start, end)]"
             }
         ]

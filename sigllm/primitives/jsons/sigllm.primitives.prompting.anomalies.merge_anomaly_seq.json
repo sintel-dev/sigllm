@@ -15,11 +15,11 @@
         "method": "merge_anomaly_seq",
         "args": [
             {
-                "name": "anomalies",
+                "name": "y",
                 "type": "ndarray"
             }, 
             {
-                "name": "start_indices",
+                "name": "first_index",
                 "type": "ndarray"
             },
             {
@@ -29,15 +29,11 @@
             {
                 "name": "step_size",
                 "type": "int"
-            },
-            {
-                "name": "beta",
-                "type": "float"
             }
         ],
         "output": [
             {
-                "name": "final_list",
+                "name": "y",
                 "type": "ndarray"
             }
         ]

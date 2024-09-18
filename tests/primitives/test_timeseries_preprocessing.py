@@ -1,6 +1,6 @@
 import numpy as np
 from pytest import fixture
-from sigllm.primitives.timeseries_preprocessing import rolling_window_sequences
+from sigllm.primitives.prompting.timeseries_preprocessing import rolling_window_sequences
 
 @fixture
 def indices():

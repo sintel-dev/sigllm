@@ -34,11 +34,33 @@ class HF:
             Model name. Default to `'mistralai/Mistral-7B-Instruct-v0.2'`.
         sep (str):
             String to separate each element in values. Default to `','`.
+        anomalous_percent (float): 
+            Expected percentage of time series that are anomalous. Default to `0.5`.
+        temp (float):
+            The value used to modulate the next token probabilities. Default to `1`.
+        top_p (float):
+            If set to float < 1, only the smallest set of most probable tokens with
+            probabilities that add up to `top_p` or higher are kept for generation.
+            Default to `1`.
+        raw (bool):
+            Whether to return the raw output or not. Defaults to `False`.
+        samples (int):
+            Number of responsed to generate for each input message. Default to `10`.
+        padding (int):
+            Additional padding token to forecast to reduce short horizon predictions.
+            Default to `0`.
     """
 
-    def __init__(self, name=DEFAULT_MODEL, sep=','):
+    def __init__(self, name=DEFAULT_MODEL, sep=',', anomalous_percent = 0.5, temp=1, top_p=1, 
+                 raw=False, samples=10, padding=0):
         self.name = name
         self.sep = sep
+        self.anomalous_percent = anomalous_percent
+        self.temp = temp
+        self.top_p = top_p
+        self.raw = raw
+        self.samples = samples
+        self.padding = padding
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.name, use_fast=False)
 
@@ -74,40 +96,28 @@ class HF:
 
         self.model.eval()
 
-    def detect(self, text, anomalous_percent = 0.5, temp=1, top_p=1, raw=False, samples=10, padding=0):
-        """Use GPT to forecast a signal.
+    def detect(self, X, **kwargs):
+        """Use HF to detect anomalies of a signal.
 
         Args:
-            text (str):
-                A string containing signal values.
-            anomalous_percent (float): 
-                Expected percentage of time series that are anomalous. Default to `0.5`.
-            temp (float):
-                The value used to modulate the next token probabilities. Default to `1`.
-            top_p (float):
-                 If set to float < 1, only the smallest set of most probable tokens with
-                 probabilities that add up to `top_p` or higher are kept for generation.
-                 Default to `1`.
-            raw (bool):
-                Whether to return the raw output or not. Defaults to `False`.
-            samples (int):
-                Number of responsed to generate for each input message. Default to `10`.
-            padding (int):
-                Additional padding token to forecast to reduce short horizon predictions.
-                Default to `0`.
-
+            X (ndarray):
+                Input sequences of strings containing signal values
+            
         Returns:
             list, list:
-                * List of forecasted signal values.
+                * List of detected anomalous values.
                 * Optionally, a list of dictionaries for raw output.
         """
-        input_length = len(self.tokenizer.encode(text))
-        max_tokens = input_length * anomalous_percent
 
-        message = ' '.join((PROMPTS['system_message'], PROMPTS['user_message'], text, '[RESPONSE]'))
+        input_length = len(self.tokenizer.encode(X[0]))
+        max_tokens = input_length * self.anomalous_percent
+
+        message = []
+        for text in X: 
+            message.append(' '.join((PROMPTS['system_message'], PROMPTS['user_message'], text, '[RESPONSE]')))
 
         tokenized_input = self.tokenizer(
-            [message],
+            message,
             return_tensors="pt"
         ).to("cuda")
 
@@ -115,11 +125,11 @@ class HF:
             **tokenized_input,
             do_sample=True,
             max_new_tokens=max_tokens,
-            temperature=temp,
-            top_p=top_p,
+            temperature=self.temp,
+            top_p=self.top_p,
             bad_words_ids=self.invalid_tokens,
             renormalize_logits=True,
-            num_return_sequences=samples
+            num_return_sequences=self.samples
         )
 
         responses = self.tokenizer.batch_decode(
@@ -128,7 +138,7 @@ class HF:
             clean_up_tokenization_spaces=False
         )
 
-        if raw:
+        if self.raw:
             return responses, generate_ids
 
         return responses

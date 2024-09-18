@@ -75,16 +75,15 @@ def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5
 
     Args:
         anomalies (ndarray):
-            A 2-dimensional array containing anomous indices of each window.
+            A 2-dimensional array containing anomalous indices of each window.
         start_indices (ndarray):
             A 1-dimensional array contaning the first index of each window.
         window_size (int):
-            Length of each window.
+            Length of each window
         step_size (int):
             Indicating the number of steps the window moves forward each round.
         beta (float):
             Percentage of containing windows needed for index to be deemed anomalous. Default to `0.5`.
-
     Return:
         ndarray:
             A 1-dimensional array containing final anomalous indices.
@@ -101,7 +100,7 @@ def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5
 
     return np.sort(final_list)
 
-def idx2time(sequence, idx_list):
+def idx2time(timestamp, idx_list):
     """Convert list of indices into list of timestamp
 
     Args:
@@ -114,10 +113,10 @@ def idx2time(sequence, idx_list):
         ndarray:
             A 1-dimensional array containing timestamps.
     """
-    timestamp_list = sequence.iloc[idx_list].timestamp.to_numpy()
+    timestamp_list = timestamp[idx_list]
     return timestamp_list
 
-def timestamp2interval(timestamp_list, interval, start, end, padding_size = 50): 
+def timestamp2interval(timestamp_list, interval, timestamp, padding_size = 50): 
     """Convert list of timestamps to list of intervals by padding to both sides
     and merge overlapping 
     
@@ -126,10 +125,8 @@ def timestamp2interval(timestamp_list, interval, start, end, padding_size = 50):
             A 1d array of point timestamps.
         interval (int):
             The fixed gap between two consecutive timestamps of the time series.
-        start (timestamp): 
-            The start timestamp of the time series.
-        end (timestamp): 
-            The end timestamp of the time series.
+        timestamp (ndarray):
+            List of full timestamp of the signal
         padding_size (int): 
             Number of steps to pad on both sides of a timestamp point. Default to `50`.
              
@@ -137,6 +134,7 @@ def timestamp2interval(timestamp_list, interval, start, end, padding_size = 50):
         List[Tuple(start, end)]:
             A list of intervals.
     """
+    start, end = timestamp[0], timestamp[-1]
     intervals = []
     for timestamp in timestamp_list: 
         intervals.append((max(start, timestamp-padding_size*interval), min(end, timestamp+padding_size*interval)))

@@ -5,6 +5,7 @@ import os
 
 import openai
 import tiktoken
+from tqdm import tqdm
 
 PROMPT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -25,6 +26,27 @@ class GPT:
             Model name. Default to `'gpt-3.5-turbo'`.
         sep (str):
             String to separate each element in values. Default to `','`.
+        anomalous_percent (float): 
+                Expected percentage of time series that are anomalous. Default to `0.5`.
+        temp (float):
+            Sampling temperature to use, between 0 and 2. Higher values like 0.8 will
+            make the output more random, while lower values like 0.2 will make it
+            more focused and deterministic. Do not use with `top_p`. Default to `1`.
+        top_p (float):
+            Alternative to sampling with temperature, called nucleus sampling, where the
+            model considers the results of the tokens with top_p probability mass.
+            So 0.1 means only the tokens comprising the top 10% probability mass are
+            considered. Do not use with `temp`. Default to `1`.
+        logprobs (bool):
+            Whether to return the log probabilities of the output tokens or not.
+            Defaults to `False`.
+        top_logprobs (int):
+            An integer between 0 and 20 specifying the number of most likely tokens
+            to return at each token position. Default to `None`.
+        samples (int):
+            Number of responses to generate for each input message. Default to `10`.
+        seed (int):
+            Beta feature by OpenAI to sample deterministically. Default to `None`.
     """
 
     def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent = 0.5, temp=1, top_p=1, logprobs=False, top_logprobs=None,
@@ -54,29 +76,8 @@ class GPT:
         """Use GPT to forecast a signal.
 
         Args:
-            text (str):
-                A string containing signal values.
-            anomalous_percent (float): 
-                Expected percentage of time series that are anomalous. Default to `0.5`.
-            temp (float):
-                Sampling temperature to use, between 0 and 2. Higher values like 0.8 will
-                make the output more random, while lower values like 0.2 will make it
-                more focused and deterministic. Do not use with `top_p`. Default to `1`.
-            top_p (float):
-                Alternative to sampling with temperature, called nucleus sampling, where the
-                model considers the results of the tokens with top_p probability mass.
-                So 0.1 means only the tokens comprising the top 10% probability mass are
-                considered. Do not use with `temp`. Default to `1`.
-            logprobs (bool):
-                Whether to return the log probabilities of the output tokens or not.
-                Defaults to `False`.
-            top_logprobs (int):
-                An integer between 0 and 20 specifying the number of most likely tokens
-                to return at each token position. Default to `None`.
-            samples (int):
-                Number of responses to generate for each input message. Default to `10`.
-            seed (int):
-                Beta feature by OpenAI to sample deterministically. Default to `None`.
+            X (ndarray):
+                Input sequences of strings containing signal values.
 
         Returns:
             list, list:
@@ -86,25 +87,33 @@ class GPT:
         input_length = len(self.tokenizer.encode(X[0]))
         max_tokens = input_length * self.anomalous_percent
 
-        message = ' '.join(PROMPTS['user_message'], text, self.sep)
-        response = openai.ChatCompletion.create(
-            model=self.name,
-            messages=[
-                {"role": "system", "content": PROMPTS['system_message']},
-                {"role": "user", "content": message}
-            ],
-            max_tokens=max_tokens,
-            temperature=self.temp,
-            logprobs=self.logprobs,
-            top_logprobs=self.top_logprobs,
-            n=self.samples,
-        )
-        responses = [choice.message.content for choice in response.choices]
-        if self.logprobs:
-            probs = [choice.logprobs for choice in response.choices]
-            return responses, probs
+        all_responses, all_probs = [], []
+        for text in tqdm(X):
+            message = ' '.join(PROMPTS['user_message'], text, self.sep)
+            response = openai.ChatCompletion.create(
+                model=self.name,
+                messages=[
+                    {"role": "system", "content": PROMPTS['system_message']},
+                    {"role": "user", "content": message}
+                ],
+                max_tokens=max_tokens,
+                temperature=self.temp,
+                logprobs=self.logprobs,
+                top_logprobs=self.top_logprobs,
+                n=self.samples,
+                seed = self.seed
+            )
+            responses = [choice.message.content for choice in response.choices]
+            if self.logprobs:
+                probs = [choice.logprobs for choice in response.choices]
+                all_probs.append(probs)
 
-        return responses
+            all_responses.append(responses)
+        
+        if self.logprobs:
+            return all_responses, all_probs
+
+        return all_responses
 
 
 

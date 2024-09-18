@@ -15,17 +15,17 @@
         "method": "idx2time",
         "args": [
             {
-                "name": "sequence",
-                "type": "DataFrame"
+                "name": "timestamp",
+                "type": "ndarray"
             }, 
             {
-                "name": "idx_list",
+                "name": "y",
                 "type": "ndarray"
             }
         ],
         "output": [
             {
-                "name": "timestamp_list",
+                "name": "y",
                 "type": "ndarray"
             }
         ]

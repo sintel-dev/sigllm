@@ -15,13 +15,13 @@
         "method": "ano_within_windows",
         "args": [
             {
-                "name": "idx_win_list",
+                "name": "y",
                 "type": "ndarray"
             }
         ],
         "output": [
             {
-                "name": "idx_list",
+                "name": "y",
                 "type": "ndarray"
             }
         ]

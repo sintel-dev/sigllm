@@ -9,7 +9,7 @@ This module contains functions that prepare timeseries for a language model.
 import numpy as np
 
 
-def rolling_window_sequences(X, index, window_size, step_size):
+def rolling_window_sequences(X, window_size = 500, step_size = 100):
     """Create rolling window sequences out of time series data.
 
     This function creates an array of sequences by rolling over the input sequence.
@@ -17,18 +17,17 @@ def rolling_window_sequences(X, index, window_size, step_size):
     Args:
         X (ndarray):
             The sequence to iterate over.
-        index (ndarray):
-            Array containing the index values of X.
         window_size (int):
-            Length of window.
+            Length of window. Defaults to 500
         step_size (int):
-            Indicating the number of steps to move the window forward each round.
+            Indicating the number of steps to move the window forward each round. Defaults to 100
 
     Returns:
         ndarray, ndarray:
             * rolling window sequences.
             * first index value of each input sequence.
     """
+    index = range(len(X))
     out_X = list()
     X_index = list()
 
