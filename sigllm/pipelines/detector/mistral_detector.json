@@ -4,7 +4,7 @@
         "sklearn.impute.SimpleImputer",
         "sigllm.primitives.transformation.Float2Scalar",
         "sigllm.primitives.forecasting.custom.rolling_window_sequences",
-	"sigllm.primitives.transformation.format_as_string",
+        "sigllm.primitives.transformation.format_as_string",
         "sigllm.primitives.forecasting.huggingface.HF",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.transformation.Scalar2Float",

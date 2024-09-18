@@ -5,6 +5,7 @@ import os
 
 import openai
 import tiktoken
+from openai import OpenAI
 from tqdm import tqdm
 
 PROMPT_PATH = os.path.join(
@@ -74,6 +75,8 @@ class GPT:
         valid_tokens.extend(self.tokenizer.encode(self.sep))
         self.logit_bias = {token: BIAS for token in valid_tokens}
 
+        self.client = OpenAI()
+
     def forecast(self, X, **kwargs):
         """Use GPT to forecast a signal.
 
@@ -86,21 +89,21 @@ class GPT:
                 * List of forecasted signal values.
                 * Optionally, a list of the output tokens' log probabilities.
         """
-        input_length = len(self.tokenizer.encode(X[0]))
-        average_length = (input_length + 1) // len(X[0].split(','))
-        max_tokens = average_length * self.steps
-
         all_responses, all_probs = [], []
         for text in tqdm(X):
+            input_length = len(self.tokenizer.encode(text))
+            average_length = (input_length + 1) // len(text.split(','))
+            max_tokens = average_length * self.steps
+
             if self.chat:
-                message = ' '.join(PROMPTS['user_message'], text, self.sep)
-                response = openai.ChatCompletion.create(
+                message = ' '.join([PROMPTS['user_message'], text, self.sep])
+                response = self.client.chat.completions.create(
                     model=self.name,
                     messages=[
                         {"role": "system", "content": PROMPTS['system_message']},
                         {"role": "user", "content": message}
                     ],
-                    max_tokens=max_tokens,
+                    max_completion_tokens=max_tokens,
                     temperature=self.temp,
                     top_p=self.top_p,
                     logprobs=self.logprobs,
@@ -111,7 +114,7 @@ class GPT:
                 responses = [choice.message.content for choice in response.choices]
 
             else:
-                message = ' '.join(text, self.sep)
+                message = ' '.join([text, self.sep])
                 response = openai.Completion.create(
                     model=self.name,
                     prompt=message,
@@ -135,4 +138,4 @@ class GPT:
         if self.logprobs:
             return all_responses, all_probs
 
-        return responses
+        return all_responses
