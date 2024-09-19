@@ -7,18 +7,19 @@ This module contains functions that help filter LLMs results to get the final an
 """
 
 import numpy as np
+import pandas as pd
 
-def val2idx(vals, windows): 
+def val2idx(y, X): 
     """Convert detected anomalies values into indices.
     
     Convert windows of detected anomalies values into an array of all indices
     in the input sequence that have those values. 
     
     Args: 
-        vals (ndarray): 
+        y (ndarray): 
             A 3d array containing detected anomalous values from different
             responses of each window.
-        windows (ndarray):
+        X (ndarray):
             rolling window sequences.      
     Returns: 
         List([ndarray]):
@@ -27,7 +28,7 @@ def val2idx(vals, windows):
     """
 
     idx_list = []
-    for anomalies_list, seq in zip(vals, windows): 
+    for anomalies_list, seq in zip(y, X): 
         idx_win_list = []
         for anomalies in anomalies_list:
             mask = np.isin(seq, anomalies)
@@ -38,13 +39,13 @@ def val2idx(vals, windows):
     idx_list = np.array(idx_list, dtype=object)
     return idx_list
 
-def ano_within_windows(idx_win_list, alpha=0.5):
+def ano_within_windows(y, alpha=0.5):
     """Get the final list of anomalous indices of each window
 
     Choose anomalous index in the sequence based on multiple LLM responses
 
     Args:
-        idx_win_list (ndarray):
+        y (ndarray):
             A 3d array containing detected anomalous values from different
             responses of each window.
         alpha (float):
@@ -56,7 +57,7 @@ def ano_within_windows(idx_win_list, alpha=0.5):
     """
     
     idx_list = []
-    for samples in idx_win_list:
+    for samples in y:
         min_vote = np.ceil(alpha * len(samples))
         #print(type(samples.tolist()))
 
@@ -70,13 +71,13 @@ def ano_within_windows(idx_win_list, alpha=0.5):
     idx_list = np.array(idx_list, dtype = object)
     return idx_list
 
-def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5):
+def merge_anomaly_seq(y, first_index, window_size, step_size, beta=0.5):
     """Get the final list of anomalous indices of a sequence when merging all rolling windows
 
     Args:
-        anomalies (ndarray):
+        y (ndarray):
             A 2-dimensional array containing anomalous indices of each window.
-        start_indices (ndarray):
+        first_index (ndarray):
             A 1-dimensional array contaning the first index of each window.
         window_size (int):
             Length of each window
@@ -88,7 +89,7 @@ def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5
         ndarray:
             A 1-dimensional array containing final anomalous indices.
     """
-    anomalies = [arr + first_idx for (arr, first_idx) in zip(anomalies, start_indices)]
+    anomalies = [arr + first_idx for (arr, first_idx) in zip(y, first_index)]
 
     min_vote = np.ceil(beta * window_size / step_size)
 
@@ -100,31 +101,29 @@ def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5
 
     return np.sort(final_list)
 
-def idx2time(timestamp, idx_list):
+def idx2time(timestamp, y):
     """Convert list of indices into list of timestamp
 
     Args:
         sequence (DataFrame):
             Signal with timestamps and values.
-        idx_list (ndarray):
+        y (ndarray):
             A 1-dimensional array of indices.
 
     Returns:
         ndarray:
             A 1-dimensional array containing timestamps.
     """
-    timestamp_list = timestamp[idx_list]
+    timestamp_list = timestamp[y]
     return timestamp_list
 
-def timestamp2interval(timestamp_list, interval, timestamp, padding_size = 50): 
+def timestamp2interval(y, timestamp, padding_size = 50): 
     """Convert list of timestamps to list of intervals by padding to both sides
     and merge overlapping 
     
     Args: 
-        timestamp_list (ndarray): 
+        y (ndarray): 
             A 1d array of point timestamps.
-        interval (int):
-            The fixed gap between two consecutive timestamps of the time series.
         timestamp (ndarray):
             List of full timestamp of the signal
         padding_size (int): 
@@ -135,8 +134,9 @@ def timestamp2interval(timestamp_list, interval, timestamp, padding_size = 50):
             A list of intervals.
     """
     start, end = timestamp[0], timestamp[-1]
+    interval = timestamp[1] - timestamp[0]
     intervals = []
-    for timestamp in timestamp_list: 
+    for timestamp in y: 
         intervals.append((max(start, timestamp-padding_size*interval), min(end, timestamp+padding_size*interval)))
     if not intervals:
         return []
@@ -153,5 +153,7 @@ def timestamp2interval(timestamp_list, interval, timestamp, padding_size = 50):
             merged_intervals[-1] = previous_interval
         else:
             merged_intervals.append(current_interval)  # Append the current interval if no overlap
-
-    return merged_intervals
+            
+    df = pd.DataFrame(merged_intervals, columns=['start', 'end'])
+    df['score'] = 0
+    return df

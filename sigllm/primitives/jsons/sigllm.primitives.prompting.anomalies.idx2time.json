@@ -12,7 +12,6 @@
     "modalities": [],
     "primitive": "sigllm.primitives.prompting.anomalies.idx2time",
     "produce": {
-        "method": "idx2time",
         "args": [
             {
                 "name": "timestamp",

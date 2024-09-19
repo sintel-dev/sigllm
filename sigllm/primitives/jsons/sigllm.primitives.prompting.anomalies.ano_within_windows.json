@@ -12,7 +12,6 @@
     "modalities": [],
     "primitive": "sigllm.primitives.prompting.anomalies.ano_within_windows",
     "produce": {
-        "method": "ano_within_windows",
         "args": [
             {
                 "name": "y",

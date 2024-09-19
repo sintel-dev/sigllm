@@ -12,7 +12,6 @@
     "modalities": [],
     "primitive": "sigllm.primitives.transformation.format_as_string",
     "produce": {
-        "method": "format_as_string",
         "args": [
             {
                 "name": "X",

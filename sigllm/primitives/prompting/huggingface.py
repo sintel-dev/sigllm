@@ -3,6 +3,7 @@
 import json
 import os
 import logging
+from tqdm import tqdm
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -109,36 +110,41 @@ class HF:
                 * Optionally, a list of dictionaries for raw output.
         """
 
-        input_length = len(self.tokenizer.encode(X[0]))
-        max_tokens = input_length * self.anomalous_percent
+        input_length = len(self.tokenizer.encode(X[0].flatten().tolist()[0]))
+        max_tokens = input_length * float(self.anomalous_percent)
+        all_responses, all_generate_ids = [], []
 
-        message = []
-        for text in X: 
-            message.append(' '.join((PROMPTS['system_message'], PROMPTS['user_message'], text, '[RESPONSE]')))
+        for text in tqdm(X): 
+            text = text.flatten().tolist()
+            message = [' '.join((PROMPTS['system_message'], PROMPTS['user_message'], x, '[RESPONSE]')) for x in text]
 
-        tokenized_input = self.tokenizer(
-            message,
-            return_tensors="pt"
-        ).to("cuda")
+            input_length = len(self.tokenizer.encode(message[0]))
 
-        generate_ids = self.model.generate(
-            **tokenized_input,
-            do_sample=True,
-            max_new_tokens=max_tokens,
-            temperature=self.temp,
-            top_p=self.top_p,
-            bad_words_ids=self.invalid_tokens,
-            renormalize_logits=True,
-            num_return_sequences=self.samples
-        )
+            tokenized_input = self.tokenizer(
+                message,
+                return_tensors="pt"
+                    ).to("cuda")
+            
+            generate_ids = self.model.generate(
+                **tokenized_input,
+                do_sample=True,
+                max_new_tokens=max_tokens,
+                temperature=self.temp,
+                top_p=self.top_p,
+                bad_words_ids=self.invalid_tokens,
+                renormalize_logits=True,
+                num_return_sequences=self.samples
+            )
 
-        responses = self.tokenizer.batch_decode(
-            generate_ids[:, input_length:],
-            skip_special_tokens=True,
-            clean_up_tokenization_spaces=False
-        )
+            responses = self.tokenizer.batch_decode(
+                generate_ids[:, input_length:],
+                skip_special_tokens=True,
+                clean_up_tokenization_spaces=False
+            )
+            all_responses.append(responses)
+            all_generate_ids.append(generate_ids)
 
         if self.raw:
-            return responses, generate_ids
+            return all_responses, all_generate_ids
 
-        return responses
+        return all_responses

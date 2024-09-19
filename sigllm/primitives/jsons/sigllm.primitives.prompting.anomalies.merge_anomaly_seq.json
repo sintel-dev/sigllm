@@ -12,7 +12,6 @@
     "modalities": [],
     "primitive": "sigllm.primitives.prompting.anomalies.merge_anomaly_seq",
     "produce": {
-        "method": "merge_anomaly_seq",
         "args": [
             {
                 "name": "y",

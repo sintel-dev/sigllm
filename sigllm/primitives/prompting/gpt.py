@@ -84,12 +84,12 @@ class GPT:
                 * List of detected anomalous values.
                 * Optionally, a list of the output tokens' log probabilities.
         """
-        input_length = len(self.tokenizer.encode(X[0]))
-        max_tokens = input_length * self.anomalous_percent
+        input_length = len(self.tokenizer.encode(X[0][0]))
+        max_tokens = input_length * float(self.anomalous_percent)
 
         all_responses, all_probs = [], []
         for text in tqdm(X):
-            message = ' '.join(PROMPTS['user_message'], text, self.sep)
+            message = ' '.join(PROMPTS['user_message'], text[0], self.sep)
             response = openai.ChatCompletion.create(
                 model=self.name,
                 messages=[

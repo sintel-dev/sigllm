@@ -4,7 +4,7 @@
         "sklearn.impute.SimpleImputer",
         "sigllm.primitives.transformation.Float2Scalar",
         "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences",
-	"sigllm.primitives.transformation.format_as_string",
+	    "sigllm.primitives.transformation.format_as_string",
         "sigllm.primitives.prompting.huggingface.HF",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.prompting.anomalies.val2idx",
@@ -23,6 +23,10 @@
             "decimal": 2,
             "rescale": true
         },
+        "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences#1": {
+            "window_size": 200,
+            "step_size": 40
+        },
         "sigllm.primitives.transformation.format_as_string#1": {
             "space": false
         },
@@ -30,17 +34,14 @@
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
             "samples": 10
         },
-        "sigllm.primitives.prompting.anomalies.ano_within_windows": {
+        "sigllm.primitives.prompting.anomalies.ano_within_windows#1": {
             "alpha": 0.4
         },
-        "orion.primitives.prompting.anomalies.merge_anomaly_seq": {
+        "sigllm.primitives.prompting.anomalies.merge_anomaly_seq#1": {
             "beta": 0.5
         }
     },
     "input_names": {
-	"sigllm.primitives.transformation.Float2Scalar#1": {
-	    "X": "y"
-	},
     "sigllm.primitives.prompting.huggingface.HF#1": {
         "X": "X_str"
     },
@@ -52,9 +53,6 @@
     "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
         "index": "timestamp"
     },
-	"sklearn.impute.SimpleImputer#1": {
-	    "X": "y"
-	},
     "sigllm.primitives.transformation.format_as_string#1": {
         "X": "X_str"
     },

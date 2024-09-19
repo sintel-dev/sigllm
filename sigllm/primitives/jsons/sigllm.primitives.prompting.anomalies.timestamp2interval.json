@@ -12,15 +12,10 @@
     "modalities": [],
     "primitive": "sigllm.primitives.prompting.anomalies.timestamp2interval",
     "produce": {
-        "method": "timestamp2interval",
         "args": [
             {
                 "name": "y",
                 "type": "ndarray"
-            },
-            {
-                "name": "interval",
-                "type": "int"
             },
             {
                 "name": "timestamp",
@@ -29,8 +24,8 @@
         ],
         "output": [
             {
-                "name": "anomalies",
-                "type": "List[Tuple(start, end)]"
+                "name": "df",
+                "type": "Dataframe"
             }
         ]
     }, 

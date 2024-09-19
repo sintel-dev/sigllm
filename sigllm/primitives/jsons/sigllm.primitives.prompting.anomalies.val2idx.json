@@ -12,7 +12,6 @@
     "modalities": [],
     "primitive": "sigllm.primitives.prompting.anomalies.val2idx",
     "produce": {
-        "method": "val2idx",
         "args": [
             {
                 "name": "y",

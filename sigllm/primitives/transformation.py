@@ -10,7 +10,7 @@ import re
 import numpy as np
 
 
-def format_as_string(values, sep=',', space=False):
+def format_as_string(X, sep=',', space=False):
     """Format values to a list of string.
 
     Transform a 2-D array of integers to a list of strings,
@@ -34,7 +34,7 @@ def format_as_string(values, sep=',', space=False):
 
         return text
 
-    return np.apply_along_axis(_as_string, axis=1, arr=values)
+    return np.apply_along_axis(_as_string, axis=1, arr=X)
 
 
 def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
@@ -71,7 +71,7 @@ def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
     return clean
 
 
-def format_as_integer(strings, sep=',', trunc=None, errors='ignore'):
+def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
     """Format a nested list of text into an array of integers.
 
     Transforms a list of list of string input as 3-D array of integers,
@@ -96,7 +96,7 @@ def format_as_integer(strings, sep=',', trunc=None, errors='ignore'):
             An array of digits values.
     """
     result = list()
-    for string_list in strings:
+    for string_list in X:
         sample = list()
         if not isinstance(string_list, list):
             raise ValueError("Input is not a list of lists.")
