@@ -62,16 +62,14 @@ which should show a signal with `timestamp` and `value`.
 5	1222948800	24.906765
 ```
 
-In this example we use `gpt_detector` pipeline and set some hyperparameters. In this case, we don't want to keep any decimal values. We also set the thresholding
- strategy to dynamic.
+In this example we use `gpt_detector` pipeline and set some hyperparameters. In this case, we set the thresholding strategy to dynamic. The hyperparameters are optional and can be removed.
+
+In addtion, the `SigLLM` object takes in a `decimal` argument to determine how many digits from the float value include. Here, we don't want to keep any decimal values, so we set it to zero.
 
 ```python3
 from sigllm import SigLLM
 
 hyperparameters = {
-    "sigllm.primitives.transformation.Float2Scalar#1": {
-        "decimal": 0
-    },
     "orion.primitives.timeseries_anomalies.find_anomalies#1": {
         "fixed_threshold": False
     }
@@ -79,6 +77,7 @@ hyperparameters = {
 
 sigllm = SigLLM(
     pipeline='gpt_detector',
+    decimal=0,
     hyperparameters=hyperparameters
 )
 ```
@@ -101,7 +100,7 @@ The output of the previous command will be a ``pandas.DataFrame`` containing a t
 
 Additional resources that might be of interest:
 * Learn about [Orion](https://github.com/sintel-dev/Orion).
-* Read our [SigLLM](https://arxiv.org/pdf/2405.14755) paper.
+* Read our [paper](https://arxiv.org/pdf/2405.14755).
 
 
 # Citation
@@ -114,7 +113,7 @@ Sarah Alnegheimish, Linh Nguyen, Laure Berti-Equille, Kalyan Veeramachaneni. [Ca
 @inproceedings{alnegheimish2024sigllm,
   title={Can Large Language Models be Anomaly Detectors for Time Series?},
   author={Alnegheimish, Sarah and Nguyen, Linh and Berti-Equille, Laure and Veeramachaneni, Kalyan},
-  booktitle={2024 IEEE International Conference on Data Science and Advanced Analytics (IEEE DSAA)},
+  booktitle={2024 IEEE International Conferencze on Data Science and Advanced Analytics (IEEE DSAA)},
   organization={IEEE},
   year={2024}
 }
