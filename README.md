@@ -6,7 +6,7 @@
 [![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 [![Python](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://badge.fury.io/py/sigllm) 
 [![PyPi Shield](https://img.shields.io/pypi/v/sigllm.svg)](https://pypi.python.org/pypi/sigllm)
-[![Tests](https://img.shields.io/github/workflow/status/sintel-dev/sigllm/Run%20Tests)](https://github.com/sintel-dev/sigllm/actions?query=workflow%3A%22Run+Tests%22+branch%3Amaster)
+[![Run Tests](https://github.com/sintel-dev/sigllm/actions/workflows/tests.yml/badge.svg)](https://github.com/sintel-dev/sigllm/actions/workflows/tests.yml)
 [![Downloads](https://pepy.tech/badge/sigllm)](https://pepy.tech/project/sigllm)
 
 
@@ -14,7 +14,7 @@
 
 Using Large Language Models (LLMs) for time series anomaly detection.
 
-- Documentation: https://sintel-dev.github.io/sigllm
+<!-- - Documentation: https://sintel-dev.github.io/sigllm -->
 - Homepage: https://github.com/sintel-dev/sigllm
 
 # Overview
@@ -24,7 +24,7 @@ We provide two types of pipelines for anomaly detection:
 * **Prompter**: directly prompting LLMs to find anomalies in time series.
 * **Detector**: using LLMs to forecast time series and finding anomalies through by comparing the real and forecasted signals.
 
-For more details on our pipelines, please read our (paper)[https://arxiv.org/pdf/2405.14755].
+For more details on our pipelines, please read our [paper](https://arxiv.org/pdf/2405.14755).
 
 # Quickstart
 
