@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Install from source &#8212; sigllm 0.0.1.dev0 documentation</title>
+    <title>SigLLM &#8212; sigllm 0.0.1.dev0 documentation</title>
     
   <link rel="stylesheet" href="_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -40,7 +40,7 @@
     <link rel="shortcut icon" href="_static/dai-logo-white.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Install from source" href="readme.html" />
+    <link rel="next" title="SigLLM" href="readme.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
   </head>
@@ -63,7 +63,23 @@
         
         
         <li class="nav-item ">
-            <a class="nav-link" href="readme.html">Install from source</a>
+            <a class="nav-link" href="readme.html">SigLLM</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
         </li>
         
         <li class="nav-item ">
@@ -133,6 +149,14 @@
         
         
         
+        
+        
+        
+        
+        
+        
+        
+        
       </ul>
   
   </nav>
@@ -150,25 +174,37 @@
     <ul class="nav section-nav flex-column">
     
         <li class="nav-item toc-entry toc-h2">
-            <a href="#" class="nav-link">Install from source</a>
+            <a href="#" class="nav-link">SigLLM</a>
         </li>
     
         <li class="nav-item toc-entry toc-h2">
-            <a href="#install-for-development" class="nav-link">Install for Development</a><ul class="nav section-nav flex-column">
+            <a href="#overview" class="nav-link">Overview</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#quickstart" class="nav-link">Quickstart</a><ul class="nav section-nav flex-column">
                 
         <li class="nav-item toc-entry toc-h3">
-            <a href="#quickstart" class="nav-link">Quickstart</a>
-        </li>
-    
-        <li class="nav-item toc-entry toc-h3">
-            <a href="#what-s-next" class="nav-link">What’s next?</a>
-        </li>
-    
-        <li class="nav-item toc-entry toc-h3">
-            <a href="#indices-and-tables" class="nav-link">Indices and tables</a>
+            <a href="#install-with-pip" class="nav-link">Install with pip</a>
         </li>
     
             </ul>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#detect-anomalies-using-a-sigllm-pipeline" class="nav-link">Detect anomalies using a SigLLM pipeline</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#resources" class="nav-link">Resources</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#citation" class="nav-link">Citation</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#indices-and-tables" class="nav-link">Indices and tables</a>
         </li>
     
     </ul>
@@ -187,100 +223,127 @@
   <p align="left">
 <img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt=“DAI-Lab” />
 <i>An open source project from Data to AI Lab at MIT.</i>
-</p><!-- Uncomment these lines after releasing the package to PyPI for version and downloads badges -->
-<!--[![PyPI Shield](https://img.shields.io/pypi/v/sigllm.svg)](https://pypi.python.org/pypi/sigllm)-->
-<!--[![Downloads](https://pepy.tech/badge/sigllm)](https://pepy.tech/project/sigllm)-->
-[![Github Actions Shield](https://img.shields.io/github/workflow/status/sintel-dev/sigllm/Run%20Tests)](https://github.com/sintel-dev/sigllm/actions)
+</p><a class="reference external image-reference" href="https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha"><img alt="Development Status" src="https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow" /></a>
+<a class="reference external image-reference" href="https://badge.fury.io/py/sigllm"><img alt="Python" src="https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue" /></a>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/sigllm"><img alt="PyPi Shield" src="https://img.shields.io/pypi/v/sigllm.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/sintel-dev/sigllm/actions/workflows/tests.yml"><img alt="Run Tests" src="https://github.com/sintel-dev/sigllm/actions/workflows/tests.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://pepy.tech/project/sigllm"><img alt="Downloads" src="https://pepy.tech/badge/sigllm" /></a>
+<section id="sigllm">
+<h1>SigLLM<a class="headerlink" href="#sigllm" title="Permalink to this headline">¶</a></h1>
+<p>Using Large Language Models (LLMs) for time series anomaly detection.</p>
+<p><span class="raw-html-m2r"><!-- - Documentation: https://sintel-dev.github.io/sigllm --></span></p>
+<ul class="simple">
+<li><p>Homepage: <a class="reference external" href="https://github.com/sintel-dev/sigllm">https://github.com/sintel-dev/sigllm</a></p></li>
+</ul>
+</section>
+<section id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>SigLLM is an extension of the Orion library, built to detect anomalies in time series data using LLMs.
+We provide two types of pipelines for anomaly detection:</p>
+<ul class="simple">
+<li><p><strong>Prompter</strong>: directly prompting LLMs to find anomalies in time series.</p></li>
+<li><p><strong>Detector</strong>: using LLMs to forecast time series and finding anomalies through by comparing the real and forecasted signals.</p></li>
+</ul>
+<p>For more details on our pipelines, please read our <a class="reference external" href="https://arxiv.org/pdf/2405.14755">paper</a>.</p>
+</section>
+<section id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<section id="install-with-pip">
+<h2>Install with pip<a class="headerlink" href="#install-with-pip" title="Permalink to this headline">¶</a></h2>
+<p>The easiest and recommended way to install <strong>SigLLM</strong> is using <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sigllm
+</pre></div>
+</div>
+<p>This will pull and install the latest stable release from <a class="reference external" href="https://pypi.org/">PyPi</a>.</p>
+<p>In the following example we show how to use one of the <strong>SigLLM Pipelines</strong>.</p>
+</section>
+</section>
+<section id="detect-anomalies-using-a-sigllm-pipeline">
+<h1>Detect anomalies using a SigLLM pipeline<a class="headerlink" href="#detect-anomalies-using-a-sigllm-pipeline" title="Permalink to this headline">¶</a></h1>
+<p>We will load a demo data located in <code class="docutils literal notranslate"><span class="pre">tutorials/data.csv</span></code> for this example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>which should show a signal with <code class="docutils literal notranslate"><span class="pre">timestamp</span></code> and <code class="docutils literal notranslate"><span class="pre">value</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>     <span class="n">timestamp</span>      <span class="n">value</span>
+<span class="mi">0</span>   <span class="mi">1222840800</span>   <span class="mf">6.357008</span>
+<span class="mi">1</span>   <span class="mi">1222862400</span>  <span class="mf">12.763547</span>
+<span class="mi">2</span>   <span class="mi">1222884000</span>  <span class="mf">18.204697</span>
+<span class="mi">3</span>   <span class="mi">1222905600</span>  <span class="mf">21.972602</span>
+<span class="mi">4</span>   <span class="mi">1222927200</span>  <span class="mf">23.986643</span>
+<span class="mi">5</span>   <span class="mi">1222948800</span>  <span class="mf">24.906765</span>
+</pre></div>
+</div>
+<p>In this example we use <code class="docutils literal notranslate"><span class="pre">gpt_detector</span></code> pipeline and set some hyperparameters. In this case, we set the thresholding strategy to dynamic. The hyperparameters are optional and can be removed.</p>
+<p>In addtion, the <code class="docutils literal notranslate"><span class="pre">SigLLM</span></code> object takes in a <code class="docutils literal notranslate"><span class="pre">decimal</span></code> argument to determine how many digits from the float value include. Here, we don’t want to keep any decimal values, so we set it to zero.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sigllm</span> <span class="kn">import</span> <span class="n">SigLLM</span>
 
+<span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;orion.primitives.timeseries_anomalies.find_anomalies#1&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;fixed_threshold&quot;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-# sigllm
-
-Signals plus LLMs
-
-- Documentation: https://sintel-dev.github.io/sigllm
-- Homepage: https://github.com/sintel-dev/sigllm
-
-# Overview
-
-TODO: Provide a short overview of the project here.
-
-# Install
-
-## Requirements
-
-**sigllm** has been developed and tested on [Python 3.8, 3.9, 3.10 and 3.11](https://www.python.org/downloads/)
-
-Also, although it is not strictly required, the usage of a [virtualenv](https://virtualenv.pypa.io/en/latest/)
-is highly recommended in order to avoid interfering with other software installed in the system
-in which **sigllm** is run.
-
-These are the minimum commands needed to create a virtualenv using python3.8 for **sigllm**:
-
-```bash
-pip install virtualenv
-virtualenv -p $(which python3.6) sigllm-venv
-```
-
-Afterwards, you have to execute this command to activate the virtualenv:
-
-```bash
-source sigllm-venv/bin/activate
-```
-
-Remember to execute it every time you start a new console to work on **sigllm**!
-
-<!-- Uncomment this section after releasing the package to PyPI for installation instructions
-## Install from PyPI
-
-After creating the virtualenv and activating it, we recommend using
-[pip](https://pip.pypa.io/en/stable/) in order to install **sigllm**:
-
-```bash
-pip install sigllm
-```
-
-This will pull and install the latest stable release from [PyPI](https://pypi.org/).
---><section id="install-from-source">
-<h1>Install from source<a class="headerlink" href="#install-from-source" title="Permalink to this headline">¶</a></h1>
-<p>With your virtualenv activated, you can clone the repository and install it from
-source by running <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> on the <code class="docutils literal notranslate"><span class="pre">stable</span></code> branch:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:sintel-dev/sigllm.git
-<span class="nb">cd</span><span class="w"> </span>sigllm
-git<span class="w"> </span>checkout<span class="w"> </span>stable
-make<span class="w"> </span>install
+<span class="n">sigllm</span> <span class="o">=</span> <span class="n">SigLLM</span><span class="p">(</span>
+    <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;gpt_detector&#39;</span><span class="p">,</span>
+    <span class="n">decimal</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">hyperparameters</span><span class="o">=</span><span class="n">hyperparameters</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Now that we have initialized the pipeline, we are ready to use it to detect anomalies:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">anomalies</span> <span class="o">=</span> <span class="n">sigllm</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">warning</dt>
+<dd class="field-odd"><p>Depending on the length of your timeseries, this might take time to run.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>The output of the previous command will be a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing a table of detected anomalies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        <span class="n">start</span>         <span class="n">end</span>  <span class="n">severity</span>
+<span class="mi">0</span>  <span class="mi">1225864800</span>  <span class="mi">1227139200</span>  <span class="mf">0.625879</span>
 </pre></div>
 </div>
 </section>
-<section id="install-for-development">
-<h1>Install for Development<a class="headerlink" href="#install-for-development" title="Permalink to this headline">¶</a></h1>
-<p>If you want to contribute to the project, a few more steps are required to make the project ready
-for development.</p>
-<p>Please head to the <a class="reference external" href="https://sintel-dev.github.io/sigllm/contributing.html#get-started">Contributing Guide</a>
-for more details about this process.</p>
-<section id="quickstart">
-<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h2>
-<p>In this short tutorial we will guide you through a series of steps that will help you
-getting started with <strong>sigllm</strong>.</p>
-<p>TODO: Create a step by step guide here.</p>
+<section id="resources">
+<h1>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h1>
+<p>Additional resources that might be of interest:</p>
+<ul class="simple">
+<li><p>Learn about <a class="reference external" href="https://github.com/sintel-dev/Orion">Orion</a>.</p></li>
+<li><p>Read our <a class="reference external" href="https://arxiv.org/pdf/2405.14755">paper</a>.</p></li>
+</ul>
 </section>
-<section id="what-s-next">
-<h2>What’s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h2>
-<p>For more details about <strong>sigllm</strong> and all its possibilities
-and features, please check the <a class="reference external" href="https://sintel-dev.github.io/sigllm/">documentation site</a>.</p>
+<section id="citation">
+<h1>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h1>
+<p>If you use <strong>SigLLM</strong> for your research, please consider citing the following paper:</p>
+<p>Sarah Alnegheimish, Linh Nguyen, Laure Berti-Equille, Kalyan Veeramachaneni. <a class="reference external" href="https://arxiv.org/pdf/2405.14755">Can Large Language Models be Anomaly Detectors for Time Series?</a>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>@inproceedings{alnegheimish2024sigllm,
+  title={Can Large Language Models be Anomaly Detectors for Time Series?},
+  author={Alnegheimish, Sarah and Nguyen, Linh and Berti-Equille, Laure and Veeramachaneni, Kalyan},
+  booktitle={2024 IEEE International Conferencze on Data Science and Advanced Analytics (IEEE DSAA)},
+  organization={IEEE},
+  year={2024}
+}
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
 </div>
 </section>
 <section id="indices-and-tables">
-<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-</section>
 </section>
 
 
@@ -289,7 +352,7 @@ and features, please check the <a class="reference external" href="https://sinte
               
               <div class='prev-next-bottom'>
                 
-    <a class='right-next' id="next-link" href="readme.html" title="next page">Install from source</a>
+    <a class='right-next' id="next-link" href="readme.html" title="next page">SigLLM</a>
 
               </div>
               

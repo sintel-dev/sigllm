@@ -61,7 +61,23 @@
         
         
         <li class="nav-item ">
-            <a class="nav-link" href="../../readme.html">Install from source</a>
+            <a class="nav-link" href="../../readme.html">SigLLM</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
         </li>
         
         <li class="nav-item ">
@@ -118,6 +134,14 @@
     
   
     <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -205,6 +229,9 @@
     <span class="n">DEFAULT_PIPELINE</span> <span class="o">=</span> <span class="s1">&#39;mistral_detector&#39;</span>
 
     <span class="k">def</span> <span class="nf">_augment_hyperparameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">primitive</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">value</span><span class="p">:</span>
+            <span class="k">return</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">primitive</span><span class="p">:</span> <span class="p">{}</span>
@@ -213,8 +240,7 @@
             <span class="k">if</span> <span class="n">primitive</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">if</span> <span class="n">value</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">[</span><span class="n">primitive</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hyperparameters</span><span class="p">[</span><span class="n">primitive</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">MLPipeline</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">interval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">decimal</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
