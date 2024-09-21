@@ -9,7 +9,7 @@ This module contains functions that prepare timeseries for a language model.
 import numpy as np
 
 
-def rolling_window_sequences(X, window_size = 500, step_size = 100):
+def rolling_window_sequences(X, window_size=500, step_size=100):
     """Create rolling window sequences out of time series data.
 
     This function creates an array of sequences by rolling over the input sequence.

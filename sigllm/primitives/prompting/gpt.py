@@ -26,7 +26,7 @@ class GPT:
             Model name. Default to `'gpt-3.5-turbo'`.
         sep (str):
             String to separate each element in values. Default to `','`.
-        anomalous_percent (float): 
+        anomalous_percent (float):
                 Expected percentage of time series that are anomalous. Default to `0.5`.
         temp (float):
             Sampling temperature to use, between 0 and 2. Higher values like 0.8 will
@@ -49,7 +49,7 @@ class GPT:
             Beta feature by OpenAI to sample deterministically. Default to `None`.
     """
 
-    def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent = 0.5, temp=1, top_p=1, logprobs=False, top_logprobs=None,
+    def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent=0.5, temp=1, top_p=1, logprobs=False, top_logprobs=None,
                  samples=10, seed=None):
         self.name = name
         self.sep = sep
@@ -60,7 +60,6 @@ class GPT:
         self.top_logprobs = top_logprobs
         self.samples = samples
         self.seed = seed
-
 
         self.tokenizer = tiktoken.encoding_for_model(self.name)
 
@@ -101,7 +100,7 @@ class GPT:
                 logprobs=self.logprobs,
                 top_logprobs=self.top_logprobs,
                 n=self.samples,
-                seed = self.seed
+                seed=self.seed
             )
             responses = [choice.message.content for choice in response.choices]
             if self.logprobs:
@@ -109,26 +108,8 @@ class GPT:
                 all_probs.append(probs)
 
             all_responses.append(responses)
-        
+
         if self.logprobs:
             return all_responses, all_probs
 
         return all_responses
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

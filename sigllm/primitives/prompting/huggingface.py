@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import json
-import os
 import logging
-from tqdm import tqdm
+import os
 
 import torch
+from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 PROMPT_PATH = os.path.join(
@@ -35,7 +35,7 @@ class HF:
             Model name. Default to `'mistralai/Mistral-7B-Instruct-v0.2'`.
         sep (str):
             String to separate each element in values. Default to `','`.
-        anomalous_percent (float): 
+        anomalous_percent (float):
             Expected percentage of time series that are anomalous. Default to `0.5`.
         temp (float):
             The value used to modulate the next token probabilities. Default to `1`.
@@ -52,7 +52,7 @@ class HF:
             Default to `0`.
     """
 
-    def __init__(self, name=DEFAULT_MODEL, sep=',', anomalous_percent = 0.5, temp=1, top_p=1, 
+    def __init__(self, name=DEFAULT_MODEL, sep=',', anomalous_percent=0.5, temp=1, top_p=1,
                  raw=False, samples=10, padding=0):
         self.name = name
         self.sep = sep
@@ -103,7 +103,7 @@ class HF:
         Args:
             X (ndarray):
                 Input sequences of strings containing signal values
-            
+
         Returns:
             list, list:
                 * List of detected anomalous values.
@@ -114,17 +114,22 @@ class HF:
         max_tokens = input_length * float(self.anomalous_percent)
         all_responses, all_generate_ids = [], []
 
-        for text in tqdm(X): 
+        for text in tqdm(X):
             text = text.flatten().tolist()
-            message = [' '.join((PROMPTS['system_message'], PROMPTS['user_message'], x, '[RESPONSE]')) for x in text]
+            message = [
+                ' '.join(
+                    (PROMPTS['system_message'],
+                     PROMPTS['user_message'],
+                        x,
+                        '[RESPONSE]')) for x in text]
 
             input_length = len(self.tokenizer.encode(message[0]))
 
             tokenized_input = self.tokenizer(
                 message,
                 return_tensors="pt"
-                    ).to("cuda")
-            
+            ).to("cuda")
+
             generate_ids = self.model.generate(
                 **tokenized_input,
                 do_sample=True,
