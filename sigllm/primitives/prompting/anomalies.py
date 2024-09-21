@@ -130,8 +130,8 @@ def timestamp2interval(y, timestamp, padding_size = 50):
             Number of steps to pad on both sides of a timestamp point. Default to `50`.
              
     Returns:
-        List[Tuple(start, end)]:
-            A list of intervals.
+        Dataframe:
+            Dataframe of interval (start, end, score).
     """
     start, end = timestamp[0], timestamp[-1]
     interval = timestamp[1] - timestamp[0]

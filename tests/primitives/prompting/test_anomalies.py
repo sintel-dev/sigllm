@@ -42,9 +42,8 @@ def step_size():
 
 
 @fixture
-def signal():
-    d = {'timestamp': [1222819200, 1222840800, 1222862400, 1222884000,
-                       1222905600], 'value': [-1.0, -1.0, -1.0, -1.0, -1.0]}
+def timestamp():
+    d = [1222819200, 1222840800, 1222862400, 1222884000, 1222905600]
     return pd.DataFrame(data=d)
 
 
@@ -66,6 +65,10 @@ def windows():
 def point_timestamp(): 
     return np.array([1320, 6450, 7890, 12030, 12340])
 
+@fixture
+def timestamp1():
+    return np.array(range(1000, 13000, 10))
+
 def test_ano_within_windows(anomaly_list_within_seq):
     expected = np.array([np.array([1]),
                          np.array([]),
@@ -85,10 +88,10 @@ def test_merge_anomaly_seq(anomaly_list_across_seq, first_indices, window_size, 
     np.testing.assert_equal(result, expected)
 
 
-def test_idx2time(signal, idx_list):
+def test_idx2time(timestamp, idx_list):
     expected = np.array([1222819200, 1222840800, 1222884000])
 
-    result = idx2time(signal, idx_list)
+    result = idx2time(timestamp, idx_list)
 
     np.testing.assert_equal(result, expected)
 
@@ -104,8 +107,8 @@ def test_val2idx(anomalous_val, windows):
             np.testing.assert_equal(r, e)
 
 #timestamp2interval
-def test_timestamp2interval(point_timestamp): 
-    expected = [(1000, 1820), (5950, 6950), (7390, 8390), (11530, 12840)]
-    result = timestamp2interval(point_timestamp, 10, 1000, 13000)
+def test_timestamp2interval(point_timestamp, timestamp1): 
+    expected = pd.DataFrame([(1000, 1820, 0), (5950, 6950, 0), (7390, 8390, 0), (11530, 12840, 0)], columns = ['start', 'end', 'score'])
+    result = timestamp2interval(point_timestamp, timestamp1)
 
-    assert result == expected
+    assert result.equals(expected)
