@@ -54,12 +54,12 @@ data.head()
 which should show a signal with `timestamp` and `value`.
 ```
      timestamp      value
-0	1222840800	 6.357008
-1	1222862400	12.763547
-2	1222884000	18.204697
-3	1222905600	21.972602
-4	1222927200	23.986643
-5	1222948800	24.906765
+0   1222840800   6.357008
+1   1222862400  12.763547
+2   1222884000  18.204697
+3   1222905600  21.972602
+4   1222927200  23.986643
+5   1222948800  24.906765
 ```
 
 In this example we use `gpt_detector` pipeline and set some hyperparameters. In this case, we set the thresholding strategy to dynamic. The hyperparameters are optional and can be removed.
