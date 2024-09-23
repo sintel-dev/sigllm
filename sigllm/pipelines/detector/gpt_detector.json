@@ -1,0 +1,95 @@
+{
+    "primitives": [
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate",
+        "sklearn.impute.SimpleImputer",
+        "sigllm.primitives.transformation.Float2Scalar",
+        "sigllm.primitives.forecasting.custom.rolling_window_sequences",
+        "sigllm.primitives.transformation.format_as_string",
+        "sigllm.primitives.forecasting.gpt.GPT",
+        "sigllm.primitives.transformation.format_as_integer",
+        "sigllm.primitives.transformation.Scalar2Float",
+        "sigllm.primitives.postprocessing.aggregate_rolling_window",
+        "numpy.reshape",
+        "orion.primitives.timeseries_errors.regression_errors",
+        "orion.primitives.timeseries_anomalies.find_anomalies"
+    ],
+    "init_params": {
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
+            "time_column": "timestamp",
+            "interval": 21600,
+            "method": "mean"
+        },
+        "sigllm.primitives.transformation.Float2Scalar#1": {
+            "decimal": 2,
+            "rescale": true
+        },
+        "sigllm.primitives.forecasting.custom.rolling_window_sequences#1": {
+            "target_column": 0,
+            "window_size": 140,
+            "target_size": 1
+        },
+        "sigllm.primitives.transformation.format_as_string#1": {
+            "space": true
+        },
+        "sigllm.primitives.forecasting.gpt.GPT#1": {
+            "name": "gpt-3.5-turbo",
+            "steps": 5
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "trunc": 1,
+            "errors": "coerce"
+        },
+        "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
+            "agg": "median",
+            "remove_outliers": true
+        },
+        "orion.primitives.timeseries_anomalies.find_anomalies#1": {
+            "window_size_portion": 0.3,
+            "window_step_size_portion": 0.1,
+            "fixed_threshold": true
+        }
+    },
+    "input_names": {
+        "sigllm.primitives.transformation.Float2Scalar#1": {
+            "X": "y"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "X": "y_hat"
+        },
+        "sigllm.primitives.transformation.Scalar2Float#1": {
+            "X": "y_hat"
+        },
+        "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
+            "y": "y_hat"
+        },
+        "numpy.reshape#1": {
+            "X": "y_hat"
+        },
+        "orion.primitives.timeseries_anomalies.find_anomalies#1": {
+            "index": "target_index"
+        }
+    },
+    "output_names": {
+        "sklearn.impute.SimpleImputer#1": {
+            "X": "y"
+        },
+        "sigllm.primitives.forecasting.gpt.GPT#1": {
+            "y": "y_hat"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "X": "y_hat"
+        },
+        "sigllm.primitives.transformation.Scalar2Float#1": {
+            "X": "y_hat"
+        },
+        "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
+            "y": "y_hat"
+        },
+        "numpy.reshape#1": {
+            "X": "y_hat"
+        },
+        "orion.primitives.timeseries_anomalies.find_anomalies#1": {
+            "y": "anomalies"
+        }
+    }
+}

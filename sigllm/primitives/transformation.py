@@ -10,7 +10,7 @@ import re
 import numpy as np
 
 
-def format_as_string(X, sep=',', space=False):
+def format_as_string(values, sep=',', space=False):
     """Format values to a list of string.
 
     Transform a 2-D array of integers to a list of strings,
@@ -18,7 +18,7 @@ def format_as_string(X, sep=',', space=False):
 
     Args:
         sep (str):
-            String to separate each element in values. Default to `','`.
+            String to separate each element in X. Default to `','`.
         space (bool):
             Whether to add space between each digit in the result. Default to `False`.
 
@@ -27,14 +27,14 @@ def format_as_string(X, sep=',', space=False):
             A list of string representation of each row.
     """
     def _as_string(x):
-        text = sep.join(list(map(str, x)))
+        text = sep.join(list(map(str, x.flatten())))
 
         if space:
             text = ' '.join(text)
 
         return text
 
-    return np.apply_along_axis(_as_string, axis=1, arr=X)
+    return np.apply_along_axis(_as_string, axis=1, arr=values)
 
 
 def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
@@ -147,7 +147,7 @@ class Float2Scalar:
 
         values = sign * (values * 10**self.decimal).astype(int)
 
-        return values, self.minimum
+        return values, self.minimum, self.decimal
 
 
 class Scalar2Float:
@@ -160,15 +160,13 @@ class Scalar2Float:
         105, 200, 310, 483, 500, 0 -> 1.05, 2., 3.1, 4.8342, 5, 0
 
     Args:
+        minimum (float):
+            Bias to shift the data. Captured from Float2Scalar.
         decimal (int):
             Number of decimal points to keep from the float representation. Default to `2`.
     """
 
-    def __init__(self, decimal=2):
-        self.decimal = decimal
-
-    def transform(self, X, minimum=0):
-        values = np.array(X).astype(float)
-        values = values * 10**(-self.decimal)
+    def transform(self, X, minimum=0, decimal=2):
+        values = X * 10**(-decimal)
 
         return values + minimum

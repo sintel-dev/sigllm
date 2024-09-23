@@ -151,19 +151,19 @@ class FromStringToIntegerTest(unittest.TestCase):
             _from_string_to_integer(data, errors='unknown')
 
 
-def test_format_as_integer_one_list():
-    data = ['1,2,3,4,5', '6,7,8,9,10']
+def test_format_as_integer_one():
+    data = ['1,2,3,4,5']
 
     with pytest.raises(ValueError):
         format_as_integer(data)
 
 
-def test_format_as_integer_list_of_list():
-    data = [['1,2,3,4,5', '6,7,8,9,10']]
+def test_format_as_integer_list():
+    data = [['1,2,3,4,5']]
 
-    expected = np.array([
-        [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
-    ])
+    expected = np.array([[[
+        1, 2, 3, 4, 5
+    ]]])
 
     output = format_as_integer(data)
 
@@ -230,7 +230,7 @@ class Float2ScalarTest(unittest.TestCase):
         print(converter)
 
         converter.fit(data)
-        output, minimum = converter.transform(data)
+        output, minimum, decimal = converter.transform(data)
 
         assert converter.decimal == 2
         assert converter.rescale is True
@@ -249,7 +249,7 @@ class Float2ScalarTest(unittest.TestCase):
         ])
 
         converter.fit(data)
-        output, minimum = converter.transform(data)
+        output, minimum, decimal = converter.transform(data)
 
         assert converter.decimal == 0
         assert converter.rescale is True
@@ -268,7 +268,7 @@ class Float2ScalarTest(unittest.TestCase):
         ])
 
         converter.fit(data)
-        output, minimum = converter.transform(data)
+        output, minimum, decimal = converter.transform(data)
 
         assert converter.decimal == 2
         assert converter.rescale is True
@@ -287,7 +287,7 @@ class Float2ScalarTest(unittest.TestCase):
         ])
 
         converter.fit(data)
-        output, minimum = converter.transform(data)
+        output, minimum, decimal = converter.transform(data)
 
         assert converter.decimal == 2
         assert converter.rescale is False
@@ -306,7 +306,7 @@ class Float2ScalarTest(unittest.TestCase):
         ])
 
         converter.fit(data)
-        output, minimum = converter.transform(data)
+        output, minimum, decimal = converter.transform(data)
 
         assert converter.decimal == 2
         assert converter.rescale is True
@@ -325,7 +325,7 @@ class Float2ScalarTest(unittest.TestCase):
         ])
 
         converter.fit([7, 3, 0.5])
-        output, minimum = converter.transform(data)
+        output, minimum, decimal = converter.transform(data)
 
         assert converter.decimal == 2
         assert converter.rescale is True
@@ -348,12 +348,10 @@ class Scalar2FloatTest(unittest.TestCase):
 
         output = converter.transform(data)
 
-        assert converter.decimal == 2
-
         np.testing.assert_array_equal(output, expected)
 
     def test_transform_decimal_zero(self):
-        converter = Scalar2Float(decimal=0)
+        converter = Scalar2Float()
 
         data = np.array([
             1, 2, 3, 4, 5, 0
@@ -362,9 +360,7 @@ class Scalar2FloatTest(unittest.TestCase):
             1., 2., 3., 4., 5., 0.
         ])
 
-        output = converter.transform(data)
-
-        assert converter.decimal == 0
+        output = converter.transform(data, decimal=0)
 
         np.testing.assert_array_equal(output, expected)
 
@@ -379,8 +375,6 @@ class Scalar2FloatTest(unittest.TestCase):
         ])
 
         output = converter.transform(data, minimum=-1)
-
-        assert converter.decimal == 2
 
         np.testing.assert_allclose(output, expected)
 
@@ -400,10 +394,10 @@ def test_float2scalar_scalar2float_integration():
     ])
 
     float2scalar.fit(data)
-    transformed, minimum = float2scalar.transform(data)
+    transformed, minimum, decimal = float2scalar.transform(data)
 
-    scalar2float = Scalar2Float(decimal)
+    scalar2float = Scalar2Float()
 
-    output = scalar2float.transform(transformed, minimum)
+    output = scalar2float.transform(transformed, minimum, decimal)
 
     np.testing.assert_allclose(output, expected, rtol=1e-2)
