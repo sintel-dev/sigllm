@@ -10,7 +10,7 @@ from typing import Union
 
 from mlblocks import MLPipeline
 from orion import Orion
-=======
+== == == =
 SigLLM is an extension to Orion's core module
 """
 import logging
@@ -36,19 +36,19 @@ class SigLLM(Orion):
     MLBlocks pipelines.
 
     Args:
-        pipeline (str, dict or MLPipeline):
+        pipeline(str, dict or MLPipeline):
             Pipeline to use. It can be passed as:
                 * An ``str`` with a path to a JSON file.
                 * An ``str`` with the name of a registered pipeline.
                 * An ``MLPipeline`` instance.
                 * A ``dict`` with an ``MLPipeline`` specification.
-<<<<<<< HEAD
-        window_size (int):
+<< << << < HEAD
+        window_size(int):
             Size of the input window.
-        steps (int):
+        steps(int):
             Number of steps ahead to forecast.
 
-        hyperparameters (dict):
+        hyperparameters(dict):
             Additional hyperparameters to set to the Pipeline.
     """
 
