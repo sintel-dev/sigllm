@@ -49,8 +49,8 @@ class GPT:
             Beta feature by OpenAI to sample deterministically. Default to `None`.
     """
 
-    def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent=0.5, temp=1, top_p=1, logprobs=False, top_logprobs=None,
-                 samples=10, seed=None):
+    def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent=0.5, temp=1, 
+                 top_p=1, logprobs=False, top_logprobs=None, samples=10, seed=None):
         self.name = name
         self.sep = sep
         self.anomalous_percent = anomalous_percent
