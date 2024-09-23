@@ -35,7 +35,6 @@ def val2idx(y, X):
             mask = np.isin(seq, anomalies)
             indices = np.where(mask)[0]
             idx_win_list.append(indices)
-        #idx_win_list = np.array(idx_win_list)
         idx_list.append(idx_win_list)
     idx_list = np.array(idx_list, dtype=object)
     return idx_list
@@ -51,7 +50,8 @@ def ano_within_windows(y, alpha=0.5):
             A 3d array containing detected anomalous values from different
             responses of each window.
         alpha (float):
-            Percentage of votes needed for an index to be deemed anomalous. Default to `0.5`.
+            Percentage of votes needed for an index to be deemed anomalous. 
+            Default to `0.5`.
 
     Returns:
         ndarray:
@@ -87,7 +87,8 @@ def merge_anomaly_seq(y, first_index, window_size, step_size, beta=0.5):
         step_size (int):
             Indicating the number of steps the window moves forward each round.
         beta (float):
-            Percentage of containing windows needed for index to be deemed anomalous. Default to `0.5`.
+            Percentage of containing windows needed for index to be deemed anomalous. 
+            Default to `0.5`.
     Return:
         ndarray:
             A 1-dimensional array containing final anomalous indices.
