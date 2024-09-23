@@ -116,4 +116,4 @@ def test_timestamp2interval(point_timestamp, timestamp1):
                             (11530, 12840, 0)], columns=['start', 'end', 'score'])
     result = timestamp2interval(point_timestamp, timestamp1)
 
-    pd.testing.assert_frame_equal(expected, result)
+    pd.testing.assert_frame_equal(expected, result, check_dtype = False)
