@@ -87,7 +87,7 @@ def merge_anomaly_seq(y, first_index, window_size, step_size, beta=0.5):
             Indicating the number of steps the window moves forward each round.
         beta (float):
             Percent of windows needed for index to be anomalous. Default to `0.5`.
-            
+
     Return:
         ndarray:
             A 1-dimensional array containing final anomalous indices.
