@@ -8,10 +8,9 @@
         "sigllm.primitives.prompting.huggingface.HF",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.prompting.anomalies.val2idx",
-        "sigllm.primitives.prompting.anomalies.ano_within_windows",
-        "sigllm.primitives.prompting.anomalies.merge_anomaly_seq",
-        "sigllm.primitives.prompting.anomalies.idx2time",
-        "sigllm.primitives.prompting.anomalies.timestamp2interval"
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_window",
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences",
+        "sigllm.primitives.prompting.anomalies.format_anomalies"
     ],
     "init_params": {
         "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
@@ -34,33 +33,33 @@
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
             "samples": 10
         },
-        "sigllm.primitives.prompting.anomalies.ano_within_windows#1": {
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_window#1": {
             "alpha": 0.4
         },
-        "sigllm.primitives.prompting.anomalies.merge_anomaly_seq#1": {
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences#1": {
             "beta": 0.5
         }
     },
     "input_names": {
-    "sigllm.primitives.prompting.huggingface.HF#1": {
-        "X": "X_str"
-    },
-    "sigllm.primitives.transformation.format_as_integer#1":{
-        "X": "y_hat"
-    }
+        "sigllm.primitives.prompting.huggingface.HF#1": {
+            "X": "X_str"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1":{
+            "X": "y_hat"
+        }
     },
     "output_names": {
-    "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
-        "index": "timestamp"
-    },
-    "sigllm.primitives.transformation.format_as_string#1": {
-        "X": "X_str"
-    },
-    "sigllm.primitives.prompting.huggingface.HF#1": {
-        "y": "y_hat"
-    },
-    "sigllm.primitives.transformation.format_as_integer#1":{
-        "X": "y"
-    }
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
+            "index": "timestamp"
+        },
+        "sigllm.primitives.transformation.format_as_string#1": {
+            "X": "X_str"
+        },
+        "sigllm.primitives.prompting.huggingface.HF#1": {
+            "y": "y_hat"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1":{
+            "X": "y"
+        }
     }
 }

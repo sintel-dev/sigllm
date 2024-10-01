@@ -7,7 +7,6 @@ This module contains functions that help filter LLMs results to get the final an
 """
 
 import numpy as np
-import pandas as pd
 
 
 def val2idx(y, X):
@@ -40,7 +39,7 @@ def val2idx(y, X):
     return idx_list
 
 
-def ano_within_windows(y, alpha=0.5):
+def find_anomalies_in_windows(y, alpha=0.5):
     """Get the final list of anomalous indices of each window
 
     Choose anomalous index in the sequence based on multiple LLM responses
@@ -73,7 +72,7 @@ def ano_within_windows(y, alpha=0.5):
     return idx_list
 
 
-def merge_anomaly_seq(y, first_index, window_size, step_size, beta=0.5):
+def merge_anomalous_sequences(y, first_index, window_size, step_size, beta=0.5):
     """Get the final list of anomalous indices of a sequence when merging all rolling windows
 
     Args:
@@ -105,39 +104,23 @@ def merge_anomaly_seq(y, first_index, window_size, step_size, beta=0.5):
     return np.sort(final_list)
 
 
-def idx2time(timestamp, y):
-    """Convert list of indices into list of timestamp
-
-    Args:
-        sequence (DataFrame):
-            Signal with timestamps and values.
-        y (ndarray):
-            A 1-dimensional array of indices.
-
-    Returns:
-        ndarray:
-            A 1-dimensional array containing timestamps.
-    """
-    timestamp_list = timestamp[y]
-    return timestamp_list
-
-
-def timestamp2interval(y, timestamp, padding_size=50):
-    """Convert list of timestamps to list of intervals by padding to both sides
+def format_anomalies(y, timestamp, padding_size=50):
+    """Convert list of anomalous indices to list of intervals by padding to both sides
     and merge overlapping
 
     Args:
         y (ndarray):
-            A 1d array of point timestamps.
+            A 1-dimensional array of indices.
         timestamp (ndarray):
             List of full timestamp of the signal
         padding_size (int):
             Number of steps to pad on both sides of a timestamp point. Default to `50`.
 
     Returns:
-        Dataframe:
-            Dataframe of interval (start, end, score).
+        List[Tuple]:
+            List of intervals (start, end, score).
     """
+    y = timestamp[y]  # Convert list of indices into list of timestamps
     start, end = timestamp[0], timestamp[-1]
     interval = timestamp[1] - timestamp[0]
     intervals = []
@@ -162,6 +145,5 @@ def timestamp2interval(y, timestamp, padding_size=50):
         else:
             merged_intervals.append(current_interval)  # Append the current interval if no overlap
 
-    df = pd.DataFrame(merged_intervals, columns=['start', 'end'])
-    df['score'] = 0
-    return df
+    merged_intervals = [(interval[0], interval[1], 0) for interval in merged_intervals]
+    return merged_intervals

@@ -1,16 +1,16 @@
 {
-    "name": "sigllm.primitives.prompting.anomalies.timestamp2interval",
+    "name": "sigllm.primitives.prompting.anomalies.format_anomalies",
     "contributors": [
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
     ],
-    "description": "Convert list of timestamps to list of intervals by padding to both sides and merge overlapping",
+    "description": "Convert list of indices to list of intervals by padding to both sides and merge overlapping",
     "classifiers": {
         "type": "postprocessor",
         "subtype": "converter"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.prompting.anomalies.timestamp2interval",
+    "primitive": "sigllm.primitives.prompting.anomalies.format_anomalies",
     "produce": {
         "args": [
             {
@@ -24,8 +24,8 @@
         ],
         "output": [
             {
-                "name": "df",
-                "type": "Dataframe"
+                "name": "merged_intervals",
+                "type": "List"
             }
         ]
     }, 

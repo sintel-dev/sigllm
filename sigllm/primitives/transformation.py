@@ -10,8 +10,8 @@ import re
 import numpy as np
 
 
-def format_as_string(values, sep=',', space=False):
-    """Format values to a list of string.
+def format_as_string(X, sep=',', space=False):
+    """Format X to a list of string.
 
     Transform a 2-D array of integers to a list of strings,
     seperated by the indicated seperator and space.
@@ -34,7 +34,9 @@ def format_as_string(values, sep=',', space=False):
 
         return text
 
-    return np.apply_along_axis(_as_string, axis=1, arr=values)
+    results = list(map(_as_string, X))
+
+    return np.array(results)
 
 
 def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
