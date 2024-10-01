@@ -88,7 +88,7 @@ class GPT:
 
         all_responses, all_probs = [], []
         for text in tqdm(X):
-            message = ' '.join(PROMPTS['user_message'], text[0], self.sep)
+            message = ' '.join(PROMPTS['user_message'], text, self.sep)
             response = openai.ChatCompletion.create(
                 model=self.name,
                 messages=[

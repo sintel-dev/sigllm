@@ -115,13 +115,10 @@ class HF:
         all_responses, all_generate_ids = [], []
 
         for text in tqdm(X):
-            text = text.flatten().tolist()
-            message = [
-                ' '.join(
-                    (PROMPTS['system_message'],
-                     PROMPTS['user_message'],
-                        x,
-                        '[RESPONSE]')) for x in text]
+            message = ' '.join(PROMPTS['system_message'],
+                                PROMPTS['user_message'],
+                                text,
+                                '[RESPONSE]')
 
             input_length = len(self.tokenizer.encode(message[0]))
 
