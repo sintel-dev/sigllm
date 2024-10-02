@@ -1,5 +1,5 @@
 {
-    "name": "sigllm.primitives.prompting.anomalies.find_anomalies_in_window",
+    "name": "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
     "contributors": [
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
@@ -10,7 +10,7 @@
         "subtype": "merger"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.prompting.anomalies.find_anomalies_in_window",
+    "primitive": "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
     "produce": {
         "args": [
             {

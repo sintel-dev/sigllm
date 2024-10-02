@@ -8,7 +8,7 @@
         "sigllm.primitives.prompting.huggingface.HF",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.prompting.anomalies.val2idx",
-        "sigllm.primitives.prompting.anomalies.find_anomalies_in_window",
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
         "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences",
         "sigllm.primitives.prompting.anomalies.format_anomalies"
     ],
@@ -33,7 +33,7 @@
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
             "samples": 10
         },
-        "sigllm.primitives.prompting.anomalies.find_anomalies_in_window#1": {
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
             "alpha": 0.4
         },
         "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences#1": {

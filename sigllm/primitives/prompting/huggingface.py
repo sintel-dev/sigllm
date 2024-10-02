@@ -117,7 +117,7 @@ class HF:
         for text in tqdm(X):
             system_message = PROMPTS['system_message']
             user_message = PROMPTS['user_message']
-            message = ' '.join(system_message, user_message, text, '[RESPONSE]')
+            message = ' '.join([system_message, user_message, text, '[RESPONSE]'])
 
             input_length = len(self.tokenizer.encode(message[0]))
 

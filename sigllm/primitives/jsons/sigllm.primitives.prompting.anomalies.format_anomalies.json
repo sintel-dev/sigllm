@@ -24,7 +24,7 @@
         ],
         "output": [
             {
-                "name": "merged_intervals",
+                "name": "anomalies",
                 "type": "List"
             }
         ]
