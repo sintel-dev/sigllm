@@ -1,0 +1,36 @@
+{
+    "name": "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>",
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Get the final list of anomalous indices of each window",
+    "classifiers": {
+        "type": "postprocessor",
+        "subtype": "merger"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
+    "produce": {
+        "args": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ]
+    }, 
+    "hyperparameters": {
+        "fixed": {
+            "alpha": {
+                "type": "float",
+                "default": 0.5
+            }
+        }
+    }
+}
