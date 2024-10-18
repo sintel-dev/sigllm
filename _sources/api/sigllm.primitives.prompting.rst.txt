@@ -8,8 +8,9 @@ Submodules
    :maxdepth: 4
 
    sigllm.primitives.prompting.anomalies
-   sigllm.primitives.prompting.data
    sigllm.primitives.prompting.gpt
+   sigllm.primitives.prompting.huggingface
+   sigllm.primitives.prompting.timeseries_preprocessing
 
 Module contents
 ---------------

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>sigllm.primitives.prompting.data module &#8212; sigllm 0.0.2.dev0 documentation</title>
+    <title>sigllm.primitives.prompting.timeseries_preprocessing module &#8212; sigllm 0.0.2.dev0 documentation</title>
     
   <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -40,8 +40,8 @@
     <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="sigllm.primitives.prompting.gpt module" href="sigllm.primitives.prompting.gpt.html" />
-    <link rel="prev" title="sigllm.primitives.prompting.anomalies module" href="sigllm.primitives.prompting.anomalies.html" />
+    <link rel="next" title="sigllm.primitives.postprocessing module" href="sigllm.primitives.postprocessing.html" />
+    <link rel="prev" title="sigllm.primitives.prompting.huggingface module" href="sigllm.primitives.prompting.huggingface.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
   </head>
@@ -186,22 +186,21 @@
               
               <div>
                 
-  <section id="module-sigllm.primitives.prompting.data">
-<span id="sigllm-primitives-prompting-data-module"></span><h1>sigllm.primitives.prompting.data module<a class="headerlink" href="#module-sigllm.primitives.prompting.data" title="Permalink to this headline">¶</a></h1>
+  <section id="module-sigllm.primitives.prompting.timeseries_preprocessing">
+<span id="sigllm-primitives-prompting-timeseries-preprocessing-module"></span><h1>sigllm.primitives.prompting.timeseries_preprocessing module<a class="headerlink" href="#module-sigllm.primitives.prompting.timeseries_preprocessing" title="Permalink to this headline">¶</a></h1>
 <p>Data preprocessing module.</p>
 <p>This module contains functions that prepare timeseries for a language model.</p>
 <dl class="py function">
-<dt id="sigllm.primitives.prompting.data.rolling_window_sequences">
-<code class="sig-prename descclassname">sigllm.primitives.prompting.data.</code><code class="sig-name descname">rolling_window_sequences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">index</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">step_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/data.html#rolling_window_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.data.rolling_window_sequences" title="Permalink to this definition">¶</a></dt>
+<dt id="sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.timeseries_preprocessing.</code><code class="sig-name descname">rolling_window_sequences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">window_size</span><span class="o">=</span><span class="default_value">500</span></em>, <em class="sig-param"><span class="n">step_size</span><span class="o">=</span><span class="default_value">100</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/timeseries_preprocessing.html#rolling_window_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create rolling window sequences out of time series data.</p>
-<p>The function creates an array of sequences by rolling over the input sequence.</p>
+<p>This function creates an array of sequences by rolling over the input sequence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>ndarray</em>) – The sequence to iterate over.</p></li>
-<li><p><strong>index</strong> (<em>ndarray</em>) – Array containing the index values of X.</p></li>
-<li><p><strong>window_size</strong> (<em>int</em>) – Length of window.</p></li>
-<li><p><strong>step_size</strong> (<em>int</em>) – Indicating the number of steps to move the window forward each round.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em>) – Length of window. Defaults to 500</p></li>
+<li><p><strong>step_size</strong> (<em>int</em>) – Indicating the number of steps to move the window forward each round. Defaults to 100</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -217,31 +216,6 @@
 </dl>
 </dd></dl>
 
-<dl class="py function">
-<dt id="sigllm.primitives.prompting.data.sig2str">
-<code class="sig-prename descclassname">sigllm.primitives.prompting.data.</code><code class="sig-name descname">sig2str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">values</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">decimal</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">rescale</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/data.html#sig2str"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.data.sig2str" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a signal to a string.</p>
-<p>Convert a 1-dimensional time series into text by casting and rescaling it
-to nonnegative integer values then into a string (optional).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> (<em>numpy.ndarray</em>) – A sequence of signal values.</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>“,”</cite>.</p></li>
-<li><p><strong>space</strong> (<em>bool</em>) – Whether to add space between each digit in the result. Default to <cite>False</cite>.</p></li>
-<li><p><strong>decimal</strong> (<em>int</em>) – Number of decimal points to keep from the float representation. Default to <cite>0</cite>.</p></li>
-<li><p><strong>rescale</strong> (<em>bool</em>) – Whether to rescale the time series. Default to <cite>True</cite></p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Text containing the elements of <cite>values</cite>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 
 
@@ -250,8 +224,8 @@ to nonnegative integer values then into a string (optional).</p>
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="sigllm.primitives.prompting.anomalies.html" title="previous page">sigllm.primitives.prompting.anomalies module</a>
-    <a class='right-next' id="next-link" href="sigllm.primitives.prompting.gpt.html" title="next page">sigllm.primitives.prompting.gpt module</a>
+    <a class='left-prev' id="prev-link" href="sigllm.primitives.prompting.huggingface.html" title="previous page">sigllm.primitives.prompting.huggingface module</a>
+    <a class='right-next' id="next-link" href="sigllm.primitives.postprocessing.html" title="next page">sigllm.primitives.postprocessing module</a>
 
               </div>
               

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>sigllm.primitives.prompting.gpt module &#8212; sigllm 0.0.2.dev0 documentation</title>
+    <title>sigllm.primitives.prompting.huggingface module &#8212; sigllm 0.0.2.dev0 documentation</title>
     
   <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -40,8 +40,8 @@
     <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="sigllm.primitives.prompting.huggingface module" href="sigllm.primitives.prompting.huggingface.html" />
-    <link rel="prev" title="sigllm.primitives.prompting.anomalies module" href="sigllm.primitives.prompting.anomalies.html" />
+    <link rel="next" title="sigllm.primitives.prompting.timeseries_preprocessing module" href="sigllm.primitives.prompting.timeseries_preprocessing.html" />
+    <link rel="prev" title="sigllm.primitives.prompting.gpt module" href="sigllm.primitives.prompting.gpt.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
   </head>
@@ -186,47 +186,42 @@
               
               <div>
                 
-  <section id="module-sigllm.primitives.prompting.gpt">
-<span id="sigllm-primitives-prompting-gpt-module"></span><h1>sigllm.primitives.prompting.gpt module<a class="headerlink" href="#module-sigllm.primitives.prompting.gpt" title="Permalink to this headline">¶</a></h1>
+  <section id="module-sigllm.primitives.prompting.huggingface">
+<span id="sigllm-primitives-prompting-huggingface-module"></span><h1>sigllm.primitives.prompting.huggingface module<a class="headerlink" href="#module-sigllm.primitives.prompting.huggingface" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="sigllm.primitives.prompting.gpt.GPT">
-<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.prompting.gpt.</code><code class="sig-name descname">GPT</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'gpt-3.5-turbo'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">anomalous_percent</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">temp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">top_p</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">logprobs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">top_logprobs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/gpt.html#GPT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.gpt.GPT" title="Permalink to this definition">¶</a></dt>
+<dt id="sigllm.primitives.prompting.huggingface.HF">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.prompting.huggingface.</code><code class="sig-name descname">HF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'mistralai/Mistral-7B-Instruct-v0.2'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">anomalous_percent</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">temp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">top_p</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">raw</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">padding</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Prompt GPT models to detect anomalies in a time series.</p>
+<p>Prompt Pretrained models on HuggingFace to detect anomalies in a time series.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Model name. Default to <cite>‘gpt-3.5-turbo’</cite>.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Model name. Default to <cite>‘mistralai/Mistral-7B-Instruct-v0.2’</cite>.</p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>‘,’</cite>.</p></li>
 <li><p><strong>anomalous_percent</strong> (<em>float</em>) – Expected percentage of time series that are anomalous. Default to <cite>0.5</cite>.</p></li>
-<li><p><strong>temp</strong> (<em>float</em>) – Sampling temperature to use, between 0 and 2. Higher values like 0.8 will
-make the output more random, while lower values like 0.2 will make it
-more focused and deterministic. Do not use with <cite>top_p</cite>. Default to <cite>1</cite>.</p></li>
-<li><p><strong>top_p</strong> (<em>float</em>) – Alternative to sampling with temperature, called nucleus sampling, where the
-model considers the results of the tokens with top_p probability mass.
-So 0.1 means only the tokens comprising the top 10% probability mass are
-considered. Do not use with <cite>temp</cite>. Default to <cite>1</cite>.</p></li>
-<li><p><strong>logprobs</strong> (<em>bool</em>) – Whether to return the log probabilities of the output tokens or not.
-Defaults to <cite>False</cite>.</p></li>
-<li><p><strong>top_logprobs</strong> (<em>int</em>) – An integer between 0 and 20 specifying the number of most likely tokens
-to return at each token position. Default to <cite>None</cite>.</p></li>
-<li><p><strong>samples</strong> (<em>int</em>) – Number of responses to generate for each input message. Default to <cite>10</cite>.</p></li>
-<li><p><strong>seed</strong> (<em>int</em>) – Beta feature by OpenAI to sample deterministically. Default to <cite>None</cite>.</p></li>
+<li><p><strong>temp</strong> (<em>float</em>) – The value used to modulate the next token probabilities. Default to <cite>1</cite>.</p></li>
+<li><p><strong>top_p</strong> (<em>float</em>) – If set to float &lt; 1, only the smallest set of most probable tokens with
+probabilities that add up to <cite>top_p</cite> or higher are kept for generation.
+Default to <cite>1</cite>.</p></li>
+<li><p><strong>raw</strong> (<em>bool</em>) – Whether to return the raw output or not. Defaults to <cite>False</cite>.</p></li>
+<li><p><strong>samples</strong> (<em>int</em>) – Number of responsed to generate for each input message. Default to <cite>10</cite>.</p></li>
+<li><p><strong>padding</strong> (<em>int</em>) – Additional padding token to forecast to reduce short horizon predictions.
+Default to <cite>0</cite>.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="sigllm.primitives.prompting.gpt.GPT.detect">
-<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/gpt.html#GPT.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.gpt.GPT.detect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use GPT to forecast a signal.</p>
+<dt id="sigllm.primitives.prompting.huggingface.HF.detect">
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF.detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use HF to detect anomalies of a signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values.</p>
+<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p>List of detected anomalous values.</p></li>
-<li><p>Optionally, a list of the output tokens’ log probabilities.</p></li>
+<li><p>Optionally, a list of dictionaries for raw output.</p></li>
 </ul>
 </p>
 </dd>
@@ -246,8 +241,8 @@ to return at each token position. Default to <cite>None</cite>.</p></li>
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="sigllm.primitives.prompting.anomalies.html" title="previous page">sigllm.primitives.prompting.anomalies module</a>
-    <a class='right-next' id="next-link" href="sigllm.primitives.prompting.huggingface.html" title="next page">sigllm.primitives.prompting.huggingface module</a>
+    <a class='left-prev' id="prev-link" href="sigllm.primitives.prompting.gpt.html" title="previous page">sigllm.primitives.prompting.gpt module</a>
+    <a class='right-next' id="next-link" href="sigllm.primitives.prompting.timeseries_preprocessing.html" title="next page">sigllm.primitives.prompting.timeseries_preprocessing module</a>
 
               </div>
               

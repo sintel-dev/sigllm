@@ -40,7 +40,7 @@
     <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="sigllm.primitives.prompting.data module" href="sigllm.primitives.prompting.data.html" />
+    <link rel="next" title="sigllm.primitives.prompting.gpt module" href="sigllm.primitives.prompting.gpt.html" />
     <link rel="prev" title="sigllm.primitives.prompting package" href="sigllm.primitives.prompting.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
@@ -188,112 +188,95 @@
                 
   <section id="module-sigllm.primitives.prompting.anomalies">
 <span id="sigllm-primitives-prompting-anomalies-module"></span><h1>sigllm.primitives.prompting.anomalies module<a class="headerlink" href="#module-sigllm.primitives.prompting.anomalies" title="Permalink to this headline">¶</a></h1>
-<p>Result post-processing module.</p>
-<p>This module contains functions that help convert model responses back to indices and timestamps.</p>
+<p>Prompter post-processing module</p>
+<p>This module contains functions that help filter LLMs results to get the final anomalies.</p>
 <dl class="py function">
-<dt id="sigllm.primitives.prompting.anomalies.get_anomaly_list_within_seq">
-<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">get_anomaly_list_within_seq</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">res_list</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#get_anomaly_list_within_seq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.get_anomaly_list_within_seq" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the final list of anomalous indices of a sequence</p>
+<dt id="sigllm.primitives.prompting.anomalies.find_anomalies_in_windows">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">find_anomalies_in_windows</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#find_anomalies_in_windows"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.find_anomalies_in_windows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the final list of anomalous indices of each window</p>
 <p>Choose anomalous index in the sequence based on multiple LLM responses</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>res_list</strong> (<em>List</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – A list of 1-dimensional array containing anomous indices output by LLM</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) – Percentage of votes needed for an index to be deemed anomalous. Default: 0.5</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – A 3d array containing detected anomalous values from different
+responses of each window.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Percent of votes needed for an index to be anomalous. Default to <cite>0.5</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A 1-dimensional array containing final anomalous indices</p>
+<dd class="field-even"><p>A 2-dimensional array containing final anomalous indices of each windows.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="sigllm.primitives.prompting.anomalies.idx2time">
-<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">idx2time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sequence</span></em>, <em class="sig-param"><span class="n">idx_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#idx2time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.idx2time" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert list of indices into list of timestamp</p>
+<dt id="sigllm.primitives.prompting.anomalies.format_anomalies">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">format_anomalies</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">timestamp</span></em>, <em class="sig-param"><span class="n">padding_size</span><span class="o">=</span><span class="default_value">50</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#format_anomalies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.format_anomalies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert list of anomalous indices to list of intervals by padding to both sides
+and merge overlapping</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sequence</strong> (<em>pandas.Dataframe</em>) – Signal with timestamps and values</p></li>
-<li><p><strong>idx_list</strong> (<em>numpy.ndarray</em>) – A 1-dimensional array of indices</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – A 1-dimensional array of indices.</p></li>
+<li><p><strong>timestamp</strong> (<em>ndarray</em>) – List of full timestamp of the signal</p></li>
+<li><p><strong>padding_size</strong> (<em>int</em>) – Number of steps to pad on both sides of a timestamp point. Default to <cite>50</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A 1-dimensional array containing timestamps</p>
+<dd class="field-even"><p>List of intervals (start, end, score).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
+<dd class="field-odd"><p>List[Tuple]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="sigllm.primitives.prompting.anomalies.merge_anomaly_seq">
-<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">merge_anomaly_seq</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">anomalies</span></em>, <em class="sig-param"><span class="n">start_indices</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">step_size</span></em>, <em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#merge_anomaly_seq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.merge_anomaly_seq" title="Permalink to this definition">¶</a></dt>
+<dt id="sigllm.primitives.prompting.anomalies.merge_anomalous_sequences">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">merge_anomalous_sequences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">first_index</span></em>, <em class="sig-param"><span class="n">window_size</span></em>, <em class="sig-param"><span class="n">step_size</span></em>, <em class="sig-param"><span class="n">beta</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#merge_anomalous_sequences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.merge_anomalous_sequences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the final list of anomalous indices of a sequence when merging all rolling windows</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>anomalies</strong> (<em>List</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – A list of 1-dimensional array containing anomous indices of each window</p></li>
-<li><p><strong>start_indices</strong> (<em>numpy.ndarray</em>) – A 1-dimensional array contaning the first index of each window</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – A 2-dimensional array containing anomalous indices of each window.</p></li>
+<li><p><strong>first_index</strong> (<em>ndarray</em>) – A 1-dimensional array contaning the first index of each window.</p></li>
 <li><p><strong>window_size</strong> (<em>int</em>) – Length of each window</p></li>
 <li><p><strong>step_size</strong> (<em>int</em>) – Indicating the number of steps the window moves forward each round.</p></li>
-<li><p><strong>beta</strong> (<em>float</em>) – Percentage of containing windows needed for index to be deemed anomalous. Default: 0.5</p></li>
+<li><p><strong>beta</strong> (<em>float</em>) – Percent of windows needed for index to be anomalous. Default to <cite>0.5</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A 1-dimensional array containing final anomalous indices</p>
+<dd class="field-even"><p>A 1-dimensional array containing final anomalous indices.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
+<dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="sigllm.primitives.prompting.anomalies.str2idx">
-<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">str2idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">len_seq</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#str2idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.str2idx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a text string to indices.</p>
-<p>Convert a string containing digits into an array of indices.</p>
+<dt id="sigllm.primitives.prompting.anomalies.val2idx">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">val2idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#val2idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.val2idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert detected anomalies values into indices.</p>
+<p>Convert windows of detected anomalies values into an array of all indices
+in the input sequence that have those values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<em>str</em>) – A string containing indices values.</p></li>
-<li><p><strong>len_seq</strong> (<em>int</em>) – The length of processed sequence</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – String that was used to separate each element in text, Default to <cite>“,”</cite>.</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – A 3d array containing detected anomalous values from different
+responses of each window.</p></li>
+<li><p><strong>X</strong> (<em>ndarray</em>) – rolling window sequences.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A 1-dimensional array containing parsed elements in <cite>text</cite>.</p>
+<dd class="field-even"><p>A 3d array containing detected anomalous indices from different
+responses of each window.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="sigllm.primitives.prompting.anomalies.str2sig">
-<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">str2sig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">decimal</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#str2sig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.str2sig" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a text string to a signal.</p>
-<p>Convert a string containing digits into an array of numbers.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<em>str</em>) – A string containing signal values.</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – String that was used to separate each element in text, Default to <cite>“,”</cite>.</p></li>
-<li><p><strong>decimal</strong> (<em>int</em>) – Number of decimal points to shift each element in text to. Default to <cite>0</cite>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A 1-dimensional array containing parsed elements in <cite>text</cite>.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
+<dd class="field-odd"><p>List([ndarray])</p>
 </dd>
 </dl>
 </dd></dl>
@@ -307,7 +290,7 @@
               <div class='prev-next-bottom'>
                 
     <a class='left-prev' id="prev-link" href="sigllm.primitives.prompting.html" title="previous page">sigllm.primitives.prompting package</a>
-    <a class='right-next' id="next-link" href="sigllm.primitives.prompting.data.html" title="next page">sigllm.primitives.prompting.data module</a>
+    <a class='right-next' id="next-link" href="sigllm.primitives.prompting.gpt.html" title="next page">sigllm.primitives.prompting.gpt module</a>
 
               </div>
               

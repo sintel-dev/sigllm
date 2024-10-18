@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sigllm.primitives.prompting.data &#8212; sigllm 0.0.2.dev0 documentation</title>
+    <title>sigllm.primitives.prompting.timeseries_preprocessing &#8212; sigllm 0.0.2.dev0 documentation</title>
     
   <link rel="stylesheet" href="../../../../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -181,7 +181,7 @@
               
               <div>
                 
-  <h1>Source code for sigllm.primitives.prompting.data</h1><div class="highlight"><pre>
+  <h1>Source code for sigllm.primitives.prompting.timeseries_preprocessing</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -193,26 +193,25 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="rolling_window_sequences"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.data.html#sigllm.primitives.prompting.data.rolling_window_sequences">[docs]</a><span class="k">def</span> <span class="nf">rolling_window_sequences</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">):</span>
+<div class="viewcode-block" id="rolling_window_sequences"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.timeseries_preprocessing.html#sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences">[docs]</a><span class="k">def</span> <span class="nf">rolling_window_sequences</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create rolling window sequences out of time series data.</span>
 
-<span class="sd">    The function creates an array of sequences by rolling over the input sequence.</span>
+<span class="sd">    This function creates an array of sequences by rolling over the input sequence.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        X (ndarray):</span>
 <span class="sd">            The sequence to iterate over.</span>
-<span class="sd">        index (ndarray):</span>
-<span class="sd">            Array containing the index values of X.</span>
 <span class="sd">        window_size (int):</span>
-<span class="sd">            Length of window.</span>
+<span class="sd">            Length of window. Defaults to 500</span>
 <span class="sd">        step_size (int):</span>
-<span class="sd">            Indicating the number of steps to move the window forward each round.</span>
+<span class="sd">            Indicating the number of steps to move the window forward each round. Defaults to 100</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ndarray, ndarray:</span>
 <span class="sd">            * rolling window sequences.</span>
 <span class="sd">            * first index value of each input sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
     <span class="n">out_X</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">X_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
 
@@ -224,45 +223,7 @@
         <span class="n">X_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">start</span><span class="p">])</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">step_size</span>
 
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">out_X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_index</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="sig2str"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.data.html#sigllm.primitives.prompting.data.sig2str">[docs]</a><span class="k">def</span> <span class="nf">sig2str</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">rescale</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a signal to a string.</span>
-
-<span class="sd">    Convert a 1-dimensional time series into text by casting and rescaling it</span>
-<span class="sd">    to nonnegative integer values then into a string (optional).</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        values (numpy.ndarray):</span>
-<span class="sd">            A sequence of signal values.</span>
-<span class="sd">        sep (str):</span>
-<span class="sd">            String to separate each element in values. Default to `&quot;,&quot;`.</span>
-<span class="sd">        space (bool):</span>
-<span class="sd">            Whether to add space between each digit in the result. Default to `False`.</span>
-<span class="sd">        decimal (int):</span>
-<span class="sd">            Number of decimal points to keep from the float representation. Default to `0`.</span>
-<span class="sd">        rescale(bool):</span>
-<span class="sd">            Whether to rescale the time series. Default to `True`</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        str:</span>
-<span class="sd">            Text containing the elements of `values`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">values</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">values</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-    <span class="n">sequence</span> <span class="o">=</span> <span class="n">sign</span> <span class="o">*</span> <span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="n">decimal</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-
-    <span class="c1"># Rescale all elements to be nonnegative</span>
-    <span class="k">if</span> <span class="n">rescale</span><span class="p">:</span>
-        <span class="n">sequence</span> <span class="o">=</span> <span class="n">sequence</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
-
-    <span class="n">res</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="n">sequence</span><span class="p">])</span>
-    <span class="k">if</span> <span class="n">space</span><span class="p">:</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">res</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">out_X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_index</span><span class="p">),</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span></div>
 </pre></div>
 
               </div>

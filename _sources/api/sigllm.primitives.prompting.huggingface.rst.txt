@@ -1,0 +1,7 @@
+sigllm.primitives.prompting.huggingface module
+==============================================
+
+.. automodule:: sigllm.primitives.prompting.huggingface
+   :members:
+   :undoc-members:
+   :show-inheritance:

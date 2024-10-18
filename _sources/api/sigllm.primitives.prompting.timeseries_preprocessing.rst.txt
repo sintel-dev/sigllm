@@ -1,0 +1,7 @@
+sigllm.primitives.prompting.timeseries\_preprocessing module
+============================================================
+
+.. automodule:: sigllm.primitives.prompting.timeseries_preprocessing
+   :members:
+   :undoc-members:
+   :show-inheritance:
