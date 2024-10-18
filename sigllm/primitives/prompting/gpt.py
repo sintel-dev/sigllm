@@ -3,10 +3,9 @@
 import json
 import os
 
-import openai
 import tiktoken
-from tqdm import tqdm
 from openai import OpenAI
+from tqdm import tqdm
 
 PROMPT_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
@@ -63,7 +62,6 @@ class GPT:
         self.seed = seed
 
         self.tokenizer = tiktoken.encoding_for_model(self.name)
-
 
         valid_tokens = []
         for number in VALID_NUMBERS:
