@@ -1,0 +1,65 @@
+{
+    "primitives": [
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate",
+        "sklearn.impute.SimpleImputer",
+        "sigllm.primitives.transformation.Float2Scalar",
+        "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences",
+	    "sigllm.primitives.transformation.format_as_string",
+        "sigllm.primitives.prompting.gpt.GPT",
+        "sigllm.primitives.transformation.format_as_integer",
+        "sigllm.primitives.prompting.anomalies.val2idx",
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences",
+        "sigllm.primitives.prompting.anomalies.format_anomalies"
+    ],
+    "init_params": {
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
+            "time_column": "timestamp",
+            "interval": 21600,
+            "method": "mean"
+        },
+        "sigllm.primitives.transformation.Float2Scalar#1": {
+            "decimal": 2,
+            "rescale": true
+        },
+        "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences#1": {
+            "window_size": 200,
+            "step_size": 40
+        },
+        "sigllm.primitives.transformation.format_as_string#1": {
+            "space": true
+        },
+        "sigllm.primitives.prompting.gpt.GPT#1": {
+            "name": "gpt-3.5-turbo",
+            "samples": 10
+        },
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
+            "alpha": 0.4
+        },
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences#1": {
+            "beta": 0.5
+        }
+    },
+    "input_names": {
+        "sigllm.primitives.prompting.gpt.GPT#1": {
+            "X": "X_str"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1":{
+            "X": "y_hat"
+        }
+    },
+    "output_names": {
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
+            "index": "timestamp"
+        },
+        "sigllm.primitives.transformation.format_as_string#1": {
+            "X": "X_str"
+        },
+        "sigllm.primitives.prompting.gpt.GPT#1": {
+            "y": "y_hat"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1":{
+            "X": "y"
+        }
+    }
+}
