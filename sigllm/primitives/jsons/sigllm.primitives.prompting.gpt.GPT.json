@@ -9,7 +9,7 @@
         "subtype": "detector"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.prompting.huggingface.HF",
+    "primitive": "sigllm.primitives.prompting.gpt.GPT",
     "produce": {
         "method": "detect",
         "args": [
