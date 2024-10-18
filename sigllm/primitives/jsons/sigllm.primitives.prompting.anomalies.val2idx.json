@@ -1,0 +1,32 @@
+{
+    "name": "sigllm.primitives.prompting.anomalies.val2idx",
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>",
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Convert detected anomalous values into indices",
+    "classifiers": {
+        "type": "postprocessor",
+        "subtype": "converter"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.anomalies.val2idx",
+    "produce": {
+        "args": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            },
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ]
+    }
+}

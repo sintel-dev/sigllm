@@ -1,0 +1,73 @@
+{
+    "name": "sigllm.primitives.prompting.gpt.GPT",
+    "contributors": [
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Prompt openai GPT model to detect time series anomalies.",
+    "classifiers": {
+        "type": "estimator",
+        "subtype": "detector"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.gpt.GPT",
+    "produce": {
+        "method": "detect",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            },
+            {
+                "name": "logprob",
+                "type": "ndarray",
+                "default": null
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "name": {
+                "type": "str",
+                "default": "gpt-3.5-turbo"
+            },
+            "sep": {
+                "type": "str",
+                "default": ","
+            },
+            "anomalous_percent": {
+                "type": "float",
+                "default": "0.5"
+            },
+            "temp": {
+                "type": "float",
+                "default": 1
+            },
+            "top_p": {
+                "type": "float",
+                "default": 1
+            },
+            "logprobs": {
+                "type": "bool",
+                "default": false
+            },
+            "top_logprobs": {
+                "type": "int",
+                "default": null
+            },
+            "samples": {
+                "type": "int",
+                "default": 1
+            },
+            "seed": {
+                "type": "int",
+                "default": null
+            }
+        }
+    }
+}

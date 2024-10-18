@@ -1,0 +1,48 @@
+{
+    "name": "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences",
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>",
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Get the final list of anomalous indices of a sequence when merging all rolling windows",
+    "classifiers": {
+        "type": "postprocessor",
+        "subtype": "merger"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences",
+    "produce": {
+        "args": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }, 
+            {
+                "name": "first_index",
+                "type": "ndarray"
+            },
+            {
+                "name": "window_size",
+                "type": "int"
+            },
+            {
+                "name": "step_size",
+                "type": "int"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ]
+    }, 
+    "hyperparameters": {
+        "fixed": {
+            "beta": {
+                "type": "float",
+                "default": 0.5
+            }
+        }
+    }
+}
