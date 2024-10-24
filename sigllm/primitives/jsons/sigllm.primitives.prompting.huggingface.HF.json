@@ -1,0 +1,69 @@
+{
+    "name": "sigllm.primitives.prompting.huggingface.HF",
+    "contributors": [
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Prompt any HF model to detect time series anomalies.",
+    "classifiers": {
+        "type": "estimator",
+        "subtype": "detector"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.huggingface.HF",
+    "produce": {
+        "method": "detect",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            },
+            {
+                "name": "logprob",
+                "type": "ndarray",
+                "default": null
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "name": {
+                "type": "str",
+                "default": "mistralai/Mistral-7B-Instruct-v0.2"
+            },
+            "sep": {
+                "type": "str",
+                "default": ","
+            },
+            "anomalous_percent": {
+                "type": "float",
+                "default": "0.5"
+            },
+            "temp": {
+                "type": "float",
+                "default": 1
+            },
+            "top_p": {
+                "type": "float",
+                "default": 1
+            },
+            "raw": {
+                "type": "bool",
+                "default": false
+            },
+            "samples": {
+                "type": "int",
+                "default": 1
+            },
+            "padding": {
+                "type": "int",
+                "default": 0
+            }
+        }
+    }
+}

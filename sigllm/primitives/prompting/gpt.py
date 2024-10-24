@@ -1,61 +1,117 @@
 # -*- coding: utf-8 -*-
 
-"""
-GPT model module.
-
-This module contains functions that are specifically used for GPT models
-"""
+import json
 import os
 
+import tiktoken
 from openai import OpenAI
+from tqdm import tqdm
+
+PROMPT_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    'gpt_messages.json'
+)
+
+PROMPTS = json.load(open(PROMPT_PATH))
+
+VALID_NUMBERS = list("0123456789 ")
+BIAS = 30
 
 
-def load_system_prompt(file_path):
-    with open(file_path) as f:
-        system_prompt = f.read()
-    return system_prompt
+class GPT:
+    """Prompt GPT models to detect anomalies in a time series.
 
+    Args:
+        name (str):
+            Model name. Default to `'gpt-3.5-turbo'`.
+        sep (str):
+            String to separate each element in values. Default to `','`.
+        anomalous_percent (float):
+                Expected percentage of time series that are anomalous. Default to `0.5`.
+        temp (float):
+            Sampling temperature to use, between 0 and 2. Higher values like 0.8 will
+            make the output more random, while lower values like 0.2 will make it
+            more focused and deterministic. Do not use with `top_p`. Default to `1`.
+        top_p (float):
+            Alternative to sampling with temperature, called nucleus sampling, where the
+            model considers the results of the tokens with top_p probability mass.
+            So 0.1 means only the tokens comprising the top 10% probability mass are
+            considered. Do not use with `temp`. Default to `1`.
+        logprobs (bool):
+            Whether to return the log probabilities of the output tokens or not.
+            Defaults to `False`.
+        top_logprobs (int):
+            An integer between 0 and 20 specifying the number of most likely tokens
+            to return at each token position. Default to `None`.
+        samples (int):
+            Number of responses to generate for each input message. Default to `10`.
+        seed (int):
+            Beta feature by OpenAI to sample deterministically. Default to `None`.
+    """
 
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+    def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent=0.5, temp=1,
+                 top_p=1, logprobs=False, top_logprobs=None, samples=10, seed=None):
+        self.name = name
+        self.sep = sep
+        self.anomalous_percent = anomalous_percent
+        self.temp = temp
+        self.top_p = top_p
+        self.logprobs = logprobs
+        self.top_logprobs = top_logprobs
+        self.samples = samples
+        self.seed = seed
 
-ZERO_SHOT_FILE = 'gpt_system_prompt_zero_shot.txt'
-ONE_SHOT_FILE = 'gpt_system_prompt_one_shot.txt'
+        self.tokenizer = tiktoken.encoding_for_model(self.name)
 
-ZERO_SHOT_DIR = os.path.join(CURRENT_DIR, "..", "template", ZERO_SHOT_FILE)
-ONE_SHOT_DIR = os.path.join(CURRENT_DIR, "..", "template", ONE_SHOT_FILE)
+        valid_tokens = []
+        for number in VALID_NUMBERS:
+            token = self.tokenizer.encode(number)
+            valid_tokens.extend(token)
 
+        valid_tokens.extend(self.tokenizer.encode(self.sep))
+        self.logit_bias = {token: BIAS for token in valid_tokens}
 
-GPT_model = "gpt-4"  # "gpt-4-0125-preview" #  #  #"gpt-3.5-turbo" #
-client = OpenAI()
+        self.client = OpenAI()
 
+    def detect(self, X, **kwargs):
+        """Use GPT to forecast a signal.
 
-def get_gpt_model_response(message, gpt_model=GPT_model):
-    completion = client.chat.completions.create(
-        model=gpt_model,
-        messages=message,
-    )
-    return completion.choices[0].message.content
+        Args:
+            X (ndarray):
+                Input sequences of strings containing signal values.
 
+        Returns:
+            list, list:
+                * List of detected anomalous values.
+                * Optionally, a list of the output tokens' log probabilities.
+        """
+        input_length = len(self.tokenizer.encode(X[0]))
+        max_tokens = int(input_length * float(self.anomalous_percent))
 
-def create_message_zero_shot(seq_query, system_prompt_file=ZERO_SHOT_DIR):
-    messages = []
+        all_responses, all_probs = [], []
+        for text in tqdm(X):
+            message = ' '.join([PROMPTS['user_message'], text, self.sep])
+            response = self.client.chat.completions.create(
+                model=self.name,
+                messages=[
+                    {"role": "system", "content": PROMPTS['system_message']},
+                    {"role": "user", "content": message}
+                ],
+                max_tokens=max_tokens,
+                temperature=self.temp,
+                logprobs=self.logprobs,
+                top_logprobs=self.top_logprobs,
+                n=self.samples,
+                seed=self.seed
+            )
+            responses = [choice.message.content for choice in response.choices]
+            if self.logprobs:
+                probs = [choice.logprobs for choice in response.choices]
+                all_probs.append(probs)
 
-    messages.append({"role": "system", "content": load_system_prompt(system_prompt_file)})
+            all_responses.append(responses)
 
-    # final prompt
-    messages.append({"role": "user", "content": f"Sequence: {seq_query}"})
-    return messages
+        if self.logprobs:
+            return all_responses, all_probs
 
-
-def create_message_one_shot(seq_query, seq_ex, ano_idx_ex, system_prompt_file=ONE_SHOT_DIR):
-    messages = []
-
-    messages.append({"role": "system", "content": load_system_prompt(system_prompt_file)})
-
-    # one shot
-    messages.append({"role": "user", "content": f"Sequence: {seq_ex}"})
-    messages.append({"role": "assistant", "content": ano_idx_ex})
-
-    # final prompt
-    messages.append({"role": "user", "content": f"Sequence: {seq_query}"})
-    return messages
+        return all_responses

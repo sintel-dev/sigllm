@@ -112,11 +112,11 @@ setup(
     keywords='sigllm sigllm sigllm',
     name='sigllm',
     packages=find_packages(include=['sigllm', 'sigllm.*']),
-    python_requires='>=3.8',
+    python_requires='>=3.8,<3.12',
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=tests_require,
     url='https://github.com/sintel-dev/sigllm',
-    version='0.0.1',
+    version='0.0.2.dev1',
     zip_safe=False,
 )

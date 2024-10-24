@@ -1,5 +1,13 @@
 # History
 
+## 0.0.2 - 2024-10-24
+
+New Prompter pipeline.
+
+* Test README with GPT – [Issue #20](https://github.com/sintel-dev/sigllm/issues/20) by @sarahmish
+* Mistral-prompter – [Issue #19](https://github.com/sintel-dev/sigllm/issues/19) by @Linh-nk
+
+
 ## 0.0.1 - 2024-09-25
 
 First sigllm release to PyPI: https://pypi.org/project/sigllm/

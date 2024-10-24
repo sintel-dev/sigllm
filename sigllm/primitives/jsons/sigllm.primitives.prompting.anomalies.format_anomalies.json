@@ -1,0 +1,40 @@
+{
+    "name": "sigllm.primitives.prompting.anomalies.format_anomalies",
+    "contributors": [
+        "Sarah Alnegheimish <smish@mit.edu>",
+        "Linh Nguyen <linhnk@mit.edu>"
+    ],
+    "description": "Convert list of indices to list of intervals by padding to both sides and merge overlapping",
+    "classifiers": {
+        "type": "postprocessor",
+        "subtype": "converter"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.anomalies.format_anomalies",
+    "produce": {
+        "args": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            },
+            {
+                "name": "timestamp",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "anomalies",
+                "type": "List"
+            }
+        ]
+    }, 
+    "hyperparameters": {
+        "fixed": {
+            "padding_size": {
+                "type": "int",
+                "default": 50
+            }
+        }
+    }
+}

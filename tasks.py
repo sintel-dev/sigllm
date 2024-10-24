@@ -90,6 +90,7 @@ def readme(c):
     cwd = os.getcwd()
     os.makedirs(test_path, exist_ok=True)
     shutil.copy('README.md', test_path / 'README.md')
+    shutil.copy('tutorials/data.csv', test_path / 'data.csv')
     os.chdir(test_path)
     c.run('rundoc run --single-session python3 -t python3 README.md')
     os.chdir(cwd)

@@ -1,0 +1,30 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: README
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  readme:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: [3.8]
+        os: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install package and dependencies
+      run: |
+          python -m pip install --upgrade pip
+          python -m pip install invoke rundoc .
+    - name: invoke readme
+      env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      run: invoke readme

@@ -1,109 +1,97 @@
 # -*- coding: utf-8 -*-
 
 """
-Result post-processing module.
+Prompter post-processing module
 
-This module contains functions that help convert model responses back to indices and timestamps.
+This module contains functions that help filter LLMs results to get the final anomalies.
 """
+
 import numpy as np
 
 
-def str2sig(text, sep=',', decimal=0):
-    """Convert a text string to a signal.
+def val2idx(y, X):
+    """Convert detected anomalies values into indices.
 
-    Convert a string containing digits into an array of numbers.
-
-    Args:
-        text (str):
-            A string containing signal values.
-        sep (str):
-            String that was used to separate each element in text, Default to `","`.
-        decimal (int):
-            Number of decimal points to shift each element in text to. Default to `0`.
-
-    Returns:
-        numpy.ndarray:
-            A 1-dimensional array containing parsed elements in `text`.
-    """
-    # Remove all characters from text except the digits and sep and decimal point
-    text = ''.join(i for i in text if (i.isdigit() or i == sep or i == '.'))
-    values = np.fromstring(text, dtype=float, sep=sep)
-    return values * 10**(-decimal)
-
-
-def str2idx(text, len_seq, sep=','):
-    """Convert a text string to indices.
-
-    Convert a string containing digits into an array of indices.
+    Convert windows of detected anomalies values into an array of all indices
+    in the input sequence that have those values.
 
     Args:
-        text (str):
-            A string containing indices values.
-        len_seq (int):
-            The length of processed sequence
-        sep (str):
-            String that was used to separate each element in text, Default to `","`.
-
+        y (ndarray):
+            A 3d array containing detected anomalous values from different
+            responses of each window.
+        X (ndarray):
+            rolling window sequences.
     Returns:
-        numpy.ndarray:
-            A 1-dimensional array containing parsed elements in `text`.
+        List([ndarray]):
+            A 3d array containing detected anomalous indices from different
+            responses of each window.
     """
-    # Remove all characters from text except the digits and sep
-    text = ''.join(i for i in text if (i.isdigit() or i == sep))
 
-    values = np.fromstring(text, dtype=int, sep=sep)
+    idx_list = []
+    for anomalies_list, seq in zip(y, X):
+        idx_win_list = []
+        for anomalies in anomalies_list:
+            mask = np.isin(seq, anomalies)
+            indices = np.where(mask)[0]
+            idx_win_list.append(indices)
+        idx_list.append(idx_win_list)
+    idx_list = np.array(idx_list, dtype=object)
+    return idx_list
 
-    # Remove indices that exceed the length of sequence
-    values = values[values < len_seq]
-    return values
 
-
-def get_anomaly_list_within_seq(res_list, alpha=0.5):
-    """Get the final list of anomalous indices of a sequence
+def find_anomalies_in_windows(y, alpha=0.5):
+    """Get the final list of anomalous indices of each window
 
     Choose anomalous index in the sequence based on multiple LLM responses
 
     Args:
-        res_list (List[numpy.ndarray]):
-            A list of 1-dimensional array containing anomous indices output by LLM
+        y (ndarray):
+            A 3d array containing detected anomalous values from different
+            responses of each window.
         alpha (float):
-            Percentage of votes needed for an index to be deemed anomalous. Default: 0.5
+            Percent of votes needed for an index to be anomalous. Default to `0.5`.
 
     Returns:
-        numpy.ndarray:
-            A 1-dimensional array containing final anomalous indices
+        ndarray:
+            A 2-dimensional array containing final anomalous indices of each windows.
     """
-    min_vote = np.ceil(alpha * len(res_list))
 
-    flattened_res = np.concatenate(res_list)
+    idx_list = []
+    for samples in y:
+        min_vote = np.ceil(alpha * len(samples))
+        # print(type(samples.tolist()))
 
-    unique_elements, counts = np.unique(flattened_res, return_counts=True)
+        flattened_res = np.concatenate(samples.tolist())
 
-    final_list = unique_elements[counts >= min_vote]
+        unique_elements, counts = np.unique(flattened_res, return_counts=True)
 
-    return final_list
+        final_list = unique_elements[counts >= min_vote]
+
+        idx_list.append(final_list)
+    idx_list = np.array(idx_list, dtype=object)
+    return idx_list
 
 
-def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5):
+def merge_anomalous_sequences(y, first_index, window_size, step_size, beta=0.5):
     """Get the final list of anomalous indices of a sequence when merging all rolling windows
 
     Args:
-        anomalies (List[numpy.ndarray]):
-            A list of 1-dimensional array containing anomous indices of each window
-        start_indices (numpy.ndarray):
-            A 1-dimensional array contaning the first index of each window
+        y (ndarray):
+            A 2-dimensional array containing anomalous indices of each window.
+        first_index (ndarray):
+            A 1-dimensional array contaning the first index of each window.
         window_size (int):
             Length of each window
         step_size (int):
             Indicating the number of steps the window moves forward each round.
         beta (float):
-            Percentage of containing windows needed for index to be deemed anomalous. Default: 0.5
+            Percent of windows needed for index to be anomalous. Default to `0.5`.
 
     Return:
-        numpy.ndarray:
-            A 1-dimensional array containing final anomalous indices
+        ndarray:
+            A 1-dimensional array containing final anomalous indices.
     """
-    anomalies = [arr + first_idx for (arr, first_idx) in zip(anomalies, start_indices)]
+    anomalies = [arr + first_idx for (arr, first_idx) in zip(y, first_index)]
 
     min_vote = np.ceil(beta * window_size / step_size)
 
@@ -116,17 +104,46 @@ def merge_anomaly_seq(anomalies, start_indices, window_size, step_size, beta=0.5
     return np.sort(final_list)
 
 
-def idx2time(sequence, idx_list):
-    """Convert list of indices into list of timestamp
+def format_anomalies(y, timestamp, padding_size=50):
+    """Convert list of anomalous indices to list of intervals by padding to both sides
+    and merge overlapping
 
     Args:
-        sequence (pandas.Dataframe):
-            Signal with timestamps and values
-        idx_list (numpy.ndarray):
-            A 1-dimensional array of indices
+        y (ndarray):
+            A 1-dimensional array of indices.
+        timestamp (ndarray):
+            List of full timestamp of the signal
+        padding_size (int):
+            Number of steps to pad on both sides of a timestamp point. Default to `50`.
 
     Returns:
-        numpy.ndarray:
-            A 1-dimensional array containing timestamps
+        List[Tuple]:
+            List of intervals (start, end, score).
     """
-    return sequence.iloc[idx_list].timestamp.to_numpy()
+    y = timestamp[y]  # Convert list of indices into list of timestamps
+    start, end = timestamp[0], timestamp[-1]
+    interval = timestamp[1] - timestamp[0]
+    intervals = []
+    for timestamp in y:
+        intervals.append((max(start, timestamp - padding_size * interval),
+                         min(end, timestamp + padding_size * interval)))
+    if not intervals:
+        return []
+
+    intervals.sort(key=lambda x: x[0])  # Sort intervals based on start time
+    merged_intervals = [intervals[0]]  # Initialize merged intervals with the first interval
+
+    for current_interval in intervals[1:]:
+        previous_interval = merged_intervals[-1]
+
+        # If the current interval overlaps with the previous one, merge them
+        if current_interval[0] <= previous_interval[1]:
+            previous_interval = (
+                previous_interval[0], max(
+                    previous_interval[1], current_interval[1]))
+            merged_intervals[-1] = previous_interval
+        else:
+            merged_intervals.append(current_interval)  # Append the current interval if no overlap
+
+    merged_intervals = [(interval[0], interval[1], 0) for interval in merged_intervals]
+    return merged_intervals
