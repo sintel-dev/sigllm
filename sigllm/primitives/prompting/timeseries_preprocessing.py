@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Data preprocessing module.
+"""Data preprocessing module.
 
 This module contains functions that prepare timeseries for a language model.
 """

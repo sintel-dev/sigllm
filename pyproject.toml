@@ -13,20 +13,19 @@ classifiers = [
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
 ]
-keywords = 'sigllm LLM4TS'
+keywords = ['sigllm', 'LLM4TS', 'timeseries', 'anomaly-detection']
 dynamic = ['version']
 license = {text = 'MIT license'}
 requires-python = '>=3.8,<3.12'
 readme = 'README.md'
 dependencies = [
     'numpy>=1.17.5,<2',
+    'pandas>=1.0.0,<2',
+    'scikit-learn>=0.22.1,<2',
     'openai>=1.46.0',
-    'pandas>=1,<2',
-    'orion-ml>=0.5,<0.8',
-    'scikit-learn>=0.22,<1.2',
     'tiktoken>=0.7.0',
     'transformers>=4.44.2',
-    'torch>=1.4',
+    'torch>=1.4.0',
     'accelerate>=0.34.2',
     'sentencepiece>=0.2.0'
 ]
@@ -64,6 +63,7 @@ dev = [
     # Advanced testing
     'coverage>=4.5.1',
     'tox>=2.9.1',
+    'invoke',
 ]
 
 [project.urls]
@@ -158,8 +158,11 @@ select = [
 ]
 ignore = [
     # pydocstyle
-    "D107",  # Missing docstring in __init__
+    "D107",   # Missing docstring in __init__
     "D417",   # Missing argument descriptions in the docstring
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "D105",   # Missing docstring in magic method
     "PD901",
     "PD101",
 ]

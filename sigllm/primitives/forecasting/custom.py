@@ -45,7 +45,7 @@ def rolling_window_sequences(X, y, index, window_size, target_size, step_size, t
         end = start + window_size
 
         out_X.append(X[start:end])
-        out_y.append(target[end:end + target_size])
+        out_y.append(target[end : end + target_size])
         X_index.append(index[start])
         y_index.append(index[end])
         start = start + step_size

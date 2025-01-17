@@ -8,14 +8,11 @@ import tiktoken
 from openai import OpenAI
 from tqdm import tqdm
 
-PROMPT_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'TEMPLATE.json'
-)
+PROMPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'TEMPLATE.json')
 
 PROMPTS = json.load(open(PROMPT_PATH))
 
-VALID_NUMBERS = list("0123456789 ")
+VALID_NUMBERS = list('0123456789 ')
 BIAS = 30
 
 
@@ -52,8 +49,19 @@ class GPT:
             Beta feature by OpenAI to sample deterministically. Default to `None`.
     """
 
-    def __init__(self, name='gpt-3.5-turbo', chat=True, sep=',', steps=1, temp=1,
-                 top_p=1, logprobs=False, top_logprobs=None, samples=1, seed=None):
+    def __init__(
+        self,
+        name='gpt-3.5-turbo',
+        chat=True,
+        sep=',',
+        steps=1,
+        temp=1,
+        top_p=1,
+        logprobs=False,
+        top_logprobs=None,
+        samples=1,
+        seed=None,
+    ):
         self.name = name
         self.chat = chat
         self.sep = sep
@@ -100,8 +108,8 @@ class GPT:
                 response = self.client.chat.completions.create(
                     model=self.name,
                     messages=[
-                        {"role": "system", "content": PROMPTS['system_message']},
-                        {"role": "user", "content": message}
+                        {'role': 'system', 'content': PROMPTS['system_message']},
+                        {'role': 'user', 'content': message},
                     ],
                     max_completion_tokens=max_tokens,
                     temperature=self.temp,
@@ -109,7 +117,7 @@ class GPT:
                     logprobs=self.logprobs,
                     top_logprobs=self.top_logprobs,
                     n=self.samples,
-                    seed=self.seed
+                    seed=self.seed,
                 )
                 responses = [choice.message.content for choice in response.choices]
 
@@ -125,7 +133,7 @@ class GPT:
                     top_logprobs=self.top_logprobs,
                     logit_bias=self.logit_bias,
                     n=self.samples,
-                    seed=self.seed
+                    seed=self.seed,
                 )
                 responses = [choice.text for choice in response.choices]
 

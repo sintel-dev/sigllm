@@ -8,12 +8,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 LOGGER = logging.getLogger(__name__)
 
-DEFAULT_BOS_TOKEN = "<s>"
-DEFAULT_EOS_TOKEN = "</s>"
-DEFAULT_UNK_TOKEN = "<unk>"
-DEFAULT_PAD_TOKEN = "<pad>"
+DEFAULT_BOS_TOKEN = '<s>'
+DEFAULT_EOS_TOKEN = '</s>'
+DEFAULT_UNK_TOKEN = '<unk>'
+DEFAULT_PAD_TOKEN = '<pad>'
 
-VALID_NUMBERS = list("0123456789")
+VALID_NUMBERS = list('0123456789')
 
 DEFAULT_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
 
@@ -43,8 +43,17 @@ class HF:
             Default to `0`.
     """
 
-    def __init__(self, name=DEFAULT_MODEL, sep=',', steps=1, temp=1, top_p=1,
-                 raw=False, samples=1, padding=0):
+    def __init__(
+        self,
+        name=DEFAULT_MODEL,
+        sep=',',
+        steps=1,
+        temp=1,
+        top_p=1,
+        raw=False,
+        samples=1,
+        padding=0,
+    ):
         self.name = name
         self.sep = sep
         self.steps = steps
@@ -59,13 +68,13 @@ class HF:
         # special tokens
         special_tokens_dict = dict()
         if self.tokenizer.eos_token is None:
-            special_tokens_dict["eos_token"] = DEFAULT_EOS_TOKEN
+            special_tokens_dict['eos_token'] = DEFAULT_EOS_TOKEN
         if self.tokenizer.bos_token is None:
-            special_tokens_dict["bos_token"] = DEFAULT_BOS_TOKEN
+            special_tokens_dict['bos_token'] = DEFAULT_BOS_TOKEN
         if self.tokenizer.unk_token is None:
-            special_tokens_dict["unk_token"] = DEFAULT_UNK_TOKEN
+            special_tokens_dict['unk_token'] = DEFAULT_UNK_TOKEN
         if self.tokenizer.pad_token is None:
-            special_tokens_dict["pad_token"] = DEFAULT_PAD_TOKEN
+            special_tokens_dict['pad_token'] = DEFAULT_PAD_TOKEN
 
         self.tokenizer.add_special_tokens(special_tokens_dict)
         self.tokenizer.pad_token = self.tokenizer.eos_token  # indicate the end of the time series
@@ -77,12 +86,13 @@ class HF:
             valid_tokens.append(token)
 
         valid_tokens.append(self.tokenizer.convert_tokens_to_ids(self.sep))
-        self.invalid_tokens = [[i]
-                               for i in range(len(self.tokenizer) - 1) if i not in valid_tokens]
+        self.invalid_tokens = [
+            [i] for i in range(len(self.tokenizer) - 1) if i not in valid_tokens
+        ]
 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.name,
-            device_map="auto",
+            device_map='auto',
             torch_dtype=torch.float16,
         )
 
@@ -103,10 +113,7 @@ class HF:
         """
         all_responses, all_probs = [], []
         for text in tqdm(X):
-            tokenized_input = self.tokenizer(
-                [text],
-                return_tensors="pt"
-            ).to("cuda")
+            tokenized_input = self.tokenizer([text], return_tensors='pt').to('cuda')
 
             input_length = tokenized_input['input_ids'].shape[1]
             average_length = input_length / len(text.split(','))
@@ -120,13 +127,13 @@ class HF:
                 top_p=self.top_p,
                 bad_words_ids=self.invalid_tokens,
                 renormalize_logits=True,
-                num_return_sequences=self.samples
+                num_return_sequences=self.samples,
             )
 
             responses = self.tokenizer.batch_decode(
                 generate_ids[:, input_length:],
                 skip_special_tokens=True,
-                clean_up_tokenization_spaces=False
+                clean_up_tokenization_spaces=False,
             )
 
             all_responses.append(responses)
