@@ -38,6 +38,8 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive',
 ]
 
 ipython_execlines = [
@@ -77,7 +79,7 @@ slug = 'sigllm'
 title = project + ' Documentation',
 copyright = '2023, MIT Data To AI Lab'
 author = 'MIT Data To AI Lab'
-description = 'Signals plus LLMs'
+description = 'LLMs for unsupervised time series anomaly detection.'
 user = 'sintel-dev'
 
 # The version info for the project you're documenting, acts as replacement
