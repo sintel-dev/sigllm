@@ -3,6 +3,19 @@ import numpy as np
 
 
 def outliers(predictions):
+    """Remove outliers from predictions.
+
+    Find the outliers according to Q1 and Q3 of the drawn samples. If
+    the prediction value exceeds these bounds, remove it from the output.
+
+    Args:
+        predictions (ndarray):
+            Predicted sequences.
+
+    Return:
+        ndarray:
+            Predictions after removing outliers.
+    """
     Q1, Q3 = np.percentile(predictions, [25, 75])
 
     IQR = Q3 - Q1
@@ -14,7 +27,7 @@ def outliers(predictions):
     return predictions
 
 
-def aggregate_rolling_window(y, step_size=1, agg="median", remove_outliers=False):
+def aggregate_rolling_window(y, step_size=1, agg='median', remove_outliers=False):
     """Aggregate a rolling window sequence.
 
     Convert a rolling window sequence into a flattened time series.

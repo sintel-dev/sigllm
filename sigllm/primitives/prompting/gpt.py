@@ -7,14 +7,11 @@ import tiktoken
 from openai import OpenAI
 from tqdm import tqdm
 
-PROMPT_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'gpt_messages.json'
-)
+PROMPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'gpt_messages.json')
 
 PROMPTS = json.load(open(PROMPT_PATH))
 
-VALID_NUMBERS = list("0123456789 ")
+VALID_NUMBERS = list('0123456789 ')
 BIAS = 30
 
 
@@ -49,8 +46,18 @@ class GPT:
             Beta feature by OpenAI to sample deterministically. Default to `None`.
     """
 
-    def __init__(self, name='gpt-3.5-turbo', sep=',', anomalous_percent=0.5, temp=1,
-                 top_p=1, logprobs=False, top_logprobs=None, samples=10, seed=None):
+    def __init__(
+        self,
+        name='gpt-3.5-turbo',
+        sep=',',
+        anomalous_percent=0.5,
+        temp=1,
+        top_p=1,
+        logprobs=False,
+        top_logprobs=None,
+        samples=10,
+        seed=None,
+    ):
         self.name = name
         self.sep = sep
         self.anomalous_percent = anomalous_percent
@@ -94,15 +101,15 @@ class GPT:
             response = self.client.chat.completions.create(
                 model=self.name,
                 messages=[
-                    {"role": "system", "content": PROMPTS['system_message']},
-                    {"role": "user", "content": message}
+                    {'role': 'system', 'content': PROMPTS['system_message']},
+                    {'role': 'user', 'content': message},
                 ],
                 max_tokens=max_tokens,
                 temperature=self.temp,
                 logprobs=self.logprobs,
                 top_logprobs=self.top_logprobs,
                 n=self.samples,
-                seed=self.seed
+                seed=self.seed,
             )
             responses = [choice.message.content for choice in response.choices]
             if self.logprobs:

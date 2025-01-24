@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Prompter post-processing module
+"""Prompter post-processing module.
 
 This module contains functions that help filter LLMs results to get the final anomalies.
 """
@@ -21,12 +20,12 @@ def val2idx(y, X):
             responses of each window.
         X (ndarray):
             rolling window sequences.
+
     Returns:
         List([ndarray]):
             A 3d array containing detected anomalous indices from different
             responses of each window.
     """
-
     idx_list = []
     for anomalies_list, seq in zip(y, X):
         idx_win_list = []
@@ -40,7 +39,7 @@ def val2idx(y, X):
 
 
 def find_anomalies_in_windows(y, alpha=0.5):
-    """Get the final list of anomalous indices of each window
+    """Get the final list of anomalous indices of each window.
 
     Choose anomalous index in the sequence based on multiple LLM responses
 
@@ -55,7 +54,6 @@ def find_anomalies_in_windows(y, alpha=0.5):
         ndarray:
             A 2-dimensional array containing final anomalous indices of each windows.
     """
-
     idx_list = []
     for samples in y:
         min_vote = np.ceil(alpha * len(samples))
@@ -73,7 +71,9 @@ def find_anomalies_in_windows(y, alpha=0.5):
 
 
 def merge_anomalous_sequences(y, first_index, window_size, step_size, beta=0.5):
-    """Get the final list of anomalous indices of a sequence when merging all rolling windows
+    """Merge sequences.
+
+    Get the final list of anomalous indices of a sequence when merging all rolling windows.
 
     Args:
         y (ndarray):
@@ -105,14 +105,16 @@ def merge_anomalous_sequences(y, first_index, window_size, step_size, beta=0.5):
 
 
 def format_anomalies(y, timestamp, padding_size=50):
-    """Convert list of anomalous indices to list of intervals by padding to both sides
-    and merge overlapping
+    """Format anomalies into intervals.
+
+    Convert list of anomalous indices to list of intervals
+    by padding to both sides and merge overlapping.
 
     Args:
         y (ndarray):
             A 1-dimensional array of indices.
         timestamp (ndarray):
-            List of full timestamp of the signal
+            List of full timestamp of the signal.
         padding_size (int):
             Number of steps to pad on both sides of a timestamp point. Default to `50`.
 
@@ -125,8 +127,10 @@ def format_anomalies(y, timestamp, padding_size=50):
     interval = timestamp[1] - timestamp[0]
     intervals = []
     for timestamp in y:
-        intervals.append((max(start, timestamp - padding_size * interval),
-                         min(end, timestamp + padding_size * interval)))
+        intervals.append((
+            max(start, timestamp - padding_size * interval),
+            min(end, timestamp + padding_size * interval),
+        ))
     if not intervals:
         return []
 
@@ -139,8 +143,9 @@ def format_anomalies(y, timestamp, padding_size=50):
         # If the current interval overlaps with the previous one, merge them
         if current_interval[0] <= previous_interval[1]:
             previous_interval = (
-                previous_interval[0], max(
-                    previous_interval[1], current_interval[1]))
+                previous_interval[0],
+                max(previous_interval[1], current_interval[1]),
+            )
             merged_intervals[-1] = previous_interval
         else:
             merged_intervals.append(current_interval)  # Append the current interval if no overlap
