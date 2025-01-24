@@ -261,7 +261,7 @@ We provide two types of pipelines for anomaly detection:</p>
 <section id="detect-anomalies-using-a-sigllm-pipeline">
 <h1>Detect anomalies using a SigLLM pipeline<a class="headerlink" href="#detect-anomalies-using-a-sigllm-pipeline" title="Permalink to this headline">¶</a></h1>
 <p>We will load a demo data located in <code class="docutils literal notranslate"><span class="pre">tutorials/data.csv</span></code> for this example:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
 <span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -279,7 +279,7 @@ We provide two types of pipelines for anomaly detection:</p>
 </div>
 <p>In this example we use <code class="docutils literal notranslate"><span class="pre">gpt_detector</span></code> pipeline and set some hyperparameters. In this case, we set the thresholding strategy to dynamic. The hyperparameters are optional and can be removed.</p>
 <p>In addtion, the <code class="docutils literal notranslate"><span class="pre">SigLLM</span></code> object takes in a <code class="docutils literal notranslate"><span class="pre">decimal</span></code> argument to determine how many digits from the float value include. Here, we don’t want to keep any decimal values, so we set it to zero.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sigllm</span> <span class="kn">import</span> <span class="n">SigLLM</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sigllm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SigLLM</span>
 
 <span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;orion.primitives.timeseries_anomalies.find_anomalies#1&quot;</span><span class="p">:</span> <span class="p">{</span>

@@ -184,16 +184,15 @@
   <h1>Source code for sigllm.primitives.prompting.anomalies</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Prompter post-processing module</span>
+<span class="sd">&quot;&quot;&quot;Prompter post-processing module.</span>
 
 <span class="sd">This module contains functions that help filter LLMs results to get the final anomalies.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
-<div class="viewcode-block" id="val2idx"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.val2idx">[docs]</a><span class="k">def</span> <span class="nf">val2idx</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="val2idx"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.val2idx">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">val2idx</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert detected anomalies values into indices.</span>
 
 <span class="sd">    Convert windows of detected anomalies values into an array of all indices</span>
@@ -205,12 +204,12 @@
 <span class="sd">            responses of each window.</span>
 <span class="sd">        X (ndarray):</span>
 <span class="sd">            rolling window sequences.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        List([ndarray]):</span>
 <span class="sd">            A 3d array containing detected anomalous indices from different</span>
 <span class="sd">            responses of each window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">idx_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">anomalies_list</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
         <span class="n">idx_win_list</span> <span class="o">=</span> <span class="p">[]</span>
@@ -223,8 +222,8 @@
     <span class="k">return</span> <span class="n">idx_list</span></div>
 
 
-<div class="viewcode-block" id="find_anomalies_in_windows"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.find_anomalies_in_windows">[docs]</a><span class="k">def</span> <span class="nf">find_anomalies_in_windows</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the final list of anomalous indices of each window</span>
+<div class="viewcode-block" id="find_anomalies_in_windows"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.find_anomalies_in_windows">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">find_anomalies_in_windows</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the final list of anomalous indices of each window.</span>
 
 <span class="sd">    Choose anomalous index in the sequence based on multiple LLM responses</span>
 
@@ -239,7 +238,6 @@
 <span class="sd">        ndarray:</span>
 <span class="sd">            A 2-dimensional array containing final anomalous indices of each windows.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">idx_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">samples</span> <span class="ow">in</span> <span class="n">y</span><span class="p">:</span>
         <span class="n">min_vote</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>
@@ -256,8 +254,10 @@
     <span class="k">return</span> <span class="n">idx_list</span></div>
 
 
-<div class="viewcode-block" id="merge_anomalous_sequences"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.merge_anomalous_sequences">[docs]</a><span class="k">def</span> <span class="nf">merge_anomalous_sequences</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">first_index</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the final list of anomalous indices of a sequence when merging all rolling windows</span>
+<div class="viewcode-block" id="merge_anomalous_sequences"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.merge_anomalous_sequences">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">merge_anomalous_sequences</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">first_index</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge sequences.</span>
+
+<span class="sd">    Get the final list of anomalous indices of a sequence when merging all rolling windows.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        y (ndarray):</span>
@@ -288,15 +288,17 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">final_list</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="format_anomalies"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.format_anomalies">[docs]</a><span class="k">def</span> <span class="nf">format_anomalies</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">padding_size</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert list of anomalous indices to list of intervals by padding to both sides</span>
-<span class="sd">    and merge overlapping</span>
+<div class="viewcode-block" id="format_anomalies"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.anomalies.html#sigllm.primitives.prompting.anomalies.format_anomalies">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_anomalies</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">padding_size</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format anomalies into intervals.</span>
+
+<span class="sd">    Convert list of anomalous indices to list of intervals</span>
+<span class="sd">    by padding to both sides and merge overlapping.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        y (ndarray):</span>
 <span class="sd">            A 1-dimensional array of indices.</span>
 <span class="sd">        timestamp (ndarray):</span>
-<span class="sd">            List of full timestamp of the signal</span>
+<span class="sd">            List of full timestamp of the signal.</span>
 <span class="sd">        padding_size (int):</span>
 <span class="sd">            Number of steps to pad on both sides of a timestamp point. Default to `50`.</span>
 
@@ -309,8 +311,10 @@
     <span class="n">interval</span> <span class="o">=</span> <span class="n">timestamp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">timestamp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">intervals</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">timestamp</span> <span class="ow">in</span> <span class="n">y</span><span class="p">:</span>
-        <span class="n">intervals</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="nb">max</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">-</span> <span class="n">padding_size</span> <span class="o">*</span> <span class="n">interval</span><span class="p">),</span>
-                         <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">padding_size</span> <span class="o">*</span> <span class="n">interval</span><span class="p">)))</span>
+        <span class="n">intervals</span><span class="o">.</span><span class="n">append</span><span class="p">((</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">-</span> <span class="n">padding_size</span> <span class="o">*</span> <span class="n">interval</span><span class="p">),</span>
+            <span class="nb">min</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">timestamp</span> <span class="o">+</span> <span class="n">padding_size</span> <span class="o">*</span> <span class="n">interval</span><span class="p">),</span>
+        <span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">intervals</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
 
@@ -323,8 +327,9 @@
         <span class="c1"># If the current interval overlaps with the previous one, merge them</span>
         <span class="k">if</span> <span class="n">current_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">previous_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">previous_interval</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">previous_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">max</span><span class="p">(</span>
-                    <span class="n">previous_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">current_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">previous_interval</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="nb">max</span><span class="p">(</span><span class="n">previous_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">current_interval</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="p">)</span>
             <span class="n">merged_intervals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">previous_interval</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">merged_intervals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_interval</span><span class="p">)</span>  <span class="c1"># Append the current interval if no overlap</span>

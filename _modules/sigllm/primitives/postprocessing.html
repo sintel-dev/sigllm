@@ -183,10 +183,23 @@
                 
   <h1>Source code for sigllm.primitives.postprocessing</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
-<div class="viewcode-block" id="outliers"><a class="viewcode-back" href="../../../api/sigllm.primitives.postprocessing.html#sigllm.primitives.postprocessing.outliers">[docs]</a><span class="k">def</span> <span class="nf">outliers</span><span class="p">(</span><span class="n">predictions</span><span class="p">):</span>
+<div class="viewcode-block" id="outliers"><a class="viewcode-back" href="../../../api/sigllm.primitives.postprocessing.html#sigllm.primitives.postprocessing.outliers">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">outliers</span><span class="p">(</span><span class="n">predictions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove outliers from predictions.</span>
+
+<span class="sd">    Find the outliers according to Q1 and Q3 of the drawn samples. If</span>
+<span class="sd">    the prediction value exceeds these bounds, remove it from the output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        predictions (ndarray):</span>
+<span class="sd">            Predicted sequences.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        ndarray:</span>
+<span class="sd">            Predictions after removing outliers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">Q1</span><span class="p">,</span> <span class="n">Q3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">75</span><span class="p">])</span>
 
     <span class="n">IQR</span> <span class="o">=</span> <span class="n">Q3</span> <span class="o">-</span> <span class="n">Q1</span>
@@ -198,7 +211,7 @@
     <span class="k">return</span> <span class="n">predictions</span></div>
 
 
-<div class="viewcode-block" id="aggregate_rolling_window"><a class="viewcode-back" href="../../../api/sigllm.primitives.postprocessing.html#sigllm.primitives.postprocessing.aggregate_rolling_window">[docs]</a><span class="k">def</span> <span class="nf">aggregate_rolling_window</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">agg</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">,</span> <span class="n">remove_outliers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="aggregate_rolling_window"><a class="viewcode-back" href="../../../api/sigllm.primitives.postprocessing.html#sigllm.primitives.postprocessing.aggregate_rolling_window">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">aggregate_rolling_window</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">agg</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">,</span> <span class="n">remove_outliers</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate a rolling window sequence.</span>
 
 <span class="sd">    Convert a rolling window sequence into a flattened time series.</span>

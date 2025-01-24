@@ -188,7 +188,6 @@
                 
   <section id="module-sigllm.primitives.transformation">
 <span id="sigllm-primitives-transformation-module"></span><h1>sigllm.primitives.transformation module<a class="headerlink" href="#module-sigllm.primitives.transformation" title="Permalink to this headline">¶</a></h1>
-<p>Transformation module.</p>
 <dl class="py class">
 <dt id="sigllm.primitives.transformation.Float2Scalar">
 <em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">Float2Scalar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">decimal</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">rescale</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Float2Scalar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Float2Scalar" title="Permalink to this definition">¶</a></dt>
@@ -211,12 +210,14 @@ and you can keep certain decimal points.</p>
 <dl class="py method">
 <dt id="sigllm.primitives.transformation.Float2Scalar.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Float2Scalar.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Float2Scalar.fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Learn minimum value in fit data.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt id="sigllm.primitives.transformation.Float2Scalar.transform">
 <code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Float2Scalar.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Float2Scalar.transform" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Transform data.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -242,7 +243,8 @@ number of decimal points.</p>
 <dl class="py method">
 <dt id="sigllm.primitives.transformation.Scalar2Float.transform">
 <code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">minimum</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">decimal</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#Scalar2Float.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.Scalar2Float.transform" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Convert data from integer to float.</p>
+</dd></dl>
 
 </dd></dl>
 

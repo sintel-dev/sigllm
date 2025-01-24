@@ -215,7 +215,21 @@ Use the aggregation specified to make each timestamp a single value.</p>
 <dl class="py function">
 <dt id="sigllm.primitives.postprocessing.outliers">
 <code class="sig-prename descclassname">sigllm.primitives.postprocessing.</code><code class="sig-name descname">outliers</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">predictions</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/postprocessing.html#outliers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.postprocessing.outliers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Remove outliers from predictions.</p>
+<p>Find the outliers according to Q1 and Q3 of the drawn samples. If
+the prediction value exceeds these bounds, remove it from the output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>predictions</strong> (<em>ndarray</em>) – Predicted sequences.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Predictions after removing outliers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

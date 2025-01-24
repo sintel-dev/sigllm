@@ -184,34 +184,31 @@
   <h1>Source code for sigllm.primitives.prompting.huggingface</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoModelForCausalLM</span><span class="p">,</span> <span class="n">AutoTokenizer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AutoModelForCausalLM</span><span class="p">,</span> <span class="n">AutoTokenizer</span>
 
-<span class="n">PROMPT_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
-    <span class="s1">&#39;huggingface_messages.json&#39;</span>
-<span class="p">)</span>
+<span class="n">PROMPT_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;huggingface_messages.json&#39;</span><span class="p">)</span>
 
 <span class="n">PROMPTS</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">PROMPT_PATH</span><span class="p">))</span>
 
 <span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">DEFAULT_BOS_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;s&gt;&quot;</span>
-<span class="n">DEFAULT_EOS_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;/s&gt;&quot;</span>
-<span class="n">DEFAULT_UNK_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;unk&gt;&quot;</span>
-<span class="n">DEFAULT_PAD_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;&lt;pad&gt;&quot;</span>
+<span class="n">DEFAULT_BOS_TOKEN</span> <span class="o">=</span> <span class="s1">&#39;&lt;s&gt;&#39;</span>
+<span class="n">DEFAULT_EOS_TOKEN</span> <span class="o">=</span> <span class="s1">&#39;&lt;/s&gt;&#39;</span>
+<span class="n">DEFAULT_UNK_TOKEN</span> <span class="o">=</span> <span class="s1">&#39;&lt;unk&gt;&#39;</span>
+<span class="n">DEFAULT_PAD_TOKEN</span> <span class="o">=</span> <span class="s1">&#39;&lt;pad&gt;&#39;</span>
 
-<span class="n">VALID_NUMBERS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;0123456789&quot;</span><span class="p">)</span>
+<span class="n">VALID_NUMBERS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;0123456789&#39;</span><span class="p">)</span>
 
 <span class="n">DEFAULT_MODEL</span> <span class="o">=</span> <span class="s1">&#39;mistralai/Mistral-7B-Instruct-v0.2&#39;</span>
 
 
-<div class="viewcode-block" id="HF"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF">[docs]</a><span class="k">class</span> <span class="nc">HF</span><span class="p">:</span>
+<div class="viewcode-block" id="HF"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">HF</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prompt Pretrained models on HuggingFace to detect anomalies in a time series.</span>
 
 <span class="sd">    Args:</span>
@@ -236,8 +233,17 @@
 <span class="sd">            Default to `0`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">DEFAULT_MODEL</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">anomalous_percent</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">DEFAULT_MODEL</span><span class="p">,</span>
+        <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+        <span class="n">anomalous_percent</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">temp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">top_p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">anomalous_percent</span> <span class="o">=</span> <span class="n">anomalous_percent</span>
@@ -252,13 +258,13 @@
         <span class="c1"># special tokens</span>
         <span class="n">special_tokens_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s2">&quot;eos_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_EOS_TOKEN</span>
+            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s1">&#39;eos_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_EOS_TOKEN</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">bos_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s2">&quot;bos_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_BOS_TOKEN</span>
+            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s1">&#39;bos_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_BOS_TOKEN</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">unk_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s2">&quot;unk_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_UNK_TOKEN</span>
+            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s1">&#39;unk_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_UNK_TOKEN</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">pad_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s2">&quot;pad_token&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PAD_TOKEN</span>
+            <span class="n">special_tokens_dict</span><span class="p">[</span><span class="s1">&#39;pad_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">DEFAULT_PAD_TOKEN</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">add_special_tokens</span><span class="p">(</span><span class="n">special_tokens_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">pad_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span>  <span class="c1"># indicate the end of the time series</span>
@@ -270,18 +276,19 @@
             <span class="n">valid_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
 
         <span class="n">valid_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span> <span class="o">=</span> <span class="p">[[</span><span class="n">i</span><span class="p">]</span>
-                               <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_tokens</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_tokens</span>
+        <span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-            <span class="n">device_map</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+            <span class="n">device_map</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span>
             <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
-<div class="viewcode-block" id="HF.detect"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF.detect">[docs]</a>    <span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="HF.detect"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF.detect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Use HF to detect anomalies of a signal.</span>
 
 <span class="sd">        Args:</span>
@@ -293,7 +300,6 @@
 <span class="sd">                * List of detected anomalous values.</span>
 <span class="sd">                * Optionally, a list of dictionaries for raw output.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">input_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]))</span>
         <span class="n">max_tokens</span> <span class="o">=</span> <span class="n">input_length</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anomalous_percent</span><span class="p">)</span>
         <span class="n">all_responses</span><span class="p">,</span> <span class="n">all_generate_ids</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -305,10 +311,7 @@
 
             <span class="n">input_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 
-            <span class="n">tokenized_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span>
-                <span class="n">message</span><span class="p">,</span>
-                <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
+            <span class="n">tokenized_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s1">&#39;pt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
 
             <span class="n">generate_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
                 <span class="o">**</span><span class="n">tokenized_input</span><span class="p">,</span>
@@ -318,13 +321,13 @@
                 <span class="n">top_p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_p</span><span class="p">,</span>
                 <span class="n">bad_words_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span><span class="p">,</span>
                 <span class="n">renormalize_logits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">num_return_sequences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span>
+                <span class="n">num_return_sequences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span>
             <span class="p">)</span>
 
             <span class="n">responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">(</span>
                 <span class="n">generate_ids</span><span class="p">[:,</span> <span class="n">input_length</span><span class="p">:],</span>
                 <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">False</span>
+                <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">all_responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span>
             <span class="n">all_generate_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">generate_ids</span><span class="p">)</span>

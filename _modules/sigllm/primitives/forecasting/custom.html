@@ -184,10 +184,10 @@
   <h1>Source code for sigllm.primitives.forecasting.custom</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
-<div class="viewcode-block" id="rolling_window_sequences"><a class="viewcode-back" href="../../../../api/sigllm.primitives.forecasting.custom.html#sigllm.primitives.forecasting.custom.rolling_window_sequences">[docs]</a><span class="k">def</span> <span class="nf">rolling_window_sequences</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">target_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">target_column</span><span class="p">):</span>
+<div class="viewcode-block" id="rolling_window_sequences"><a class="viewcode-back" href="../../../../api/sigllm.primitives.forecasting.custom.html#sigllm.primitives.forecasting.custom.rolling_window_sequences">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rolling_window_sequences</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">target_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">target_column</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create rolling window sequences out of time series data.</span>
 
 <span class="sd">    The function creates an array of input sequences and an array of target sequences by rolling</span>
@@ -229,7 +229,7 @@
         <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">window_size</span>
 
         <span class="n">out_X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">])</span>
-        <span class="n">out_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">end</span><span class="p">:</span><span class="n">end</span> <span class="o">+</span> <span class="n">target_size</span><span class="p">])</span>
+        <span class="n">out_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">end</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="n">target_size</span><span class="p">])</span>
         <span class="n">X_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">start</span><span class="p">])</span>
         <span class="n">y_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">end</span><span class="p">])</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">step_size</span>

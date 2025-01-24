@@ -185,16 +185,12 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Transformation module.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="kn">import</span> <span class="nn">re</span>
-
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
-<div class="viewcode-block" id="format_as_string"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_string">[docs]</a><span class="k">def</span> <span class="nf">format_as_string</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="format_as_string"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_string">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_as_string</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format X to a list of string.</span>
 
 <span class="sd">    Transform a 2-D array of integers to a list of strings,</span>
@@ -210,7 +206,8 @@
 <span class="sd">        ndarray:</span>
 <span class="sd">            A list of string representation of each row.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">_as_string</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_as_string</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
 
         <span class="k">if</span> <span class="n">space</span><span class="p">:</span>
@@ -223,10 +220,9 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_from_string_to_integer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_from_string_to_integer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a text sequence consisting of digits to an array of integers.&quot;&quot;&quot;</span>
-
-    <span class="n">nospace</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="n">nospace</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
     <span class="n">rule</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;[^0-9|</span><span class="si">{</span><span class="n">sep</span><span class="si">}</span><span class="s1">]&#39;</span>
 
     <span class="k">if</span> <span class="n">errors</span> <span class="o">==</span> <span class="s1">&#39;raise&#39;</span><span class="p">:</span>
@@ -247,7 +243,7 @@
         <span class="n">clean</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown errors strategy </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unknown errors strategy </span><span class="si">{</span><span class="n">errors</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
 
     <span class="n">clean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
@@ -257,7 +253,7 @@
     <span class="k">return</span> <span class="n">clean</span>
 
 
-<div class="viewcode-block" id="format_as_integer"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_integer">[docs]</a><span class="k">def</span> <span class="nf">format_as_integer</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="format_as_integer"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_integer">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_as_integer</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a nested list of text into an array of integers.</span>
 
 <span class="sd">    Transforms a list of list of string input as 3-D array of integers,</span>
@@ -285,7 +281,7 @@
     <span class="k">for</span> <span class="n">string_list</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
         <span class="n">sample</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">string_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input is not a list of lists.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Input is not a list of lists.&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">string_list</span><span class="p">:</span>
             <span class="n">scalar</span> <span class="o">=</span> <span class="n">_from_string_to_integer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">trunc</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
@@ -300,7 +296,7 @@
     <span class="k">return</span> <span class="n">output</span></div>
 
 
-<div class="viewcode-block" id="Float2Scalar"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Scalar">[docs]</a><span class="k">class</span> <span class="nc">Float2Scalar</span><span class="p">:</span>
+<div class="viewcode-block" id="Float2Scalar"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Scalar">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Float2Scalar</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an array of float values to scalar.</span>
 
 <span class="sd">    Transforms an array of floats to an array integers. With the</span>
@@ -316,17 +312,19 @@
 <span class="sd">            Whether to rescale the array such that the minimum value becomes 0. Default to `True`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rescale</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">rescale</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">decimal</span> <span class="o">=</span> <span class="n">decimal</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rescale</span> <span class="o">=</span> <span class="n">rescale</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minimum</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="Float2Scalar.fit"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Scalar.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="Float2Scalar.fit"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Scalar.fit">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Learn minimum value in fit data.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">minimum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Float2Scalar.transform"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Scalar.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<div class="viewcode-block" id="Float2Scalar.transform"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Scalar.transform">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform data.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rescale</span><span class="p">:</span>
-            <span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum</span>
 
         <span class="n">sign</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">*</span> <span class="p">(</span><span class="n">X</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -336,7 +334,7 @@
         <span class="k">return</span> <span class="n">values</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimum</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decimal</span></div></div>
 
 
-<div class="viewcode-block" id="Scalar2Float"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Scalar2Float">[docs]</a><span class="k">class</span> <span class="nc">Scalar2Float</span><span class="p">:</span>
+<div class="viewcode-block" id="Scalar2Float"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Scalar2Float">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Scalar2Float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an array of integer values to float.</span>
 
 <span class="sd">    Transforms an array of integers to an array floats.</span>
@@ -352,8 +350,9 @@
 <span class="sd">            Number of decimal points to keep from the float representation. Default to `2`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Scalar2Float.transform"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Scalar2Float.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">decimal</span><span class="p">)</span>
+<div class="viewcode-block" id="Scalar2Float.transform"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Scalar2Float.transform">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert data from integer to float.&quot;&quot;&quot;</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">decimal</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">values</span> <span class="o">+</span> <span class="n">minimum</span></div></div>
 </pre></div>

@@ -184,26 +184,23 @@
   <h1>Source code for sigllm.primitives.forecasting.gpt</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span> <span class="nn">openai</span>
-<span class="kn">import</span> <span class="nn">tiktoken</span>
-<span class="kn">from</span> <span class="nn">openai</span> <span class="kn">import</span> <span class="n">OpenAI</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">openai</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tiktoken</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 
-<span class="n">PROMPT_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span>
-    <span class="s1">&#39;TEMPLATE.json&#39;</span>
-<span class="p">)</span>
+<span class="n">PROMPT_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;TEMPLATE.json&#39;</span><span class="p">)</span>
 
 <span class="n">PROMPTS</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">PROMPT_PATH</span><span class="p">))</span>
 
-<span class="n">VALID_NUMBERS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s2">&quot;0123456789 &quot;</span><span class="p">)</span>
+<span class="n">VALID_NUMBERS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;0123456789 &#39;</span><span class="p">)</span>
 <span class="n">BIAS</span> <span class="o">=</span> <span class="mi">30</span>
 
 
-<div class="viewcode-block" id="GPT"><a class="viewcode-back" href="../../../../api/sigllm.primitives.forecasting.gpt.html#sigllm.primitives.forecasting.gpt.GPT">[docs]</a><span class="k">class</span> <span class="nc">GPT</span><span class="p">:</span>
+<div class="viewcode-block" id="GPT"><a class="viewcode-back" href="../../../../api/sigllm.primitives.forecasting.gpt.html#sigllm.primitives.forecasting.gpt.GPT">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">GPT</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prompt GPT models to forecast a time series.</span>
 
 <span class="sd">    Args:</span>
@@ -236,8 +233,19 @@
 <span class="sd">            Beta feature by OpenAI to sample deterministically. Default to `None`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span> <span class="n">chat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                 <span class="n">top_p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">logprobs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">top_logprobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span>
+        <span class="n">chat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span>
+        <span class="n">steps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">temp</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">top_p</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">logprobs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">top_logprobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">chat</span> <span class="o">=</span> <span class="n">chat</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
@@ -261,7 +269,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">()</span>
 
-<div class="viewcode-block" id="GPT.forecast"><a class="viewcode-back" href="../../../../api/sigllm.primitives.forecasting.gpt.html#sigllm.primitives.forecasting.gpt.GPT.forecast">[docs]</a>    <span class="k">def</span> <span class="nf">forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="GPT.forecast"><a class="viewcode-back" href="../../../../api/sigllm.primitives.forecasting.gpt.html#sigllm.primitives.forecasting.gpt.GPT.forecast">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Use GPT to forecast a signal.</span>
 
 <span class="sd">        Args:</span>
@@ -284,8 +292,8 @@
                 <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
                     <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                     <span class="n">messages</span><span class="o">=</span><span class="p">[</span>
-                        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;system_message&#39;</span><span class="p">]},</span>
-                        <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span>
+                        <span class="p">{</span><span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;system&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;system_message&#39;</span><span class="p">]},</span>
+                        <span class="p">{</span><span class="s1">&#39;role&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="n">message</span><span class="p">},</span>
                     <span class="p">],</span>
                     <span class="n">max_completion_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
                     <span class="n">temperature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
@@ -293,7 +301,7 @@
                     <span class="n">logprobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logprobs</span><span class="p">,</span>
                     <span class="n">top_logprobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_logprobs</span><span class="p">,</span>
                     <span class="n">n</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span>
-                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">responses</span> <span class="o">=</span> <span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">]</span>
 
@@ -309,7 +317,7 @@
                     <span class="n">top_logprobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_logprobs</span><span class="p">,</span>
                     <span class="n">logit_bias</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logit_bias</span><span class="p">,</span>
                     <span class="n">n</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span>
-                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+                    <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
                 <span class="p">)</span>
                 <span class="n">responses</span> <span class="o">=</span> <span class="p">[</span><span class="n">choice</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">choice</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">]</span>
 
