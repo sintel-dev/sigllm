@@ -4,7 +4,7 @@
 </p>
 
 [![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
-[![Python](https://img.shields.io/badge/Python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue)](https://badge.fury.io/py/sigllm) 
+[![Python](https://img.shields.io/badge/Python-3.9%20%7C%203.10%20%7C%203.11-blue)](https://badge.fury.io/py/sigllm) 
 [![PyPi Shield](https://img.shields.io/pypi/v/sigllm.svg)](https://pypi.python.org/pypi/sigllm)
 [![Run Tests](https://github.com/sintel-dev/sigllm/actions/workflows/tests.yml/badge.svg)](https://github.com/sintel-dev/sigllm/actions/workflows/tests.yml)
 [![Downloads](https://pepy.tech/badge/sigllm)](https://pepy.tech/project/sigllm)
