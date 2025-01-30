@@ -35,6 +35,7 @@ test = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
     'pytest-runner>=2.11.1',
+    'rundoc>=0.4.3,<0.5',
     'tomli>=2.0.0,<3',
 ]
 
@@ -85,7 +86,7 @@ dev = [
 homepage = 'https://github.com/sintel-dev/sigllm/'
 
 [project.entry-points]
-sigllm = { main = 'sigllm.cli.__main__:main' }
+mlblocks = { primitives = 'sigllm:MLBLOCKS_PRIMITIVES', pipelines = 'sigllm:MLBLOCKS_PIPELINES' }
 
 [build-system]
 requires = ['setuptools', 'wheel']
