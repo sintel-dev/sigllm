@@ -85,8 +85,9 @@ dev = [
 [project.urls]
 homepage = 'https://github.com/sintel-dev/sigllm/'
 
-[project.entry-points]
-mlblocks = { primitives = 'sigllm:MLBLOCKS_PRIMITIVES', pipelines = 'sigllm:MLBLOCKS_PIPELINES' }
+[project.entry-points.mlblocks]
+primitives = 'sigllm:MLBLOCKS_PRIMITIVES'
+pipelines = 'sigllm:MLBLOCKS_PIPELINES'
 
 [build-system]
 requires = ['setuptools', 'wheel']
