@@ -73,7 +73,8 @@ from mlblocks.discovery import get_pipelines_paths
 
 for path in get_pipelines_paths():
     print(path)
-    print(os.listdir(path))
+    if os.path.isdir(path):
+        print(os.listdir(path))
 
 hyperparameters = {
     "orion.primitives.timeseries_anomalies.find_anomalies#1": {
