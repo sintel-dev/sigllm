@@ -70,30 +70,19 @@ def minimum(c):
     unit(c)
 
 
-def add_paths():
-    base_path = Path(os.path.join(os.getcwd(), 'sigllm'))
-    primitives_path = os.path.join(base_path, 'primitives', 'jsons')
-    pipeline_paths = [
-        os.path.join(base_path, 'pipelines', 'detector'),
-        os.path.join(base_path, 'pipelines', 'prompter')
-    ]
-    add_primitives_path(primitives_path)
-    for pipeline_path in pipeline_paths:
-        add_pipelines_path(pipeline_path)
-
-
 @task
 def readme(c):
-    print(os.walk(os.getcwd()))
-    add_paths()
+    pipeline_path = 'sigllm/pipelines/detector/gpt_detector.json'
     test_path = Path('tests/readme_test')
     if test_path.exists() and test_path.is_dir():
         shutil.rmtree(test_path)
 
     cwd = os.getcwd()
     os.makedirs(test_path, exist_ok=True)
+    os.makedirs(test_path / 'mlpipelines', exist_ok=True)
     shutil.copy('README.md', test_path / 'README.md')
     shutil.copy('tutorials/data.csv', test_path / 'data.csv')
+    shutil.copy(pipeline_path, test_path / 'mlpipelines' / 'gpt_detector.json')
     os.chdir(test_path)
     c.run('rundoc run --single-session python3 -t python3 README.md')
     os.chdir(cwd)
