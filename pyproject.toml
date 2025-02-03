@@ -102,7 +102,21 @@ include = ['sigllm', 'sigllm.*']
 namespaces = false
 
 [tool.setuptools.package-data]
-"*" = ["*.*"]
+'*' = [
+    'CONTRIBUTING.rst',
+    'HISTORY.md',
+    'README.md',
+    '*.md',
+    '*.rst',
+    '*.json',
+    'conf.py',
+    'Makefile',
+    'make.bat',
+    '*.jpg',
+    '*.png',
+    '*.gif',
+]
+
 
 [tool.setuptools.exclude-package-data]
 '*' = [

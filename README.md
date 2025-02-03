@@ -67,14 +67,7 @@ In this example we use `gpt_detector` pipeline and set some hyperparameters. In 
 In addtion, the `SigLLM` object takes in a `decimal` argument to determine how many digits from the float value include. Here, we don't want to keep any decimal values, so we set it to zero.
 
 ```python3
-import os
 from sigllm import SigLLM
-from mlblocks.discovery import get_pipelines_paths
-
-for path in get_pipelines_paths():
-    print(path)
-    if os.path.isdir(path):
-        print(os.listdir(path))
 
 hyperparameters = {
     "orion.primitives.timeseries_anomalies.find_anomalies#1": {
