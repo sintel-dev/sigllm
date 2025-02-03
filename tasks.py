@@ -10,7 +10,7 @@ from invoke import task
 from packaging.requirements import Requirement
 from packaging.version import Version
 
-from mlblocks.discovery import add_primitives_path, add_pipelines_path, get_primitives_paths
+from mlblocks.discovery import add_primitives_path, add_pipelines_path, get_primitives_paths, get_pipelines_paths
 
 def _get_minimum_versions(dependencies, python_version):
     min_versions = {}
@@ -86,6 +86,7 @@ def add_paths():
 def readme(c):
     add_paths()
     print(get_primitives_paths())
+    print(get_pipelines_paths())
     test_path = Path('tests/readme_test')
     if test_path.exists() and test_path.is_dir():
         shutil.rmtree(test_path)
