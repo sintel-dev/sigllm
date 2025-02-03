@@ -10,6 +10,7 @@ from invoke import task
 from packaging.requirements import Requirement
 from packaging.version import Version
 
+from sigllm import SigLLM
 from mlblocks.discovery import add_primitives_path, add_pipelines_path, get_primitives_paths, get_pipelines_paths
 
 def _get_minimum_versions(dependencies, python_version):
