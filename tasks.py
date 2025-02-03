@@ -86,8 +86,6 @@ def add_paths():
 def readme(c):
     print(os.walk(os.getcwd()))
     add_paths()
-    print(get_primitives_paths())
-    print(get_pipelines_paths())
     test_path = Path('tests/readme_test')
     if test_path.exists() and test_path.is_dir():
         shutil.rmtree(test_path)
