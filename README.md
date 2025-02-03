@@ -67,6 +67,7 @@ In this example we use `gpt_detector` pipeline and set some hyperparameters. In 
 In addtion, the `SigLLM` object takes in a `decimal` argument to determine how many digits from the float value include. Here, we don't want to keep any decimal values, so we set it to zero.
 
 ```python3
+import os
 from sigllm import SigLLM
 from mlblocks.discovery import get_pipelines_paths
 
