@@ -70,11 +70,16 @@ In addtion, the `SigLLM` object takes in a `decimal` argument to determine how m
 import os
 from sigllm import SigLLM
 from mlblocks.discovery import get_pipelines_paths, add_pipelines_path
+from mlblocks.discovery import get_primitives_paths, add_primitives_path
 
 print(get_pipelines_paths())
 path = os.path.join(os.getcwd(), '..', '..', 'sigllm', 'pipelines', 'detector')
 add_pipelines_path(path)
 print(get_pipelines_paths())
+
+path = os.path.join(os.getcwd(), '..', '..', 'sigllm', 'primitives', 'jsons')
+add_primitives_path(path)
+
 
 hyperparameters = {
     "orion.primitives.timeseries_anomalies.find_anomalies#1": {
