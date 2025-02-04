@@ -5,14 +5,14 @@ name: README
 
 on:
   push:
-    branches: [ '*' ]
+    branches: [ master ]
 
 jobs:
   readme:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ['3.11']
+        python-version: ['3.10']
         os: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v4
