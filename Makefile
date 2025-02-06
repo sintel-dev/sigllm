@@ -44,11 +44,9 @@ install-test: clean-build clean-pyc ## install the package and test dependencies
 install-develop: clean-build clean-pyc ## install the package in editable mode and dependencies for development
 	pip install -e .[dev]
 
-MINIMUM := $(shell sed -n '/install_requires = \[/,/]/p' setup.py | grep -v -e '[][]' | sed 's/ *\(.*\),$?$$/\1/g' | tr '>' '=')
-
 .PHONY: install-minimum
-install-minimum: ## install the minimum supported versions of the package dependencies
-	pip install $(MINIMUM)
+install-minimum: clean-build clean-pyc ## install the package with depencencies in minimum versions
+	invoke install-minimum
 
 .PHONY: check-dependencies
 check-dependencies: ## test if there are any broken dependencies
@@ -63,14 +61,17 @@ lint: ## check style with flake8 and isort
 
 .PHONY: lint-sigllm
 lint-sigllm: ## check style with flake8 and isort
-	flake8 sigllm tests
-	isort -c --recursive sigllm tests
+	ruff check sigllm/
+	ruff format --check --diff sigllm/
+
+.PHONY: lint-tests
+lint-tests: ## check style with flake8 and isort
+	ruff check tests/
+	ruff format --check --diff tests/
 
 .PHONY: fix-lint
 fix-lint: ## fix lint issues using autoflake, autopep8, and isort
-	find sigllm tests -name '*.py' | xargs autoflake --in-place --remove-all-unused-imports --remove-unused-variables
-	autopep8 --in-place --recursive --aggressive sigllm tests
-	isort --apply --atomic --recursive sigllm tests
+	invoke fix-lint
 
 
 # TEST TARGETS
@@ -92,10 +93,6 @@ test: test-unit test-readme test-tutorials ## test everything that needs test de
 
 .PHONY: test-minimum
 test-minimum: install-minimum check-dependencies test ## run tests using the minimum supported dependencies
-
-.PHONY: test-sigllm
-test: ## run tests quickly with the default Python
-	python -m pytest --basetemp=${ENVTMPDIR} --cov=sigllm --cov-report xml
 
 .PHONY: test-all
 test-all: ## run tests on every Python version with tox
@@ -129,8 +126,7 @@ serve-docs: view-docs ## compile the docs watching for changes
 
 .PHONY: dist
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	python -m build --wheel --sdist
 	ls -l dist
 
 .PHONY: publish-confirm
@@ -152,34 +148,34 @@ publish: dist publish-confirm ## package and upload a release
 bumpversion-release: ## Merge master to stable and bumpversion release
 	git checkout stable || git checkout -b stable
 	git merge --no-ff master -m"make release-tag: Merge branch 'master' into stable"
-	bumpversion release
+	bump-my-version bump release
 	git push --tags origin stable
 
 .PHONY: bumpversion-release-test
 bumpversion-release-test: ## Merge master to stable and bumpversion release
 	git checkout stable || git checkout -b stable
 	git merge --no-ff master -m"make release-tag: Merge branch 'master' into stable"
-	bumpversion release --no-tag
+	bump-my-version bump release --no-tag
 	@echo git push --tags origin stable
 
 .PHONY: bumpversion-patch
 bumpversion-patch: ## Merge stable to master and bumpversion patch
 	git checkout master
 	git merge stable
-	bumpversion --no-tag patch
+	bump-my-version bump --no-tag patch
 	git push
 
 .PHONY: bumpversion-minor
 bumpversion-minor: ## Bump the version the next minor skipping the release
-	bumpversion --no-tag minor
+	bump-my-version bump --no-tag minor
 
 .PHONY: bumpversion-major
 bumpversion-major: ## Bump the version the next major skipping the release
-	bumpversion --no-tag major
+	bump-my-version bump --no-tag major
 
 .PHONY: bumpversion-candidate
 bumpversion-candidate: ## Bump the version to the next candidate
-	bumpversion candidate --no-tag
+	bump-my-version bump candidate --no-tag
 
 .PHONY: bumpversion-revert
 bumpversion-revert: ## Undo a previous bumpversion-release

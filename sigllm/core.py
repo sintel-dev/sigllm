@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""
-Main module.
+"""Main module.
 
 SigLLM is an extension to Orion's core module
 """
+
 import logging
 from typing import Union
 
@@ -14,9 +14,9 @@ from orion import Orion
 
 LOGGER = logging.getLogger(__name__)
 
-INTERVAL_PRIMITIVE = "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1"
-DECIMAL_PRIMITIVE = "sigllm.primitives.transformation.Float2Scalar#1"
-WINDOW_SIZE_PRIMITIVE = "sigllm.primitives.forecasting.custom.rolling_window_sequences#1"
+INTERVAL_PRIMITIVE = 'mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1'
+DECIMAL_PRIMITIVE = 'sigllm.primitives.transformation.Float2Scalar#1'
+WINDOW_SIZE_PRIMITIVE = 'sigllm.primitives.forecasting.custom.rolling_window_sequences#1'
 
 
 class SigLLM(Orion):
@@ -42,6 +42,7 @@ class SigLLM(Orion):
         hyperparameters (dict):
             Additional hyperparameters to set to the Pipeline.
     """
+
     DEFAULT_PIPELINE = 'mistral_detector'
 
     def _augment_hyperparameters(self, primitive, key, value):
@@ -49,17 +50,21 @@ class SigLLM(Orion):
             return
 
         if self._hyperparameters is None:
-            self._hyperparameters = {
-                primitive: {}
-            }
+            self._hyperparameters = {primitive: {}}
         else:
             if primitive not in self._hyperparameters:
                 self._hyperparameters[primitive] = {}
 
         self._hyperparameters[primitive][key] = value
 
-    def __init__(self, pipeline: Union[str, dict, MLPipeline] = None, interval: int = None,
-                 decimal: int = None, window_size: int = None, hyperparameters: dict = None):
+    def __init__(
+        self,
+        pipeline: Union[str, dict, MLPipeline] = None,
+        interval: int = None,
+        decimal: int = None,
+        window_size: int = None,
+        hyperparameters: dict = None,
+    ):
         self._pipeline = pipeline or self.DEFAULT_PIPELINE
         self._hyperparameters = hyperparameters
         self._mlpipeline = self._get_mlpipeline()
@@ -76,11 +81,13 @@ class SigLLM(Orion):
     def __repr__(self):
         if isinstance(self._pipeline, MLPipeline):
             pipeline = '\n'.join(
-                '    {}'.format(primitive) for primitive in self._pipeline.to_dict()['primitives'])
+                '    {}'.format(primitive) for primitive in self._pipeline.to_dict()['primitives']
+            )
 
         elif isinstance(self._pipeline, dict):
             pipeline = '\n'.join(
-                '    {}'.format(primitive) for primitive in self._pipeline['primitives'])
+                '    {}'.format(primitive) for primitive in self._pipeline['primitives']
+            )
 
         else:
             pipeline = '    {}'.format(self._pipeline)
@@ -88,15 +95,10 @@ class SigLLM(Orion):
         hyperparameters = None
         if self._hyperparameters is not None:
             hyperparameters = '\n'.join(
-                '    {}: {}'.format(step, value) for step, value in self._hyperparameters.items())
+                '    {}: {}'.format(step, value) for step, value in self._hyperparameters.items()
+            )
 
-        return (
-            'SigLLM:\n{}\n'
-            'hyperparameters:\n{}\n'
-        ).format(
-            pipeline,
-            hyperparameters
-        )
+        return ('SigLLM:\n{}\nhyperparameters:\n{}\n').format(pipeline, hyperparameters)
 
     def detect(self, data: pd.DataFrame, visualization: bool = False, **kwargs) -> pd.DataFrame:
         """Detect anomalies in the given data..

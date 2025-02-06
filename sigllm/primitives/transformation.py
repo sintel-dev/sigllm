@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-Transformation module.
-"""
-
 import re
 
 import numpy as np
@@ -26,6 +22,7 @@ def format_as_string(X, sep=',', space=False):
         ndarray:
             A list of string representation of each row.
     """
+
     def _as_string(x):
         text = sep.join(list(map(str, x.flatten())))
 
@@ -41,8 +38,7 @@ def format_as_string(X, sep=',', space=False):
 
 def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
     """Convert a text sequence consisting of digits to an array of integers."""
-
-    nospace = re.sub(r"\s+", "", text)
+    nospace = re.sub(r'\s+', '', text)
     rule = f'[^0-9|{sep}]'
 
     if errors == 'raise':
@@ -63,7 +59,7 @@ def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
         clean = list(map(lambda x: x if not bool(re.search(rule, x)) else np.nan, values))
 
     else:
-        raise KeyError(f"Unknown errors strategy {errors}.")
+        raise KeyError(f'Unknown errors strategy {errors}.')
 
     clean = np.array(clean, dtype=float)
 
@@ -101,7 +97,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
     for string_list in X:
         sample = list()
         if not isinstance(string_list, list):
-            raise ValueError("Input is not a list of lists.")
+            raise ValueError('Input is not a list of lists.')
 
         for text in string_list:
             scalar = _from_string_to_integer(text, sep, trunc, errors)
@@ -138,11 +134,13 @@ class Float2Scalar:
         self.minimum = None
 
     def fit(self, X):
+        """Learn minimum value in fit data."""
         self.minimum = np.min(X)
 
     def transform(self, X):
+        """Transform data."""
         if self.rescale:
-            X = (X - self.minimum)
+            X = X - self.minimum
 
         sign = 1 * (X >= 0) - 1 * (X < 0)
         values = np.abs(X)
@@ -169,6 +167,7 @@ class Scalar2Float:
     """
 
     def transform(self, X, minimum=0, decimal=2):
-        values = X * 10**(-decimal)
+        """Convert data from integer to float."""
+        values = X * 10 ** (-decimal)
 
         return values + minimum

@@ -1,0 +1,207 @@
+[project]
+name = 'sigllm'
+description = 'LLMs for unsupervised time series anomaly detection'
+authors = [{name = 'MIT Data To AI Lab', email = 'dailabmit@gmail.com'}]
+classifiers = [
+    'Development Status :: 2 - Pre-Alpha',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Natural Language :: English',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+]
+keywords = ['sigllm', 'LLM4TS', 'timeseries', 'anomaly-detection']
+dynamic = ['version']
+license = {text = 'MIT license'}
+requires-python = '>=3.9,<3.12'
+readme = 'README.md'
+dependencies = [
+    'numpy>=1.17.5,<2',
+    'pandas>=1.0.0,<2',
+    'scikit-learn>=0.22.1,<2',
+    'orion-ml>=0.6,<0.8',
+    'openai>=1.46.0',
+    'tiktoken>=0.7.0',
+    'transformers>=4.44.2',
+    'torch>=1.4.0',
+    'accelerate>=0.34.2',
+    'sentencepiece>=0.2.0'
+]
+
+[project.optional-dependencies]
+test = [
+    'pytest>=3.4.2',
+    'pytest-cov>=2.6.0',
+    'pytest-runner>=2.11.1',
+    'rundoc>=0.4.3,<0.5',
+    'tomli>=2.0.0,<3',
+]
+
+dev = [
+    'sigllm[test]',
+
+    # general
+    'build>=1.0.0,<2',
+    'bump-my-version>=0.18.3',
+    'pip>=9.0.1',
+    'watchdog>=0.8.3',
+
+    # docs
+    'docutils>=0.12,<0.18',
+    'm2r2>=0.2.5,<0.3',
+    'nbsphinx>=0.5.0,<0.7',
+    'Sphinx>=3,<3.3',
+    'pydata-sphinx-theme<0.5',
+    'markupsafe<2.1.0',
+    'ipython>=6.5,<9',
+
+    # fails on Sphinx < v3.4
+    'alabaster<=0.7.12',
+    # fails on Sphins < v5.0
+    'sphinxcontrib-applehelp<1.0.8',
+    'sphinxcontrib-devhelp<1.0.6',
+    'sphinxcontrib-htmlhelp<2.0.5',
+    'sphinxcontrib-serializinghtml<1.1.10',
+    'sphinxcontrib-qthelp<1.0.7',
+    
+    # Jinja2>=3 makes the sphinx theme fail
+    'Jinja2>=2,<3',
+
+    # style check
+    'ruff>=0.4.5',
+
+    # distribute on PyPI
+    'twine>=1.10.0',
+    'wheel>=0.30.0',
+
+    # Advanced testing
+    'coverage>=4.5.1',
+    'tox>=2.9.1',
+    'invoke',
+]
+
+[project.urls]
+homepage = 'https://github.com/sintel-dev/sigllm/'
+
+[project.entry-points.mlblocks]
+pipelines = 'sigllm:MLBLOCKS_PIPELINES'
+primitives = 'sigllm:MLBLOCKS_PRIMITIVES'
+
+[build-system]
+requires = ['setuptools', 'wheel']
+build-backend = 'setuptools.build_meta'
+
+[tool.setuptools]
+include-package-data = true
+license-files = ['LICENSE']
+
+[tool.setuptools.packages.find]
+include = ['sigllm', 'sigllm.*']
+namespaces = false
+
+[tool.setuptools.package-data]
+'*' = ['*.*']
+
+[tool.setuptools.exclude-package-data]
+'*' = [
+    '* __pycache__',
+]
+
+[tool.setuptools.dynamic]
+version = {attr = 'sigllm.__version__'}
+
+[tool.bumpversion]
+current_version = "0.0.3.dev1"
+parse = '(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(\.(?P<release>[a-z]+)(?P<candidate>\d+))?'
+serialize = [
+    '{major}.{minor}.{patch}.{release}{candidate}',
+	'{major}.{minor}.{patch}'
+]
+search = '{current_version}'
+replace = '{new_version}'
+regex = false
+ignore_missing_version = false
+tag = true
+sign_tags = false
+tag_name = 'v{new_version}'
+tag_message = 'Bump version: {current_version} → {new_version}'
+allow_dirty = false
+commit = true
+message = 'Bump version: {current_version} → {new_version}'
+commit_args = ''
+
+[tool.bumpversion.parts.release]
+first_value = 'dev'
+optional_value = 'release'
+values = [
+    'dev',
+    'release'
+]
+
+[[tool.bumpversion.files]]
+filename = "sigllm/__init__.py"
+search = "__version__ = '{current_version}'"
+replace = "__version__ = '{new_version}'"
+
+[tool.pytest.ini_options]
+addopts = "--ignore=pyproject.toml"
+
+# linting
+[tool.ruff]
+preview = true
+line-length = 99
+indent-width = 4
+src = ['sigllm']
+exclude = [
+    "docs",
+    ".tox",
+    ".git",
+    "__pycache__",
+    "*.ipynb",
+    ".ipynb_checkpoints",
+    "tasks.py"
+]
+
+[tool.ruff.lint]
+select = [
+    "F", # Pyflakes
+    "E", # pycodestyle
+    "W", # pycodestyle
+    "D", # pydocstyle
+    "I001", # isort
+    "T201", # print statements
+]
+ignore = [
+    # pydocstyle
+    "D107",   # Missing docstring in __init__
+    "D417",   # Missing argument descriptions in the docstring
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "D105",   # Missing docstring in magic method
+    "PD901",
+    "PD101",
+]
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+preview = true
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+[tool.ruff.lint.isort]
+known-first-party = ['sigllm']
+lines-between-types = 0
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "E402", "F403", "F405", "E501", "I001"]
+"tests/**.py" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 99
+max-line-length = 99
