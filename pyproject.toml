@@ -113,7 +113,7 @@ namespaces = false
 version = {attr = 'sigllm.__version__'}
 
 [tool.bumpversion]
-current_version = "0.0.3"
+current_version = "0.0.4.dev0"
 parse = '(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(\.(?P<release>[a-z]+)(?P<candidate>\d+))?'
 serialize = [
     '{major}.{minor}.{patch}.{release}{candidate}',
