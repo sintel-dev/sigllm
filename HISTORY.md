@@ -1,5 +1,14 @@
 # History
 
+## 0.0.3 - 2025-02-06
+
+Internal improvements and removing support for Python 3.8
+
+* Add entrypoints for mlblocks – [Issue #32](https://github.com/sintel-dev/sigllm/issues/32) by @sarahmish
+* Make readme.yml use Python 3.10 – [Issue #30](https://github.com/sintel-dev/sigllm/issues/30) by @sarahmish
+* Migrate from setup.py to pyroject.toml to specify project metadata – [Issue #28](https://github.com/sintel-dev/sigllm/issues/28) by @sarahmish
+
+
 ## 0.0.2 - 2024-10-24
 
 New Prompter pipeline.
