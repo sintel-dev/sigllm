@@ -164,8 +164,8 @@ class HF:
             }
 
             # Only add bad_words_ids if token restriction is enabled
-            # if self.restrict_tokens:
-            #     generate_kwargs['bad_words_ids'] = self.invalid_tokens
+            if self.restrict_tokens:
+                generate_kwargs['bad_words_ids'] = self.invalid_tokens
 
             generate_ids = self.model.generate(**generate_kwargs)
 

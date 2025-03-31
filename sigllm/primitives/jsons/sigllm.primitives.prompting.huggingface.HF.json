@@ -68,6 +68,10 @@
             "padding": {
                 "type": "int",
                 "default": 0
+            },
+            "restrict_tokens": {
+                "type": "bool",
+                "default": false
             }
         }
     }
