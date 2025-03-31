@@ -47,6 +47,8 @@ class HF:
         padding (int):
             Additional padding token to forecast to reduce short horizon predictions.
             Default to `0`.
+        restrict_tokens (bool):
+            Whether to restrict tokens or not. Default to `True`.
     """
 
     def __init__(
@@ -59,6 +61,7 @@ class HF:
         raw=False,
         samples=10,
         padding=0,
+        restrict_tokens=False,
     ):
         self.name = name
         self.sep = sep
@@ -68,6 +71,7 @@ class HF:
         self.raw = raw
         self.samples = samples
         self.padding = padding
+        self.restrict_tokens = restrict_tokens
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.name, use_fast=False)
 
@@ -85,16 +89,19 @@ class HF:
         self.tokenizer.add_special_tokens(special_tokens_dict)
         self.tokenizer.pad_token = self.tokenizer.eos_token  # indicate the end of the time series
 
-        # invalid tokens
-        valid_tokens = []
-        for number in VALID_NUMBERS:
-            token = self.tokenizer.convert_tokens_to_ids(number)
-            valid_tokens.append(token)
+        # Only set up invalid tokens if restriction is enabled
+        if self.restrict_tokens:
+            valid_tokens = []
+            for number in VALID_NUMBERS:
+                token = self.tokenizer.convert_tokens_to_ids(number)
+                valid_tokens.append(token)
 
-        valid_tokens.append(self.tokenizer.convert_tokens_to_ids(self.sep))
-        self.invalid_tokens = [
-            [i] for i in range(len(self.tokenizer) - 1) if i not in valid_tokens
-        ]
+            valid_tokens.append(self.tokenizer.convert_tokens_to_ids(self.sep))
+            self.invalid_tokens = [
+                [i] for i in range(len(self.tokenizer) - 1) if i not in valid_tokens
+            ]
+        else:
+            self.invalid_tokens = None
 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.name,
@@ -104,12 +111,15 @@ class HF:
 
         self.model.eval()
 
-    def detect(self, X, **kwargs):
+    def detect(self, X, normal=None, **kwargs):
         """Use HF to detect anomalies of a signal.
 
         Args:
             X (ndarray):
                 Input sequences of strings containing signal values
+            normal (str, optional):
+                A normal reference sequence for one-shot learning. If None,
+                zero-shot learning is used. Default to None.
 
         Returns:
             list, list:
@@ -120,31 +130,61 @@ class HF:
         max_tokens = input_length * float(self.anomalous_percent)
         all_responses, all_generate_ids = [], []
 
+        # Prepare the one-shot example if provided
+        one_shot_message = ""
+        if normal is not None:
+            one_shot_message = PROMPTS['one_shot_prefix'] + normal + "\n\n"
+
         for text in tqdm(X):
+
             system_message = PROMPTS['system_message']
             user_message = PROMPTS['user_message']
-            message = ' '.join([system_message, user_message, text, '[RESPONSE]'])
+            
+            # Combine messages with one-shot example if provided
+            message = ' '.join([
+                system_message,
+                one_shot_message,
+                user_message,
+                text,
+                '[RESPONSE]'
+            ])
 
-            input_length = len(self.tokenizer.encode(message[0]))
+            input_length = len(self.tokenizer.encode(message))
 
             tokenized_input = self.tokenizer(message, return_tensors='pt').to('cuda')
 
-            generate_ids = self.model.generate(
+            generate_kwargs = {
                 **tokenized_input,
-                do_sample=True,
-                max_new_tokens=max_tokens,
-                temperature=self.temp,
-                top_p=self.top_p,
-                bad_words_ids=self.invalid_tokens,
-                renormalize_logits=True,
-                num_return_sequences=self.samples,
-            )
+                'do_sample': True,
+                'max_new_tokens': max_tokens,
+                'temperature': self.temp,
+                'top_p': self.top_p,
+                'renormalize_logits': True,
+                'num_return_sequences': self.samples,
+            }
 
-            responses = self.tokenizer.batch_decode(
-                generate_ids[:, input_length:],
+            # Only add bad_words_ids if token restriction is enabled
+            # if self.restrict_tokens:
+            #     generate_kwargs['bad_words_ids'] = self.invalid_tokens
+
+            generate_ids = self.model.generate(**generate_kwargs)
+
+            # Get the full generated text
+            full_responses = self.tokenizer.batch_decode(
+                generate_ids,
                 skip_special_tokens=True,
                 clean_up_tokenization_spaces=False,
             )
+            
+            # Extract only the part after [RESPONSE]
+            responses = []
+            for full_response in full_responses:
+                try:
+                    response = full_response.split('[RESPONSE]')[1].strip()
+                    responses.append(response)
+                except IndexError:
+                    responses.append("")  # If no [RESPONSE] found, return empty string
+            
             all_responses.append(responses)
             all_generate_ids.append(generate_ids)
 
