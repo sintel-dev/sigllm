@@ -1,7 +1,6 @@
 {
     "name": "sigllm.primitives.transformation.parse_anomaly_response",
     "contributors": ["Salim Cherkaoui"],
-    "documentation": "https://github.com/salimch2/sigllm",
     "description": "Parse LLM responses to extract anomaly values from text format.",
     "classifiers": {
         "type": "transformer",
