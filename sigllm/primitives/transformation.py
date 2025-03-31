@@ -27,7 +27,7 @@ def format_as_string(X, sep=',', space=False, normal=False):
     Returns:
         ndarray or str:
             If normal=True, returns a single string representation.
-            If normal=False, returns a list of string representations for each window.
+            If normal=False, returns a list of string representations for each wprintindow.
     """
     
 
