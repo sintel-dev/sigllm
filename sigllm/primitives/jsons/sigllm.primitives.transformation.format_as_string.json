@@ -4,7 +4,7 @@
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
     ],
-    "description": "Transform an ndarray of scalar values to an ndarray of string.",
+    "description": "Format X to string(s). Handles both normal time series (single string) and multiple windows (list of strings).",
     "classifiers": {
         "type": "preprocessor",
         "subtype": "tranformer"
@@ -32,6 +32,10 @@
                 "default": ","
             },
             "space": {
+                "type": "bool",
+                "default": false
+            },
+            "normal": {
                 "type": "bool",
                 "default": false
             }

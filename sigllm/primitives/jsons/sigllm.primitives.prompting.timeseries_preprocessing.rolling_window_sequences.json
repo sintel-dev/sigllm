@@ -43,11 +43,11 @@
         "fixed": {
             "window_size": {
                 "type": "int",
-                "default": 500
+                "default": 50
             },
             "step_size": {
                 "type": "int",
-                "default": 100
+                "default": 50
             }
         }
     }
