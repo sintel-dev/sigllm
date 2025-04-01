@@ -26,9 +26,10 @@ def format_as_string(X, sep=',', space=False, normal=False):
 
     Returns:
         ndarray or str:
-            If normal=True, returns a single string representation.
-            If normal=False, returns a list of string representations for each wprintindow.
+            If normal=True, returns a single string representation. If normal=False,
+            returns a list of string representations for each window.
     """
+
     def _as_string(x):
         text = sep.join(list(map(str, x.flatten())))
         if space:
@@ -202,8 +203,8 @@ def parse_anomaly_response(X):
         text = text.strip().lower()
 
         # Check for "no anomalies" case
-        if "no anomalies" in text or "no anomaly" in text:
-            return ""
+        if 'no anomalies' in text or 'no anomaly' in text:
+            return ''
 
         # Try to extract the values using regex
         # Match anything inside square brackets that consists of digits and commas
@@ -219,7 +220,7 @@ def parse_anomaly_response(X):
             return ','.join(values)
 
         # Return empty string if no valid format is found
-        return ""
+        return ''
 
     # Process each list of responses in the input
     result = []

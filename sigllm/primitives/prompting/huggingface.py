@@ -131,12 +131,11 @@ class HF:
         all_responses, all_generate_ids = [], []
 
         # Prepare the one-shot example if provided
-        one_shot_message = ""
+        one_shot_message = ''
         if normal is not None:
-            one_shot_message = PROMPTS['one_shot_prefix'] + normal + "\n\n"
+            one_shot_message = PROMPTS['one_shot_prefix'] + normal + '\n\n'
 
         for text in tqdm(X):
-
             system_message = PROMPTS['system_message']
             if self.restrict_tokens:
                 user_message = PROMPTS['user_message']
@@ -149,7 +148,7 @@ class HF:
                 one_shot_message,
                 user_message,
                 text,
-                '[RESPONSE]'
+                '[RESPONSE]',
             ])
 
             input_length = len(self.tokenizer.encode(message))
@@ -186,7 +185,7 @@ class HF:
                     response = full_response.split('[RESPONSE]')[1].strip()
                     responses.append(response)
                 except IndexError:
-                    responses.append("")  # If no [RESPONSE] found, return empty string
+                    responses.append('')  # If no [RESPONSE] found, return empty string
 
             all_responses.append(responses)
             all_generate_ids.append(generate_ids)

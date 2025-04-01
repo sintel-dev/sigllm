@@ -17,10 +17,7 @@ import pandas as pd
 
 LOGGER = logging.getLogger(__name__)
 
-DATA_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'data'
-)
+DATA_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 BUCKET = 'sintel-sigllm'
 S3_URL = 'https://{}.s3.amazonaws.com/{}'
 
@@ -81,15 +78,15 @@ def download_normal(name, test_size=None, data_path=DATA_PATH):
             return data
         except Exception:
             error_msg = (
-                f"Could not download or find normal file for {name}. "
-                f"Please ensure the file exists at {filename} or can be "
-                f"downloaded from {url}"
+                f'Could not download or find normal file for {name}. '
+                f'Please ensure the file exists at {filename} or can be '
+                f'downloaded from {url}'
             )
             LOGGER.error(error_msg)
             raise FileNotFoundError(error_msg)
 
     except Exception as e:
-        error_msg = f"Error processing normal file for {name}: {str(e)}"
+        error_msg = f'Error processing normal file for {name}: {str(e)}'
         LOGGER.error(error_msg)
         raise FileNotFoundError(error_msg)
 
@@ -105,12 +102,8 @@ def format_csv(df, timestamp_column=None, value_columns=None):
     Returns:
         pd.DataFrame: Formatted DataFrame with timestamp and values
     """
-    timestamp_column_name = (
-        df.columns[timestamp_column] if timestamp_column else df.columns[0]
-    )
-    value_column_names = (
-        df.columns[value_columns] if value_columns else df.columns[1:]
-    )
+    timestamp_column_name = df.columns[timestamp_column] if timestamp_column else df.columns[0]
+    value_column_names = df.columns[value_columns] if value_columns else df.columns[1:]
 
     data = dict()
     data['timestamp'] = df[timestamp_column_name].astype('int64').values
@@ -139,19 +132,13 @@ def load_csv(path, timestamp_column=None, value_column=None):
 
     if timestamp_column is None:
         if value_column is not None:
-            raise ValueError(
-                "If value_column is provided, timestamp_column must be as well"
-            )
+            raise ValueError('If value_column is provided, timestamp_column must be as well')
         return data
 
     elif value_column is None:
-        raise ValueError(
-            "If timestamp_column is provided, value_column must be as well"
-        )
+        raise ValueError('If timestamp_column is provided, value_column must be as well')
     elif timestamp_column == value_column:
-        raise ValueError(
-            "timestamp_column cannot be the same as value_column"
-        )
+        raise ValueError('timestamp_column cannot be the same as value_column')
 
     return format_csv(data, timestamp_column, value_column)
 
