@@ -29,8 +29,6 @@ def format_as_string(X, sep=',', space=False, normal=False):
             If normal=True, returns a single string representation.
             If normal=False, returns a list of string representations for each wprintindow.
     """
-    
-
     def _as_string(x):
         text = sep.join(list(map(str, x.flatten())))
         if space:
@@ -161,7 +159,6 @@ class Float2Scalar:
 
         values = sign * (values * 10**self.decimal).astype(int)
 
-
         return values, self.minimum, self.decimal
 
 
@@ -187,36 +184,32 @@ class Scalar2Float:
 
         return values + minimum
 
-from typing import List
-import re
 
 def parse_anomaly_response(X):
-    """
-    Parse a list of lists of LLM responses to extract anomaly values and format them as strings.
-    
+    """Parse a list of lists of LLM responses to extract anomaly values and format them as strings.
+
     Args:
         X (List[List[str]]): List of lists of response texts from the LLM in the format
                            "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]"
-    
     Returns:
         List[List[str]]: List of lists of parsed responses where each element is either
                         "val1,val2,...,valN" if anomalies are found,
                         or empty string if no anomalies are present
     """
-    
+
     def parse_single_response(text: str) -> str:
         # Clean the input text
         text = text.strip().lower()
-        
+
         # Check for "no anomalies" case
         if "no anomalies" in text or "no anomaly" in text:
             return ""
-        
+
         # Try to extract the values using regex
         # Match anything inside square brackets that consists of digits and commas
         pattern = r'\[([\d\s,]+)\]'
         match = re.search(pattern, text)
-        
+
         if match:
             # Extract the content inside brackets and clean it
             values = match.group(1)
@@ -224,10 +217,10 @@ def parse_anomaly_response(X):
             values = [val.strip() for val in values.split(',') if val.strip()]
             # Join the values with commas
             return ','.join(values)
-        
+
         # Return empty string if no valid format is found
         return ""
-    
+
     # Process each list of responses in the input
     result = []
     for response_list in X:
@@ -235,8 +228,9 @@ def parse_anomaly_response(X):
         parsed_list = [parse_single_response(response) for response in response_list]
         result.append(parsed_list)
 
-    #return np.array(result, dtype=object)
+    # return np.array(result, dtype=object)
     return result
+
 
 def format_as_single_string(X, sep=',', space=False):
     """Format a single time series to a string.
@@ -257,10 +251,10 @@ def format_as_single_string(X, sep=',', space=False):
     # Ensure X is 1D
     if X.ndim > 1:
         X = X.flatten()
-    
+
     text = sep.join(list(map(str, X)))
-    
+
     if space:
         text = ' '.join(text)
-    
+
     return text

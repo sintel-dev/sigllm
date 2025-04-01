@@ -100,7 +100,8 @@ class SigLLM(Orion):
 
         return ('SigLLM:\n{}\nhyperparameters:\n{}\n').format(pipeline, hyperparameters)
 
-    def detect(self, data: pd.DataFrame, normal: pd.DataFrame = None, visualization: bool = False, **kwargs) -> pd.DataFrame:
+    def detect(self, data: pd.DataFrame, normal: pd.DataFrame = None,
+                visualization: bool = False, **kwargs) -> pd.DataFrame:
         """Detect anomalies in the given data.
 
         If ``visualization=True``, also return the visualization

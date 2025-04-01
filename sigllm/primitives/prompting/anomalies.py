@@ -36,7 +36,6 @@ def val2idx(y, X):
         idx_list.append(idx_win_list)
     idx_list = np.array(idx_list, dtype=object)
 
-
     return idx_list
 
 
@@ -124,11 +123,10 @@ def format_anomalies(y, timestamp, padding_size=50):
         List[Tuple]:
             List of intervals (start, end, score). Empty list if no anomalies are found.
     """
-    
     # Handle empty array case
     if len(y) == 0:
         return []
-        
+
     y = timestamp[y]  # Convert list of indices into list of timestamps
     start, end = timestamp[0], timestamp[-1]
     interval = timestamp[1] - timestamp[0]

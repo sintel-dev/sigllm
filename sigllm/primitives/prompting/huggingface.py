@@ -142,7 +142,7 @@ class HF:
                 user_message = PROMPTS['user_message']
             else:
                 user_message = PROMPTS['user_message_2']
-            
+
             # Combine messages with one-shot example if provided
             message = ' '.join([
                 system_message,
@@ -178,7 +178,7 @@ class HF:
                 skip_special_tokens=True,
                 clean_up_tokenization_spaces=False,
             )
-            
+
             # Extract only the part after [RESPONSE]
             responses = []
             for full_response in full_responses:
@@ -187,7 +187,7 @@ class HF:
                     responses.append(response)
                 except IndexError:
                     responses.append("")  # If no [RESPONSE] found, return empty string
-            
+
             all_responses.append(responses)
             all_generate_ids.append(generate_ids)
 

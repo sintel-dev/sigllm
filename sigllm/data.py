@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Data Management module.
+"""Data Management module.
 
 This module contains functions that allow downloading demo data from Amazon S3,
 as well as load and work with other data stored locally.
@@ -11,11 +10,9 @@ The demo data is a modified version of the NASA data found here:
 https://s3-us-west-2.amazonaws.com/telemanom/data.zip
 """
 
-import json
 import logging
 import os
 
-import numpy as np
 import pandas as pd
 
 LOGGER = logging.getLogger(__name__)
@@ -55,7 +52,8 @@ def download_normal(name, test_size=None, data_path=DATA_PATH):
         the train split and another one for the test split is returned.
 
     Raises:
-        FileNotFoundError: If the normal file doesn't exist locally and can't be downloaded from S3.
+        FileNotFoundError: If the normal file doesn't exist locally and can't
+        be downloaded from S3.
     """
     try:
         url = None
@@ -75,16 +73,18 @@ def download_normal(name, test_size=None, data_path=DATA_PATH):
 
         url = url or S3_URL.format(BUCKET, '{}_normal.csv'.format(name))
         LOGGER.info('Downloading CSV %s from %s', name, url)
-        print("Downloading CSV %s from %s", name, url)
-        
+
         try:
             data = pd.read_csv(url)
             os.makedirs(data_path, exist_ok=True)
             data.to_csv(filename, index=False)
             return data
-        except Exception as e:
-            error_msg = f"Could not download or find normal file for {name}. "
-            error_msg += f"Please ensure the file exists at {filename} or can be downloaded from {url}"
+        except Exception:
+            error_msg = (
+                f"Could not download or find normal file for {name}. "
+                f"Please ensure the file exists at {filename} or can be "
+                f"downloaded from {url}"
+            )
             LOGGER.error(error_msg)
             raise FileNotFoundError(error_msg)
 
@@ -95,8 +95,22 @@ def download_normal(name, test_size=None, data_path=DATA_PATH):
 
 
 def format_csv(df, timestamp_column=None, value_columns=None):
-    timestamp_column_name = df.columns[timestamp_column] if timestamp_column else df.columns[0]
-    value_column_names = df.columns[value_columns] if value_columns else df.columns[1:]
+    """Format CSV data with timestamp and value columns.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame
+        timestamp_column: Column index or name for timestamp
+        value_columns: Column index or name for values
+
+    Returns:
+        pd.DataFrame: Formatted DataFrame with timestamp and values
+    """
+    timestamp_column_name = (
+        df.columns[timestamp_column] if timestamp_column else df.columns[0]
+    )
+    value_column_names = (
+        df.columns[value_columns] if value_columns else df.columns[1:]
+    )
 
     data = dict()
     data['timestamp'] = df[timestamp_column_name].astype('int64').values
@@ -107,29 +121,56 @@ def format_csv(df, timestamp_column=None, value_columns=None):
 
 
 def load_csv(path, timestamp_column=None, value_column=None):
+    """Load and format CSV file.
+
+    Args:
+        path (str): Path to CSV file
+        timestamp_column: Column index or name for timestamp
+        value_column: Column index or name for values
+
+    Returns:
+        pd.DataFrame: Loaded and formatted DataFrame
+
+    Raises:
+        ValueError: If column specifications are invalid
+    """
     header = None if timestamp_column is not None else 'infer'
     data = pd.read_csv(path, header=header)
 
     if timestamp_column is None:
         if value_column is not None:
-            raise ValueError("If value_column is provided, timestamp_column must be as well")
-
+            raise ValueError(
+                "If value_column is provided, timestamp_column must be as well"
+            )
         return data
 
     elif value_column is None:
-        raise ValueError("If timestamp_column is provided, value_column must be as well")
+        raise ValueError(
+            "If timestamp_column is provided, value_column must be as well"
+        )
     elif timestamp_column == value_column:
-        raise ValueError("timestamp_column cannot be the same as value_column")
+        raise ValueError(
+            "timestamp_column cannot be the same as value_column"
+        )
 
     return format_csv(data, timestamp_column, value_column)
 
 
 def load_normal(normal, timestamp_column=None, value_column=None):
+    """Load normal data from file or download if needed.
+
+    Args:
+        normal (str): Name or path of the normal data
+        timestamp_column: Column index or name for timestamp
+        value_column: Column index or name for values
+
+    Returns:
+        pd.DataFrame: Loaded and formatted normal data
+    """
     if os.path.isfile(normal):
         data = load_csv(normal, timestamp_column, value_column)
     else:
         data = download_normal(normal)
 
     data = format_csv(data)
-
     return data
