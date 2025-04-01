@@ -124,7 +124,7 @@ def load_csv(path, timestamp_column=None, value_column=None):
     return format_csv(data, timestamp_column, value_column)
 
 
-def load_normal(normal, test_size=None, timestamp_column=None, value_column=None):
+def load_normal(normal, timestamp_column=None, value_column=None):
     if os.path.isfile(normal):
         data = load_csv(normal, timestamp_column, value_column)
     else:
@@ -132,11 +132,4 @@ def load_normal(normal, test_size=None, timestamp_column=None, value_column=None
 
     data = format_csv(data)
 
-    if test_size is None:
-        return data
-
-    test_length = round(len(data) * test_size)
-    train = data.iloc[:-test_length]
-    test = data.iloc[-test_length:]
-
-    return train, test
+    return data
