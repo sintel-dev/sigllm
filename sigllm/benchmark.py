@@ -6,7 +6,6 @@ import concurrent
 import json
 import logging
 import os
-import pickle
 import uuid
 import warnings
 from copy import deepcopy
@@ -18,41 +17,21 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import tqdm
-from scipy import signal as scipy_signal
+from mlblocks import get_pipelines_paths
 from orion.benchmark import _load_signal, _parse_confusion_matrix, _sort_leaderboard
-from orion.data import load_anomalies, load_signal
+from orion.data import load_anomalies
 from orion.evaluation import CONTEXTUAL_METRICS as METRICS
 from orion.evaluation import contextual_confusion_matrix
 from orion.progress import TqdmLogger, progress
 
 from sigllm import SigLLM
-from sigllm.data import load_normal # TODO: implement a retrieval function for loading normal subsequences
-
-# def load_normal(name, start=None, end=None):
-# """Loading normal subsequences of a signal.
-#
-#    Load a subsequence from local or s3 bucket, if `start`
-#    or `end` are specified, slice the signal based on these
-#    values.
-#
-#    Args:
-#        name (str):
-#            Name of the signal to be loaded.
-#        start (int):
-#            Optional. If specificed, this will be start of the subsequence.
-#        end (int):
-#            Optional. If specificed, this will be end of the subsequence.
-#
-#    Returns:
-#        pandas.DataFrame:
-#            Loaded subsequence with `timestamp` and `value` columns.
-# """
+from sigllm.data import load_normal
 
 warnings.simplefilter('ignore')
 
 LOGGER = logging.getLogger(__name__)
 
-BUCKET = 'sintel-sigllm' # TODO: create an s3 bucket with this name, this bucket will have normal subsequences, dataset, and parameters files
+BUCKET = 'sintel-sigllm'
 S3_URL = 'https://{}.s3.amazonaws.com/{}'
 
 BENCHMARK_PATH = os.path.join(os.path.join(
@@ -68,10 +47,29 @@ BENCHMARK_PARAMS = pd.read_csv(S3_URL.format(
 PIPELINE_DIR = os.path.join(os.path.dirname(__file__), 'pipelines')
 
 PIPELINES = {
-    # 'what you want to name the model': 'pipeline name'
-    'mistral_detector': 'mistral_detector',
-    'mistral_one_shot': 'mistral_prompter_one_shot',
-}
+    'mistral_prompter_restricted': 'mistral_prompter',
+    'mistral_prompter_0shot': 'mistral_prompter_0shot',
+    'mistral_prompter_1shot': 'mistral_prompter_1shot',
+}  # ['mistral_prompter_0shot', 'mistral_prompter_1shot']
+
+
+def _get_pipeline_directory(pipeline_name):
+    if os.path.isfile(pipeline_name):
+        return os.path.dirname(pipeline_name)
+
+    pipelines_paths = get_pipelines_paths()
+    for base_path in pipelines_paths:
+        parts = pipeline_name.split('.')
+        number_of_parts = len(parts)
+
+        for folder_parts in range(number_of_parts):
+            folder = os.path.join(base_path, *parts[:folder_parts])
+            filename = '.'.join(parts[folder_parts:]) + '.json'
+            json_path = os.path.join(folder, filename)
+
+            if os.path.isfile(json_path):
+                return os.path.dirname(json_path)
+
 
 def _get_pipeline_hyperparameter(hyperparameters, dataset_name, pipeline_name):
     hyperparameters_ = deepcopy(hyperparameters)
@@ -81,8 +79,11 @@ def _get_pipeline_hyperparameter(hyperparameters, dataset_name, pipeline_name):
         hyperparameters_ = hyperparameters_.get(pipeline_name) or hyperparameters_
 
     if hyperparameters_ is None and dataset_name and pipeline_name:
+        pipeline_path = _get_pipeline_directory(pipeline_name)
+        pipeline_dirname = os.path.basename(pipeline_path)
         file_path = os.path.join(
-            PIPELINE_DIR, pipeline_name, pipeline_name + '_' + dataset_name.lower() + '.json')
+            pipeline_path, pipeline_dirname + '_' + dataset_name.lower() + '.json'
+        )
         if os.path.exists(file_path):
             hyperparameters_ = file_path
 
@@ -94,13 +95,13 @@ def _get_pipeline_hyperparameter(hyperparameters, dataset_name, pipeline_name):
 
 
 def _evaluate_signal(pipeline, signal, hyperparameter, metrics, test_split=False,
-                     few_shot=False, pipeline_path=None, anomaly_path=None):
+                     few_shot=False, anomaly_path=None):
 
     train, test = _load_signal(signal, test_split)
     truth = load_anomalies(signal)
 
     normal = None
-    if few_shot: # TODO: decide if this is the logic to work with
+    if few_shot:
         normal = load_normal(signal)
 
     try:
@@ -109,7 +110,7 @@ def _evaluate_signal(pipeline, signal, hyperparameter, metrics, test_split=False
 
         start = datetime.utcnow()
         pipeline = SigLLM(pipeline, hyperparameter)
-        anomalies = pipeline.detect(test, normal=normal) # Do we need to keep `train` here?
+        anomalies = pipeline.detect(test, normal=normal)
         elapsed = datetime.utcnow() - start
 
         scores = {
@@ -138,10 +139,6 @@ def _evaluate_signal(pipeline, signal, hyperparameter, metrics, test_split=False
     scores['elapsed'] = elapsed.total_seconds()
     scores['split'] = test_split
 
-    if pipeline_path: # TODO: replace with SigLLM `save`` function
-        with open(pipeline_path, 'wb') as f:
-            pickle.dump(pipeline, f)
-
     if anomaly_path:
         anomalies.to_csv(anomaly_path, index=False)
 
@@ -153,12 +150,7 @@ def _run_job(args):
     np.random.seed()
 
     (pipeline, pipeline_name, dataset, signal, hyperparameter, metrics, test_split, few_shot,
-        iteration, cache_dir, pipeline_dir, anomaly_dir, run_id) = args
-
-    pipeline_path = pipeline_dir
-    if pipeline_dir:
-        base_path = str(pipeline_dir / f'{pipeline_name}_{signal}_{dataset}_{iteration}')
-        pipeline_path = base_path + '_pipeline.pkl'
+        iteration, cache_dir, anomaly_dir, run_id) = args
 
     anomaly_path = anomaly_dir
     if anomaly_dir:
@@ -175,7 +167,6 @@ def _run_job(args):
         metrics,
         test_split,
         few_shot,
-        pipeline_path,
         anomaly_path
     )
     scores = pd.DataFrame.from_records([output], columns=output.keys())
@@ -217,8 +208,8 @@ def _run_on_dask(jobs, verbose):
 
 
 def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRICS, rank='f1',
-              test_split=False, detrend=False, iterations=1, workers=1, show_progress=False,
-              cache_dir=None, resume=False, output_path=None, pipeline_dir=None, anomaly_dir=None):
+              test_split=False, iterations=1, workers=1, show_progress=False,
+              cache_dir=None, anomaly_dir=None, resume=False, output_path=None):
     """Run pipelines on the given datasets and evaluate the performance.
 
     The pipelines are used to analyze the given signals and later on the
@@ -248,7 +239,6 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
         test_split (bool or float): Whether to use the prespecified train-test split. If
             float, then it should be between 0.0 and 1.0 and represent the proportion of
             the signal to include in the test split. If not given, use ``False``.
-        detrend (bool): Whether to use ``scipy.detrend``. If not given, use ``False``.
         iterations (int):
             Number of iterations to perform over each signal and pipeline. Defaults to 1.
         workers (int or str):
@@ -264,17 +254,14 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
             as CSV files as they get computted. This allows inspecting results while the benchmark
             is still running and also recovering results in case the process does not finish
             properly. Defaults to ``None``.
+        anomaly_dir (str):
+            If a ``anomaly_dir`` is given, detected anomalies will get dumped in the specificed
+            directory as csv files. Defaults to ``None``.
         resume (bool):
             Whether to continue running the experiments in the benchmark from the current
             progress in ``cache_dir``.
         output_path (str): Location to save the intermediatry results. If not given,
             intermediatry results will not be saved.
-        pipeline_dir (str):
-            If a ``pipeline_dir`` is given, pipelines will get dumped in the specificed directory
-            as pickle files. Defaults to ``None``.
-        anomaly_dir (str):
-            If a ``anomaly_dir`` is given, detected anomalies will get dumped in the specificed
-            directory as csv files. Defaults to ``None``.
 
     Returns:
         pandas.DataFrame:
@@ -311,10 +298,6 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
         cache_dir = Path(cache_dir)
         os.makedirs(cache_dir, exist_ok=True)
 
-    if pipeline_dir:
-        pipeline_dir = Path(pipeline_dir)
-        os.makedirs(pipeline_dir, exist_ok=True)
-
     if anomaly_dir:
         anomaly_dir = Path(anomaly_dir)
         os.makedirs(anomaly_dir, exist_ok=True)
@@ -325,7 +308,7 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
             hyperparameter = _get_pipeline_hyperparameter(hyperparameters, dataset, pipeline_name)
             parameters = BENCHMARK_PARAMS.get(dataset)
 
-            few_shot = True if 'shot' in pipeline_name.lower() else False # does this logic make sense?
+            few_shot = True if '1shot' in pipeline_name.lower() else False  # does this logic make sense?
             if parameters is not None:
                 test_split = parameters.values()
             for signal in signals:
@@ -349,7 +332,6 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
                         few_shot,
                         iteration,
                         cache_dir,
-                        pipeline_dir,
                         anomaly_dir,
                         run_id,
                     )
@@ -409,7 +391,6 @@ if __name__ == "__main__":
 
     parser.add_argument('-o', '--output_path', type=str, default='results.csv')
     parser.add_argument('-c', '--cache_dir', type=str, default='cache')
-    parser.add_argument('-pd', '--pipeline_dir', type=str, default='pipeline_dir')
     parser.add_argument('-ad', '--anomaly_dir', type=str, default='anomaly_dir')
 
     config = parser.parse_args()
