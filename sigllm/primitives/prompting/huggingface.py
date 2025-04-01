@@ -175,8 +175,8 @@ class HF:
                     generate_ids[:, input_length:],
                     skip_special_tokens=True,
                     clean_up_tokenization_spaces=False,
-                    )
-            else:    # Extract only the part after [RESPONSE]
+                )
+            else:  # Extract only the part after [RESPONSE]
                 # Get the full generated text
                 full_responses = self.tokenizer.batch_decode(
                     generate_ids,

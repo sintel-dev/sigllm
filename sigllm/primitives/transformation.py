@@ -187,13 +187,13 @@ class Scalar2Float:
 
 
 def parse_anomaly_response(X):
-    """Parse a list of lists of LLM responses to extract anomaly
-    values and format them as strings.
+    """Parse a list of lists of LLM responses to extract anomaly values and format them as strings.
 
     Args:
         X (List[List[str]]):
                 List of lists of response texts from the LLM in the format
                 "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]"
+
     Returns:
         List[List[str]]:
                 List of lists of parsed responses where each element is either

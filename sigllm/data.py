@@ -139,13 +139,15 @@ def load_csv(path, timestamp_column=None, value_column=None):
     return format_csv(data, timestamp_column, value_column)
 
 
-def load_normal(name, timestamp_column=None, value_column=None, start=None, end=None, use_timestamps=False):
+def load_normal(
+    name, timestamp_column=None, value_column=None, start=None, end=None, use_timestamps=False
+):
     """Load normal data from file or download if needed.
 
     Args:
         name (str):
             Name or path of the normal data.
-        timestamp_column (str or int): 
+        timestamp_column (str or int):
             Column index or name for timestamp.
         value_column (str or int):
             Column index or name for values.
