@@ -138,7 +138,10 @@ class HF:
         for text in tqdm(X):
 
             system_message = PROMPTS['system_message']
-            user_message = PROMPTS['user_message']
+            if self.restrict_tokens:
+                user_message = PROMPTS['user_message']
+            else:
+                user_message = PROMPTS['user_message_2']
             
             # Combine messages with one-shot example if provided
             message = ' '.join([
