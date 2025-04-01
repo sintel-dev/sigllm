@@ -4,10 +4,6 @@
 
 This module contains functions that allow downloading demo data from Amazon S3,
 as well as load and work with other data stored locally.
-
-The demo data is a modified version of the NASA data found here:
-
-https://s3-us-west-2.amazonaws.com/telemanom/data.zip
 """
 
 import logging
@@ -143,21 +139,43 @@ def load_csv(path, timestamp_column=None, value_column=None):
     return format_csv(data, timestamp_column, value_column)
 
 
-def load_normal(normal, timestamp_column=None, value_column=None):
+def load_normal(name, timestamp_column=None, value_column=None, start=None, end=None, use_timestamps=False):
     """Load normal data from file or download if needed.
 
     Args:
-        normal (str): Name or path of the normal data
-        timestamp_column: Column index or name for timestamp
-        value_column: Column index or name for values
+        name (str):
+            Name or path of the normal data.
+        timestamp_column (str or int): 
+            Column index or name for timestamp.
+        value_column (str or int):
+            Column index or name for values.
+        start (int or timestamp):
+            Optional. If specified, this will be start of the sub-sequence.
+        end (int or timestamp):
+            Optional. If specified, this will be end of the sub-sequence.
+        use_timestamps (bool):
+            If True, start and end are interpreted as timestamps.
+            If False, start and end are interpreted as row indices.
 
     Returns:
-        pd.DataFrame: Loaded and formatted normal data
+        pandas.DataFrame:
+            Loaded subsequence with `timestamp` and `value` columns.
     """
-    if os.path.isfile(normal):
-        data = load_csv(normal, timestamp_column, value_column)
+    if os.path.isfile(name):
+        data = load_csv(name, timestamp_column, value_column)
     else:
-        data = download_normal(normal)
+        data = download_normal(name)
 
     data = format_csv(data)
+
+    # Handle slicing if start or end is specified
+    if start is not None or end is not None:
+        if use_timestamps:
+            # If start and end are timestamps
+            mask = (data['timestamp'] >= start) & (data['timestamp'] <= end)
+            data = data[mask]
+        else:
+            # If start and end are indices
+            data = data.iloc[start:end]
+
     return data

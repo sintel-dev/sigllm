@@ -12,7 +12,8 @@
         "args": [
             {
                 "name": "X",
-                "type": "ndarray"            }
+                "type": "ndarray"            
+            }
         ],
         "output": [
             {

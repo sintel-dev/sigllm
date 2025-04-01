@@ -48,7 +48,7 @@ class HF:
             Additional padding token to forecast to reduce short horizon predictions.
             Default to `0`.
         restrict_tokens (bool):
-            Whether to restrict tokens or not. Default to `True`.
+            Whether to restrict tokens or not. Default to `False`.
     """
 
     def __init__(
@@ -118,8 +118,8 @@ class HF:
             X (ndarray):
                 Input sequences of strings containing signal values
             normal (str, optional):
-                A normal reference sequence for one-shot learning. If None,
-                zero-shot learning is used. Default to None.
+                A normal reference sequence for one-shot prompting. If None,
+                zero-shot prompting is used. Default to None.
 
         Returns:
             list, list:
@@ -156,7 +156,6 @@ class HF:
             tokenized_input = self.tokenizer(message, return_tensors='pt').to('cuda')
 
             generate_kwargs = {
-                **tokenized_input,
                 'do_sample': True,
                 'max_new_tokens': max_tokens,
                 'temperature': self.temp,
@@ -169,23 +168,28 @@ class HF:
             if self.restrict_tokens:
                 generate_kwargs['bad_words_ids'] = self.invalid_tokens
 
-            generate_ids = self.model.generate(**generate_kwargs)
+            generate_ids = self.model.generate(**tokenized_input, **generate_kwargs)
 
-            # Get the full generated text
-            full_responses = self.tokenizer.batch_decode(
-                generate_ids,
-                skip_special_tokens=True,
-                clean_up_tokenization_spaces=False,
-            )
-
-            # Extract only the part after [RESPONSE]
-            responses = []
-            for full_response in full_responses:
-                try:
-                    response = full_response.split('[RESPONSE]')[1].strip()
-                    responses.append(response)
-                except IndexError:
-                    responses.append('')  # If no [RESPONSE] found, return empty string
+            if self.restrict_tokens:
+                responses = self.tokenizer.batch_decode(
+                    generate_ids[:, input_length:],
+                    skip_special_tokens=True,
+                    clean_up_tokenization_spaces=False,
+                    )
+            else:    # Extract only the part after [RESPONSE]
+                # Get the full generated text
+                full_responses = self.tokenizer.batch_decode(
+                    generate_ids,
+                    skip_special_tokens=True,
+                    clean_up_tokenization_spaces=False,
+                )
+                responses = []
+                for full_response in full_responses:
+                    try:
+                        response = full_response.split('[RESPONSE]')[1].strip()
+                        responses.append(response)
+                    except IndexError:
+                        responses.append('')  # If no [RESPONSE] found, return empty string
 
             all_responses.append(responses)
             all_generate_ids.append(generate_ids)

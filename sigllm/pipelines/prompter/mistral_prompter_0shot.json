@@ -9,8 +9,8 @@
         "sigllm.primitives.prompting.huggingface.HF",
         "sigllm.primitives.transformation.parse_anomaly_response",
         "sigllm.primitives.transformation.format_as_integer",
-        "sigllm/primitives/jsons/sigllm.primitives.prompting.anomalies.val2idx.json",
-        "sigllm/primitives/jsons/sigllm.primitives.prompting.anomalies.find_anomalies_in_windows.json",
+        "sigllm.primitives.prompting.anomalies.val2idx",
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
         "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences",
         "sigllm.primitives.prompting.anomalies.format_anomalies"
     ],

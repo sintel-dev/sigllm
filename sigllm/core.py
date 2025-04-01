@@ -117,9 +117,9 @@ class SigLLM(Orion):
                 Input data, passed as a ``pandas.DataFrame`` containing
                 exactly two columns: timestamp and value.
             normal (DataFrame, optional):
-                Normal reference data for one-shot learning, passed as a ``pandas.DataFrame``
+                Normal reference data for one-shot prompting, passed as a ``pandas.DataFrame``
                 containing exactly two columns: timestamp and value. If None, zero-shot
-                learning is used. Default to None.
+                prompting is used. Default to None.
             visualization (bool):
                 If ``True``, also capture the ``visualization`` named
                 output from the ``MLPipeline`` and return it as a second
