@@ -11,7 +11,7 @@
         "sigllm.primitives.transformation.Float2Scalar",
         "sigllm.primitives.transformation.format_as_string",
         
-        "sigllm.primitives.prompting.huggingface",
+        "sigllm.primitives.prompting.huggingface.HF",
         "sigllm.primitives.transformation.parse_anomaly_response",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.prompting.anomalies.val2idx",
@@ -49,7 +49,7 @@
             "space": false,
             "normal": true
         },
-        "sigllm.primitives.prompting.huggingface#1": {
+        "sigllm.primitives.prompting.huggingface.HF#1": {
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
             "anomalous_percent": 0.5,
             "samples": 1,
@@ -96,27 +96,27 @@
         },
 
 
-        "sigllm/primitives/jsons/sigllm.primitives.prompting.huggingface.HF.json#1": {
+        "sigllm.primitives.prompting.huggingface.HF#1": {
             "X": "X_str",
             "normal": "normal_str"
         },
-        "sigllm/primitives/jsons/sigllm.primitives.transformation.parse_anomaly_response.json#1": {
+        "sigllm.primitives.transformation.parse_anomaly_response#1": {
             "X": "y_hat"
         },
-        "sigllm/primitives/jsons/sigllm.primitives.transformation.format_as_integer.json#1": {
+        "sigllm.primitives.transformation.format_as_integer#1": {
             "X": "y_parsed"
         },
-        "sigllm/primitives/jsons/sigllm.primitives.prompting.anomalies.val2idx.json#1": {
+        "sigllm.primitives.prompting.anomalies.val2idx#1": {
             "y": "y_intermediate",
             "X": "X_sequences"
         },
-        "sigllm/primitives/jsons/sigllm.primitives.prompting.anomalies.find_anomalies_in_windows.json#1": {
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
             "y": "y_idx"
         },
-        "sigllm/primitives/jsons/sigllm.primitives.prompting.anomalies.merge_anomalous_sequences.json#1": {
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences#1": {
             "y": "y_windows"
         },
-        "sigllm/primitives/jsons/sigllm.primitives.prompting.anomalies.format_anomalies.json#1": {
+        "sigllm.primitives.prompting.anomalies.format_anomalies#1": {
             "y": "y_merged"
         }
     },

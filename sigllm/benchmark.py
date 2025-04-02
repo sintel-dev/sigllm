@@ -126,7 +126,7 @@ def _evaluate_signal(
         )
 
         start = datetime.utcnow()
-        pipeline = SigLLM(pipeline, hyperparameter)
+        pipeline = SigLLM(pipeline, hyperparameters=hyperparameter)
         anomalies = pipeline.detect(test, normal=normal)
         elapsed = datetime.utcnow() - start
 
@@ -350,12 +350,13 @@ def benchmark(
         for pipeline_name, pipeline in pipelines.items():
             hyperparameter = _get_pipeline_hyperparameter(hyperparameters, dataset, pipeline_name)
             parameters = BENCHMARK_PARAMS.get(dataset)
+            print(hyperparameter)
 
             few_shot = True if '1shot' in pipeline_name.lower() else False
             hyperparameter = _augment_hyperparameters(hyperparameter, few_shot)
 
             if parameters is not None:
-                test_split = parameters.values()
+                test_split, = parameters.values()
             for signal in signals:
                 for iteration in range(iterations):
                     if resume:
