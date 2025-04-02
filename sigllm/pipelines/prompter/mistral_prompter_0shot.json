@@ -25,7 +25,7 @@
             "rescale": true
         },
         "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences#1": {
-            "window_size": 200,
+            "window_size": 100,
             "step_size": 40
         },
         "sigllm.primitives.transformation.format_as_string#1": {
@@ -33,7 +33,7 @@
         },
         "sigllm.primitives.prompting.huggingface.HF#1": {
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
-            "samples": 3,
+            "samples": 1,
             "temp": 0.01
         },
         "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
