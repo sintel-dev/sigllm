@@ -16,6 +16,11 @@
             {
                 "name": "X",
                 "type": "ndarray"
+            },
+            {
+                "name": "normal",
+                "type": "ndarray",
+                "default": null
             }
         ],
         "output": [
@@ -63,6 +68,10 @@
             "padding": {
                 "type": "int",
                 "default": 0
+            },
+            "restrict_tokens": {
+                "type": "bool",
+                "default": false
             }
         }
     }

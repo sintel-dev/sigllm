@@ -5,7 +5,9 @@
         "sigllm.primitives.transformation.Float2Scalar",
         "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences",
 	    "sigllm.primitives.transformation.format_as_string",
+        
         "sigllm.primitives.prompting.huggingface.HF",
+        "sigllm.primitives.transformation.parse_anomaly_response",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.prompting.anomalies.val2idx",
         "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
@@ -31,8 +33,8 @@
         },
         "sigllm.primitives.prompting.huggingface.HF#1": {
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
-            "samples": 10,
-            "restrict_tokens": true
+            "samples": 3,
+            "temp": 0.01
         },
         "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
             "alpha": 0.4
@@ -45,8 +47,11 @@
         "sigllm.primitives.prompting.huggingface.HF#1": {
             "X": "X_str"
         },
-        "sigllm.primitives.transformation.format_as_integer#1":{
+        "sigllm.primitives.transformation.parse_anomaly_response#1": {
             "X": "y_hat"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "X": "y_parsed"
         }
     },
     "output_names": {
@@ -59,7 +64,10 @@
         "sigllm.primitives.prompting.huggingface.HF#1": {
             "y": "y_hat"
         },
-        "sigllm.primitives.transformation.format_as_integer#1":{
+        "sigllm.primitives.transformation.parse_anomaly_response#1": {
+            "X": "y_parsed"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
             "X": "y"
         }
     }

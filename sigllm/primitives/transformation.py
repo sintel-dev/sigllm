@@ -6,34 +6,43 @@ import re
 import numpy as np
 
 
-def format_as_string(X, sep=',', space=False):
+def format_as_string(X, sep=',', space=False, normal=False):
     """Format X to a list of string.
 
-    Transform a 2-D array of integers to a list of strings,
-    seperated by the indicated seperator and space.
+    Transform an array of integers to string(s), separated by the indicated separator and space.
+    Handles two cases:
+    - If normal=True, treats X as a single time series (window_size, 1)
+    - If normal=False, treats X as multiple windows (num_windows, window_size, 1)
 
     Args:
         sep (str):
             String to separate each element in X. Default to `','`.
         space (bool):
             Whether to add space between each digit in the result. Default to `False`.
+        normal (bool):
+            Whether to treat X as a normal time series. If True, expects (window_size, 1)
+            and returns a single string. If False, expects (num_windows, window_size, 1)
+            and returns a list of strings. Default to `False`.
 
     Returns:
-        ndarray:
-            A list of string representation of each row.
+        ndarray or str:
+            If normal=True, returns a single string representation. If normal=False,
+            returns a list of string representations for each window.
     """
 
     def _as_string(x):
         text = sep.join(list(map(str, x.flatten())))
-
         if space:
             text = ' '.join(text)
-
         return text
 
-    results = list(map(_as_string, X))
-
-    return np.array(results)
+    if normal:
+        # Handle as single time series (window_size, 1)
+        return _as_string(X)
+    else:
+        # Handle as multiple windows (num_windows, window_size, 1)
+        results = list(map(_as_string, X))
+        return np.array(results)
 
 
 def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
@@ -74,6 +83,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
 
     Transforms a list of list of string input as 3-D array of integers,
     seperated by the indicated seperator and truncated based on `trunc`.
+    Handles empty strings by returning empty arrays.
 
     Args:
         sep (str):
@@ -91,7 +101,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
 
     Returns:
         ndarray:
-            An array of digits values.
+            An array of digits values. Empty arrays for empty strings.
     """
     result = list()
     for string_list in X:
@@ -100,8 +110,11 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
             raise ValueError('Input is not a list of lists.')
 
         for text in string_list:
-            scalar = _from_string_to_integer(text, sep, trunc, errors)
-            sample.append(scalar)
+            if not text:  # Handle empty string
+                sample.append(np.array([], dtype=float))
+            else:
+                scalar = _from_string_to_integer(text, sep, trunc, errors)
+                sample.append(scalar)
 
         result.append(sample)
 
@@ -171,3 +184,81 @@ class Scalar2Float:
         values = X * 10 ** (-decimal)
 
         return values + minimum
+
+
+def parse_anomaly_response(X):
+    """Parse a list of lists of LLM responses to extract anomaly values and format them as strings.
+
+    Args:
+        X (List[List[str]]):
+                List of lists of response texts from the LLM in the format
+                "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]"
+
+    Returns:
+        List[List[str]]:
+                List of lists of parsed responses where each element is either
+                "val1,val2,...,valN" if anomalies are found, or empty string if
+                no anomalies are present
+    """
+
+    def _parse_single_response(text: str):
+        # Clean the input text
+        text = text.strip().lower()
+
+        # Check for "no anomalies" case
+        if 'no anomalies' in text or 'no anomaly' in text:
+            return ''
+
+        # Try to extract the values using regex
+        # Match anything inside square brackets that consists of digits and commas
+        pattern = r'\[([\d\s,]+)\]'
+        match = re.search(pattern, text)
+
+        if match:
+            # Extract the content inside brackets and clean it
+            values = match.group(1)
+            # Split by comma, strip whitespace, and filter out empty strings
+            values = [val.strip() for val in values.split(',') if val.strip()]
+            # Join the values with commas
+            return ','.join(values)
+
+        # Return empty string if no valid format is found
+        return ''
+
+    # Process each list of responses in the input
+    result = []
+    for response_list in X:
+        # Process each response in the inner list
+        parsed_list = [_parse_single_response(response) for response in response_list]
+        result.append(parsed_list)
+
+    # return np.array(result, dtype=object)
+    return result
+
+
+def format_as_single_string(X, sep=',', space=False):
+    """Format a single time series to a string.
+
+    Transform a 1-D array of integers to a single string,
+    separated by the indicated separator and space.
+
+    Args:
+        sep (str):
+            String to separate each element in X. Default to `','`.
+        space (bool):
+            Whether to add space between each digit in the result. Default to `False`.
+
+    Returns:
+        str:
+            A string representation of the time series.
+    """
+    # Ensure X is 1D
+    if X.ndim > 1:
+        X = X.flatten()
+
+    text = sep.join(list(map(str, X)))
+
+    if space:
+        text = ' '.join(text)
+
+    return text

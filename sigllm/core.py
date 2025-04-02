@@ -100,8 +100,14 @@ class SigLLM(Orion):
 
         return ('SigLLM:\n{}\nhyperparameters:\n{}\n').format(pipeline, hyperparameters)
 
-    def detect(self, data: pd.DataFrame, visualization: bool = False, **kwargs) -> pd.DataFrame:
-        """Detect anomalies in the given data..
+    def detect(
+        self,
+        data: pd.DataFrame,
+        normal: pd.DataFrame = None,
+        visualization: bool = False,
+        **kwargs,
+    ) -> pd.DataFrame:
+        """Detect anomalies in the given data.
 
         If ``visualization=True``, also return the visualization
         outputs from the MLPipeline object.
@@ -110,6 +116,10 @@ class SigLLM(Orion):
             data (DataFrame):
                 Input data, passed as a ``pandas.DataFrame`` containing
                 exactly two columns: timestamp and value.
+            normal (DataFrame, optional):
+                Normal reference data for one-shot prompting, passed as a ``pandas.DataFrame``
+                containing exactly two columns: timestamp and value. If None, zero-shot
+                prompting is used. Default to None.
             visualization (bool):
                 If ``True``, also capture the ``visualization`` named
                 output from the ``MLPipeline`` and return it as a second
@@ -124,6 +134,9 @@ class SigLLM(Orion):
         """
         if not self._fitted:
             self._mlpipeline = self._get_mlpipeline()
+
+        if normal is not None:
+            kwargs['normal'] = normal
 
         result = self._detect(self._mlpipeline.fit, data, visualization, **kwargs)
         self._fitted = True
