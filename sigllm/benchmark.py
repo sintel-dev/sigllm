@@ -34,15 +34,20 @@ LOGGER = logging.getLogger(__name__)
 BUCKET = 'sintel-sigllm'
 S3_URL = 'https://{}.s3.amazonaws.com/{}'
 
-BENCHMARK_PATH = os.path.join(os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..'),
-    'benchmark'
+BENCHMARK_PATH = os.path.join(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'), 'benchmark'
 )
 
-BENCHMARK_DATA = pd.read_csv(S3_URL.format(
-    BUCKET, 'datasets.csv'), index_col=0, header=None).applymap(ast.literal_eval).to_dict()[1]
-BENCHMARK_PARAMS = pd.read_csv(S3_URL.format(
-    BUCKET, 'parameters.csv'), index_col=0, header=None).applymap(ast.literal_eval).to_dict()[1]
+BENCHMARK_DATA = (
+    pd.read_csv(S3_URL.format(BUCKET, 'datasets.csv'), index_col=0, header=None)
+    .applymap(ast.literal_eval)
+    .to_dict()[1]
+)
+BENCHMARK_PARAMS = (
+    pd.read_csv(S3_URL.format(BUCKET, 'parameters.csv'), index_col=0, header=None)
+    .applymap(ast.literal_eval)
+    .to_dict()[1]
+)
 
 PIPELINE_DIR = os.path.join(os.path.dirname(__file__), 'pipelines')
 
@@ -94,10 +99,21 @@ def _get_pipeline_hyperparameter(hyperparameters, dataset_name, pipeline_name):
     return hyperparameters_
 
 
-def _evaluate_signal(pipeline, signal, hyperparameter, metrics, test_split=False,
-                     few_shot=False, anomaly_path=None):
+def _augment_hyperparameters(hyperparameters, few_shot):
+    hyperparameters_ = deepcopy(hyperparameters)
+    if few_shot:
+        for hyperparameter, value in hyperparameters.items():
+            if 'time_segments_aggregate' in hyperparameter:
+                name = hyperparameter[:-1]
+                hyperparameters_[name + '2'] = value
 
-    train, test = _load_signal(signal, test_split)
+    return hyperparameters_
+
+
+def _evaluate_signal(
+    pipeline, signal, hyperparameter, metrics, test_split=False, few_shot=False, anomaly_path=None
+):
+    _, test = _load_signal(signal, test_split)
     truth = load_anomalies(signal)
 
     normal = None
@@ -105,30 +121,31 @@ def _evaluate_signal(pipeline, signal, hyperparameter, metrics, test_split=False
         normal = load_normal(signal)
 
     try:
-        LOGGER.info("Scoring pipeline %s on signal %s (test split: %s)",
-                    pipeline, signal, test_split)
+        LOGGER.info(
+            'Scoring pipeline %s on signal %s (test split: %s)', pipeline, signal, test_split
+        )
 
         start = datetime.utcnow()
         pipeline = SigLLM(pipeline, hyperparameter)
         anomalies = pipeline.detect(test, normal=normal)
         elapsed = datetime.utcnow() - start
 
-        scores = {
-            name: scorer(truth, anomalies, test)
-            for name, scorer in metrics.items()
-        }
+        scores = {name: scorer(truth, anomalies, test) for name, scorer in metrics.items()}
 
         status = 'OK'
 
     except Exception as ex:
-        LOGGER.exception("Exception scoring pipeline %s on signal %s (test split: %s), error %s.",
-                         pipeline, signal, test_split, ex)
+        LOGGER.exception(
+            'Exception scoring pipeline %s on signal %s (test split: %s), error %s.',
+            pipeline,
+            signal,
+            test_split,
+            ex,
+        )
 
         elapsed = datetime.utcnow() - start
         anomalies = pd.DataFrame([], columns=['start', 'end', 'score'])
-        scores = {
-            name: 0 for name in metrics.keys()
-        }
+        scores = {name: 0 for name in metrics.keys()}
 
         status = 'ERROR'
 
@@ -149,25 +166,37 @@ def _run_job(args):
     # Reset random seed
     np.random.seed()
 
-    (pipeline, pipeline_name, dataset, signal, hyperparameter, metrics, test_split, few_shot,
-        iteration, cache_dir, anomaly_dir, run_id) = args
+    (
+        pipeline,
+        pipeline_name,
+        dataset,
+        signal,
+        hyperparameter,
+        metrics,
+        test_split,
+        few_shot,
+        iteration,
+        cache_dir,
+        anomaly_dir,
+        run_id,
+    ) = args
 
     anomaly_path = anomaly_dir
     if anomaly_dir:
         base_path = str(anomaly_dir / f'{pipeline_name}_{signal}_{dataset}_{iteration}')
         anomaly_path = base_path + '_anomalies.csv'
 
-    LOGGER.info('Evaluating pipeline %s on signal %s dataset %s (test split: %s); iteration %s',
-                pipeline_name, signal, dataset, test_split, iteration)
+    LOGGER.info(
+        'Evaluating pipeline %s on signal %s dataset %s (test split: %s); iteration %s',
+        pipeline_name,
+        signal,
+        dataset,
+        test_split,
+        iteration,
+    )
 
     output = _evaluate_signal(
-        pipeline,
-        signal,
-        hyperparameter,
-        metrics,
-        test_split,
-        few_shot,
-        anomaly_path
+        pipeline, signal, hyperparameter, metrics, test_split, few_shot, anomaly_path
     )
     scores = pd.DataFrame.from_records([output], columns=output.keys())
 
@@ -207,9 +236,21 @@ def _run_on_dask(jobs, verbose):
     return dask.compute(*persisted)
 
 
-def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRICS, rank='f1',
-              test_split=False, iterations=1, workers=1, show_progress=False,
-              cache_dir=None, anomaly_dir=None, resume=False, output_path=None):
+def benchmark(
+    pipelines=None,
+    datasets=None,
+    hyperparameters=None,
+    metrics=METRICS,
+    rank='f1',
+    test_split=False,
+    iterations=1,
+    workers=1,
+    show_progress=False,
+    cache_dir=None,
+    anomaly_dir=None,
+    resume=False,
+    output_path=None,
+):
     """Run pipelines on the given datasets and evaluate the performance.
 
     The pipelines are used to analyze the given signals and later on the
@@ -279,8 +320,10 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
         datasets = {'dataset': datasets}
 
     if isinstance(hyperparameters, list):
-        hyperparameters = {pipeline: hyperparameter for pipeline, hyperparameter in
-                           zip(pipelines.keys(), hyperparameters)}
+        hyperparameters = {
+            pipeline: hyperparameter
+            for pipeline, hyperparameter in zip(pipelines.keys(), hyperparameters)
+        }
 
     if isinstance(metrics, list):
         metrics_ = dict()
@@ -308,7 +351,9 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
             hyperparameter = _get_pipeline_hyperparameter(hyperparameters, dataset, pipeline_name)
             parameters = BENCHMARK_PARAMS.get(dataset)
 
-            few_shot = True if '1shot' in pipeline_name.lower() else False  # does this logic make sense?
+            few_shot = True if '1shot' in pipeline_name.lower() else False
+            hyperparameter = _augment_hyperparameters(hyperparameter, few_shot)
+
             if parameters is not None:
                 test_split = parameters.values()
             for signal in signals:
@@ -362,8 +407,8 @@ def benchmark(pipelines=None, datasets=None, hyperparameters=None, metrics=METRI
     return pd.DataFrame()
 
 
-def main(pipelines, datasets, resume, workers, output_path, cache_dir, pipeline_dir, anomaly_dir,
-         **kwargs):
+def main(pipelines, datasets, resume, workers, output_path, cache_dir, anomaly_dir, **kwargs):
+    """Main to call benchmark function."""
     # output path
     output_path = os.path.join(BENCHMARK_PATH, 'results', output_path)
 
@@ -373,15 +418,20 @@ def main(pipelines, datasets, resume, workers, output_path, cache_dir, pipeline_
     metrics = {k: partial(fun, weighted=False) for k, fun in METRICS.items()}
 
     results = benchmark(
-        pipelines=pipelines, datasets=datasets, metrics=metrics, output_path=output_path,
-        workers=workers, resume=resume, pipeline_dir=pipeline_dir, cache_dir=cache_dir,
-        anomaly_dir=anomaly_dir
+        pipelines=pipelines,
+        datasets=datasets,
+        metrics=metrics,
+        output_path=output_path,
+        workers=workers,
+        resume=resume,
+        cache_dir=cache_dir,
+        anomaly_dir=anomaly_dir,
     )
 
     return results
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-p', '--pipelines', nargs='+', type=str, default=PIPELINES)
