@@ -3,6 +3,7 @@
 import argparse
 import ast
 import concurrent
+import gc
 import json
 import logging
 import os
@@ -16,16 +17,18 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import torch
 import tqdm
 from mlblocks import get_pipelines_paths
 from orion.benchmark import _load_signal, _parse_confusion_matrix, _sort_leaderboard
 from orion.data import load_anomalies
 from orion.evaluation import CONTEXTUAL_METRICS as METRICS
 from orion.evaluation import contextual_confusion_matrix
-from orion.progress import TqdmLogger, progress
+from orion.progress import TqdmLogger
 
 from sigllm import SigLLM
-from sigllm.data import load_normal
+
+# from sigllm.data import load_normal
 
 warnings.simplefilter('ignore')
 
@@ -53,8 +56,8 @@ PIPELINE_DIR = os.path.join(os.path.dirname(__file__), 'pipelines')
 
 PIPELINES = {
     'mistral_prompter_restricted': 'mistral_prompter',
-    'mistral_prompter_0shot': 'mistral_prompter_0shot',
-    'mistral_prompter_1shot': 'mistral_prompter_1shot',
+    # 'mistral_prompter_0shot': 'mistral_prompter_0shot',
+    # 'mistral_prompter_1shot': 'mistral_prompter_1shot',
 }  # ['mistral_prompter_0shot', 'mistral_prompter_1shot']
 
 
@@ -79,22 +82,23 @@ def _get_pipeline_directory(pipeline_name):
 def _get_pipeline_hyperparameter(hyperparameters, dataset_name, pipeline_name):
     hyperparameters_ = deepcopy(hyperparameters)
 
-    if hyperparameters:
+    if isinstance(hyperparameters, dict):
         hyperparameters_ = hyperparameters_.get(dataset_name) or hyperparameters_
         hyperparameters_ = hyperparameters_.get(pipeline_name) or hyperparameters_
 
-    if hyperparameters_ is None and dataset_name and pipeline_name:
-        pipeline_path = _get_pipeline_directory(pipeline_name)
-        pipeline_dirname = os.path.basename(pipeline_path)
-        file_path = os.path.join(
-            pipeline_path, pipeline_dirname + '_' + dataset_name.lower() + '.json'
-        )
-        if os.path.exists(file_path):
-            hyperparameters_ = file_path
-
-    if isinstance(hyperparameters_, str) and os.path.exists(hyperparameters_):
+    elif isinstance(hyperparameters_, str) and os.path.exists(hyperparameters_):
         with open(hyperparameters_) as f:
             hyperparameters_ = json.load(f)
+
+    elif hyperparameters_ is None and dataset_name and pipeline_name:
+        pipeline_path = _get_pipeline_directory(pipeline_name)
+        if pipeline_path:
+            pipeline_dirname = os.path.basename(pipeline_path)
+            file_path = os.path.join(
+                pipeline_path, pipeline_dirname + '_' + dataset_name.lower() + '.json'
+            )
+            if os.path.exists(file_path):
+                hyperparameters_ = json.load(file_path)
 
     return hyperparameters_
 
@@ -105,7 +109,8 @@ def _augment_hyperparameters(hyperparameters, few_shot):
         for hyperparameter, value in hyperparameters.items():
             if 'time_segments_aggregate' in hyperparameter:
                 name = hyperparameter[:-1]
-                hyperparameters_[name + '2'] = value
+                number = int(hyperparameter[-1]) + 1
+                hyperparameters_[name + str(number)] = value
 
     return hyperparameters_
 
@@ -117,8 +122,8 @@ def _evaluate_signal(
     truth = load_anomalies(signal)
 
     normal = None
-    if few_shot:
-        normal = load_normal(signal)
+    # if few_shot:
+    #     normal = load_normal(signal)
 
     try:
         LOGGER.info(
@@ -126,7 +131,7 @@ def _evaluate_signal(
         )
 
         start = datetime.utcnow()
-        pipeline = SigLLM(pipeline, hyperparameter)
+        pipeline = SigLLM(pipeline, hyperparameters=hyperparameter)
         anomalies = pipeline.detect(test, normal=normal)
         elapsed = datetime.utcnow() - start
 
@@ -159,6 +164,9 @@ def _evaluate_signal(
     if anomaly_path:
         anomalies.to_csv(anomaly_path, index=False)
 
+    del pipeline
+    torch.cuda.empty_cache()
+    gc.collect()
     return scores
 
 
@@ -213,29 +221,6 @@ def _run_job(args):
     return scores
 
 
-def _run_on_dask(jobs, verbose):
-    """Run the tasks in parallel using dask."""
-    try:
-        import dask
-    except ImportError as ie:
-        ie.msg += (
-            '\n\nIt seems like `dask` is not installed.\n'
-            'Please install `dask` and `distributed` using:\n'
-            '\n    pip install dask distributed'
-        )
-        raise
-
-    scorer = dask.delayed(_run_job)
-    persisted = dask.persist(*[scorer(args) for args in jobs])
-    if verbose:
-        try:
-            progress(persisted)
-        except ValueError:
-            pass
-
-    return dask.compute(*persisted)
-
-
 def benchmark(
     pipelines=None,
     datasets=None,
@@ -282,12 +267,9 @@ def benchmark(
             the signal to include in the test split. If not given, use ``False``.
         iterations (int):
             Number of iterations to perform over each signal and pipeline. Defaults to 1.
-        workers (int or str):
+        workers (int):
             If ``workers`` is given as an integer value other than 0 or 1, a multiprocessing
             Pool is used to distribute the computation across the indicated number of workers.
-            If the string ``dask`` is given, the computation is distributed using ``dask``.
-            In this case, setting up the ``dask`` cluster and client is expected to be handled
-            outside of this function.
         show_progress (bool):
             Whether to use tqdm to keep track of the progress. Defaults to ``True``.
         cache_dir (str):
@@ -348,14 +330,13 @@ def benchmark(
     jobs = list()
     for dataset, signals in datasets.items():
         for pipeline_name, pipeline in pipelines.items():
-            hyperparameter = _get_pipeline_hyperparameter(hyperparameters, dataset, pipeline_name)
+            hyperparameter = _get_pipeline_hyperparameter(hyperparameters, dataset, pipeline)
             parameters = BENCHMARK_PARAMS.get(dataset)
-
-            few_shot = True if '1shot' in pipeline_name.lower() else False
+            few_shot = True if '1shot' in pipeline.lower() else False
             hyperparameter = _augment_hyperparameters(hyperparameter, few_shot)
-
             if parameters is not None:
-                test_split = parameters.values()
+                (test_split,) = parameters.values()
+
             for signal in signals:
                 for iteration in range(iterations):
                     if resume:
@@ -382,18 +363,15 @@ def benchmark(
                     )
                     jobs.append(args)
 
-    if workers == 'dask':
-        scores = _run_on_dask(jobs, show_progress)
+    if workers in (0, 1):
+        scores = map(_run_job, jobs)
     else:
-        if workers in (0, 1):
-            scores = map(_run_job, jobs)
-        else:
-            pool = concurrent.futures.ProcessPoolExecutor(workers)
-            scores = pool.map(_run_job, jobs)
+        pool = concurrent.futures.ProcessPoolExecutor(workers)
+        scores = pool.map(_run_job, jobs)
 
-        scores = tqdm.tqdm(scores, total=len(jobs), file=TqdmLogger())
-        if show_progress:
-            scores = tqdm.tqdm(scores, total=len(jobs))
+    scores = tqdm.tqdm(scores, total=len(jobs), file=TqdmLogger())
+    if show_progress:
+        scores = tqdm.tqdm(scores, total=len(jobs))
 
     if scores:
         scores = pd.concat(scores)
@@ -410,7 +388,7 @@ def benchmark(
 def main(pipelines, datasets, resume, workers, output_path, cache_dir, anomaly_dir, **kwargs):
     """Main to call benchmark function."""
     # output path
-    output_path = os.path.join(BENCHMARK_PATH, 'results', output_path)
+    output_path = os.path.join(BENCHMARK_PATH, output_path)
 
     # metrics
     del METRICS['accuracy']
