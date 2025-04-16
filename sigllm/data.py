@@ -10,6 +10,7 @@ import logging
 import os
 
 import pandas as pd
+from orion.data import format_csv, load_csv
 
 LOGGER = logging.getLogger(__name__)
 
@@ -18,31 +19,27 @@ BUCKET = 'sintel-sigllm'
 S3_URL = 'https://{}.s3.amazonaws.com/{}'
 
 
-def download_normal(name, test_size=None, data_path=DATA_PATH):
+def download_normal(name, data_path=DATA_PATH):
     """Load the CSV with the given name from S3.
 
     If the CSV has never been loaded before, it will be downloaded
-    from the [d3-ai-orion bucket](https://d3-ai-orion.s3.amazonaws.com) or
+    from the [sintel-sigllm bucket](https://sintel-sigllm.s3.amazonaws.com) or
     the S3 bucket specified following the `s3://{bucket}/path/to/the.csv` format,
-    and then cached inside the `data` folder, within the `orion` package
+    and then cached inside the `data` folder, within the `sigllm` package
     directory, and then returned.
 
     Otherwise, if it has been downloaded and cached before, it will be directly
-    loaded from the `orion/data` folder without contacting S3.
-
-    If a `test_size` value is given, the data will be split in two parts
-    without altering its order, making the second one proportionally as
-    big as the given value.
+    loaded from the `sigllm/data` folder without contacting S3.
 
     Args:
-        name (str): Name of the CSV to load.
-        test_size (float): Value between 0 and 1 indicating the proportional
-            size of the test split. If 0 or None (default), the data is not split.
+        name (str):
+            Name of the CSV to load.
+        data_path (str):
+            Path to store data.
 
     Returns:
-        If no test_size is given, a single pandas.DataFrame is returned containing all
-        the data. If test_size is given, a tuple containing one pandas.DataFrame for
-        the train split and another one for the test split is returned.
+        pandas.DataFrame:
+            A pandas.DataFrame is returned containing all the data.
 
     Raises:
         FileNotFoundError: If the normal file doesn't exist locally and can't
@@ -87,61 +84,7 @@ def download_normal(name, test_size=None, data_path=DATA_PATH):
         raise FileNotFoundError(error_msg)
 
 
-def format_csv(df, timestamp_column=None, value_columns=None):
-    """Format CSV data with timestamp and value columns.
-
-    Args:
-        df (pd.DataFrame): Input DataFrame
-        timestamp_column: Column index or name for timestamp
-        value_columns: Column index or name for values
-
-    Returns:
-        pd.DataFrame: Formatted DataFrame with timestamp and values
-    """
-    timestamp_column_name = df.columns[timestamp_column] if timestamp_column else df.columns[0]
-    value_column_names = df.columns[value_columns] if value_columns else df.columns[1:]
-
-    data = dict()
-    data['timestamp'] = df[timestamp_column_name].astype('int64').values
-    for column in value_column_names:
-        data[column] = df[column].astype(float).values
-
-    return pd.DataFrame(data)
-
-
-def load_csv(path, timestamp_column=None, value_column=None):
-    """Load and format CSV file.
-
-    Args:
-        path (str): Path to CSV file
-        timestamp_column: Column index or name for timestamp
-        value_column: Column index or name for values
-
-    Returns:
-        pd.DataFrame: Loaded and formatted DataFrame
-
-    Raises:
-        ValueError: If column specifications are invalid
-    """
-    header = None if timestamp_column is not None else 'infer'
-    data = pd.read_csv(path, header=header)
-
-    if timestamp_column is None:
-        if value_column is not None:
-            raise ValueError('If value_column is provided, timestamp_column must be as well')
-        return data
-
-    elif value_column is None:
-        raise ValueError('If timestamp_column is provided, value_column must be as well')
-    elif timestamp_column == value_column:
-        raise ValueError('timestamp_column cannot be the same as value_column')
-
-    return format_csv(data, timestamp_column, value_column)
-
-
-def load_normal(
-    name, timestamp_column=None, value_column=None, start=None, end=None, use_timestamps=False
-):
+def load_normal(name, timestamp_column=None, value_column=None, start=None, end=None):
     """Load normal data from file or download if needed.
 
     Args:
@@ -155,9 +98,6 @@ def load_normal(
             Optional. If specified, this will be start of the sub-sequence.
         end (int or timestamp):
             Optional. If specified, this will be end of the sub-sequence.
-        use_timestamps (bool):
-            If True, start and end are interpreted as timestamps.
-            If False, start and end are interpreted as row indices.
 
     Returns:
         pandas.DataFrame:
@@ -170,14 +110,16 @@ def load_normal(
 
     data = format_csv(data)
 
-    # Handle slicing if start or end is specified
-    if start is not None or end is not None:
-        if use_timestamps:
-            # If start and end are timestamps
-            mask = (data['timestamp'] >= start) & (data['timestamp'] <= end)
-            data = data[mask]
-        else:
-            # If start and end are indices
+    # handle start or end is specified
+    if start or end:
+        if any(data.index.isin([start, end])):
             data = data.iloc[start:end]
+        else:
+            mask = True
+            if start is not None:
+                mask &= data[timestamp_column] >= start
+            if end is not None:
+                mask &= data[timestamp_column] <= end
+            data = data[mask]
 
     return data

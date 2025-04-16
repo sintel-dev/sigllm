@@ -1,6 +1,6 @@
 {
     "system_message": "You are an expert in time series analysis. Your task is to detect anomalies in time series data.",
     "user_message": "Below is a [SEQUENCE], please return the anomalies in that sequence in [RESPONSE]. Only return the numbers. [SEQUENCE]",
-    "user_message_2": "Below is a [SEQUENCE], analyze the following time series and identify any anomalies. If you find anomalies, provide their values in the format [first_anomaly, ..., last_anomaly]. If no anomalies are found, respond with 'no anomalies'. Be concise, do not write code, do not permorm any calculations, just give your answers as told.: [SEQUENCE]",
+    "user_message_2": "Below is a [SEQUENCE], analyze the following time series and identify any anomalies. If you find anomalies, provide their values in the format [first_anomaly, ..., last_anomaly]. If no anomalies are found, respond with 'no anomalies'. Be concise, do not write code, do not perform any calculations, just give your answers as told.: [SEQUENCE]",
     "one_shot_prefix": "Here is a normal reference of the time series: [NORMAL]"
 }

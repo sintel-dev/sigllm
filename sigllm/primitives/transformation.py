@@ -191,48 +191,38 @@ def parse_anomaly_response(X):
 
     Args:
         X (List[List[str]]):
-                List of lists of response texts from the LLM in the format
-                "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]"
+            List of lists of response texts from the LLM in the format
+            "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]"
 
     Returns:
         List[List[str]]:
-                List of lists of parsed responses where each element is either
-                "val1,val2,...,valN" if anomalies are found, or empty string if
-                no anomalies are present
+            List of lists of parsed responses where each element is either
+            "val1,val2,...,valN" if anomalies are found, or empty string if
+            no anomalies are present
     """
 
     def _parse_single_response(text: str):
-        # Clean the input text
         text = text.strip().lower()
 
-        # Check for "no anomalies" case
         if 'no anomalies' in text or 'no anomaly' in text:
             return ''
 
-        # Try to extract the values using regex
-        # Match anything inside square brackets that consists of digits and commas
+        # match anything that consists of digits and commas
         pattern = r'\[([\d\s,]+)\]'
         match = re.search(pattern, text)
 
         if match:
-            # Extract the content inside brackets and clean it
             values = match.group(1)
-            # Split by comma, strip whitespace, and filter out empty strings
             values = [val.strip() for val in values.split(',') if val.strip()]
-            # Join the values with commas
             return ','.join(values)
 
-        # Return empty string if no valid format is found
         return ''
 
-    # Process each list of responses in the input
     result = []
     for response_list in X:
-        # Process each response in the inner list
         parsed_list = [_parse_single_response(response) for response in response_list]
         result.append(parsed_list)
 
-    # return np.array(result, dtype=object)
     return result
 
 
@@ -252,7 +242,6 @@ def format_as_single_string(X, sep=',', space=False):
         str:
             A string representation of the time series.
     """
-    # Ensure X is 1D
     if X.ndim > 1:
         X = X.flatten()
 
