@@ -6,27 +6,27 @@ import re
 import numpy as np
 
 
-def format_as_string(X, sep=',', space=False, normal=False):
+def format_as_string(X, sep=',', space=False, single=False):
     """Format X to a list of string.
 
-    Transform an array of integers to string(s), separated by the indicated separator and space.
-    Handles two cases:
-    - If normal=True, treats X as a single time series (window_size, 1)
-    - If normal=False, treats X as multiple windows (num_windows, window_size, 1)
+    Transform an array of integers to string(s), separated by the 
+    indicated separator and space. Handles two cases:
+    - If single=True, treats X as a single time series (window_size, 1)
+    - If single=False, treats X as multiple windows (num_windows, window_size, 1)
 
     Args:
         sep (str):
             String to separate each element in X. Default to `','`.
         space (bool):
             Whether to add space between each digit in the result. Default to `False`.
-        normal (bool):
-            Whether to treat X as a normal time series. If True, expects (window_size, 1)
+        single (bool):
+            Whether to treat X as a single time series. If True, expects (window_size, 1)
             and returns a single string. If False, expects (num_windows, window_size, 1)
             and returns a list of strings. Default to `False`.
 
     Returns:
         ndarray or str:
-            If normal=True, returns a single string representation. If normal=False,
+            If single=True, returns one string representation. If single=False,
             returns a list of string representations for each window.
     """
 
@@ -36,11 +36,11 @@ def format_as_string(X, sep=',', space=False, normal=False):
             text = ' '.join(text)
         return text
 
-    if normal:
-        # Handle as single time series (window_size, 1)
+    if single:
+        # single time series (window_size, 1)
         return _as_string(X)
     else:
-        # Handle as multiple windows (num_windows, window_size, 1)
+        # multiple windows (num_windows, window_size, 1)
         results = list(map(_as_string, X))
         return np.array(results)
 
@@ -110,7 +110,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
             raise ValueError('Input is not a list of lists.')
 
         for text in string_list:
-            if not text:  # Handle empty string
+            if not text:  # empty string
                 sample.append(np.array([], dtype=float))
             else:
                 scalar = _from_string_to_integer(text, sep, trunc, errors)
@@ -202,7 +202,7 @@ def parse_anomaly_response(X):
             no anomalies are present.
     """
 
-    def _parse_single_response(text: str):
+    def _parse_single_response(text):
         text = text.strip().lower()
 
         if 'no anomalies' in text or 'no anomaly' in text:
@@ -225,30 +225,3 @@ def parse_anomaly_response(X):
         result.append(parsed_list)
 
     return result
-
-
-def format_as_single_string(X, sep=',', space=False):
-    """Format a single time series to a string.
-
-    Transform a 1-D array of integers to a single string,
-    separated by the indicated separator and space.
-
-    Args:
-        sep (str):
-            String to separate each element in X. Default to `','`.
-        space (bool):
-            Whether to add space between each digit in the result. Default to `False`.
-
-    Returns:
-        str:
-            A string representation of the time series.
-    """
-    if X.ndim > 1:
-        X = X.flatten()
-
-    text = sep.join(list(map(str, X)))
-
-    if space:
-        text = ' '.join(text)
-
-    return text
