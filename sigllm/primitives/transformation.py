@@ -9,7 +9,7 @@ import numpy as np
 def format_as_string(X, sep=',', space=False, single=False):
     """Format X to a list of string.
 
-    Transform an array of integers to string(s), separated by the 
+    Transform an array of integers to string(s), separated by the
     indicated separator and space. Handles two cases:
     - If single=True, treats X as a single time series (window_size, 1)
     - If single=False, treats X as multiple windows (num_windows, window_size, 1)

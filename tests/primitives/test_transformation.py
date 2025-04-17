@@ -129,6 +129,7 @@ def test_format_as_integer_one():
     with pytest.raises(ValueError):
         format_as_integer(data)
 
+
 def test_format_as_integer_list():
     data = [['1,2,3,4,5']]
 
@@ -138,14 +139,16 @@ def test_format_as_integer_list():
 
     np.testing.assert_equal(output, expected)
 
+
 def test_format_as_integer_empty():
     data = [['']]
 
     expected = np.array([[np.array([], dtype=float)]])
-    
+
     output = format_as_integer(data)
-    
+
     np.testing.assert_equal(output, expected)
+
 
 def test_format_as_integer_2d_shape_mismatch():
     data = [['1,2,3,4,5'], ['1, 294., 3 , j34,5'], ['!232, 23,3,4,5']]
@@ -165,15 +168,15 @@ def test_format_as_integer_2d_shape_mismatch():
 def test_format_as_integer_mixed():
     data = [[''], ['1,2,3']]
 
-    expected = np.array([[np.array([], dtype=float)], [np.array([1., 2., 3.])]], dtype=object)
-    
+    expected = np.array([[np.array([], dtype=float)], [np.array([1.0, 2.0, 3.0])]], dtype=object)
+
     output = format_as_integer(data)
-    
+
     for out, exp in list(zip(output, expected)):
         for o, e in list(zip(out, exp)):
             np.testing.assert_equal(o, e)
 
-        
+
 def test_format_as_integer_2d_trunc():
     data = [['1,2,3,4,5'], ['1,294.,3,j34,5'], ['!232, 23,3,4,5']]
 
@@ -364,10 +367,7 @@ class ParseAnomalyResponseTest(unittest.TestCase):
         self.assertEqual(output, expected)
 
     def test_mixed_responses(self):
-        data = [
-            ['Answer: no anomalies', 'Answer: [123, 456]'],
-            ['Answer: [789]', 'no anomaly']
-        ]
+        data = [['Answer: no anomalies', 'Answer: [123, 456]'], ['Answer: [789]', 'no anomaly']]
         expected = [['', '123,456'], ['789', '']]
 
         output = parse_anomaly_response(data)
@@ -376,12 +376,9 @@ class ParseAnomalyResponseTest(unittest.TestCase):
     def test_different_formats(self):
         data = [
             ['Answer: [123, 456]', 'Answer: [ 789 , 101 ]'],
-            ['Answer: [1,2,3]', 'Answer: [ 4 , 5 , 6 ]']
+            ['Answer: [1,2,3]', 'Answer: [ 4 , 5 , 6 ]'],
         ]
-        expected = [
-            ['123,456', '789,101'],
-            ['1,2,3', '4,5,6']
-        ]
+        expected = [['123,456', '789,101'], ['1,2,3', '4,5,6']]
 
         output = parse_anomaly_response(data)
         self.assertEqual(output, expected)
