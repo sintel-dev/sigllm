@@ -192,13 +192,14 @@ def parse_anomaly_response(X):
     Args:
         X (List[List[str]]):
             List of lists of response texts from the LLM in the format
-            "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]"
+            "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]."
+            values must be within brackets.
 
     Returns:
         List[List[str]]:
             List of lists of parsed responses where each element is either
             "val1,val2,...,valN" if anomalies are found, or empty string if
-            no anomalies are present
+            no anomalies are present.
     """
 
     def _parse_single_response(text: str):
