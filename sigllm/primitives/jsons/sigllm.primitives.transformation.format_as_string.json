@@ -35,7 +35,7 @@
                 "type": "bool",
                 "default": false
             },
-            "normal": {
+            "single": {
                 "type": "bool",
                 "default": false
             }
