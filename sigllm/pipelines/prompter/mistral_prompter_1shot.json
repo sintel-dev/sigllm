@@ -47,7 +47,7 @@
         },
         "sigllm.primitives.transformation.format_as_string#2": {
             "space": false,
-            "normal": true
+            "single": true
         },
         "sigllm.primitives.prompting.huggingface.HF#1": {
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
