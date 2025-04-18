@@ -190,7 +190,7 @@
 <span id="sigllm-primitives-prompting-huggingface-module"></span><h1>sigllm.primitives.prompting.huggingface module<a class="headerlink" href="#module-sigllm.primitives.prompting.huggingface" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="sigllm.primitives.prompting.huggingface.HF">
-<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.prompting.huggingface.</code><code class="sig-name descname">HF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'mistralai/Mistral-7B-Instruct-v0.2'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">anomalous_percent</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">temp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">top_p</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">raw</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">padding</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.prompting.huggingface.</code><code class="sig-name descname">HF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'mistralai/Mistral-7B-Instruct-v0.2'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">anomalous_percent</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">temp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">top_p</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">raw</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">padding</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">restrict_tokens</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Prompt Pretrained models on HuggingFace to detect anomalies in a time series.</p>
 <dl class="field-list simple">
@@ -207,16 +207,21 @@ Default to <cite>1</cite>.</p></li>
 <li><p><strong>samples</strong> (<em>int</em>) – Number of responsed to generate for each input message. Default to <cite>10</cite>.</p></li>
 <li><p><strong>padding</strong> (<em>int</em>) – Additional padding token to forecast to reduce short horizon predictions.
 Default to <cite>0</cite>.</p></li>
+<li><p><strong>restrict_tokens</strong> (<em>bool</em>) – Whether to restrict tokens or not. Default to <cite>False</cite>.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt id="sigllm.primitives.prompting.huggingface.HF.detect">
-<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF.detect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">normal</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use HF to detect anomalies of a signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values</p></li>
+<li><p><strong>normal</strong> (<em>str</em><em>, </em><em>optional</em>) – A normal reference sequence for one-shot prompting. If None,
+zero-shot prompting is used. Default to None.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">

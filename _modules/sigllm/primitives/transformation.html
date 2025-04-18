@@ -190,34 +190,43 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
-<div class="viewcode-block" id="format_as_string"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_string">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_as_string</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="format_as_string"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_string">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_as_string</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format X to a list of string.</span>
 
-<span class="sd">    Transform a 2-D array of integers to a list of strings,</span>
-<span class="sd">    seperated by the indicated seperator and space.</span>
+<span class="sd">    Transform an array of integers to string(s), separated by the</span>
+<span class="sd">    indicated separator and space. Handles two cases:</span>
+<span class="sd">    - If single=True, treats X as a single time series (window_size, 1)</span>
+<span class="sd">    - If single=False, treats X as multiple windows (num_windows, window_size, 1)</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        sep (str):</span>
 <span class="sd">            String to separate each element in X. Default to `&#39;,&#39;`.</span>
 <span class="sd">        space (bool):</span>
 <span class="sd">            Whether to add space between each digit in the result. Default to `False`.</span>
+<span class="sd">        single (bool):</span>
+<span class="sd">            Whether to treat X as a single time series. If True, expects (window_size, 1)</span>
+<span class="sd">            and returns a single string. If False, expects (num_windows, window_size, 1)</span>
+<span class="sd">            and returns a list of strings. Default to `False`.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        ndarray:</span>
-<span class="sd">            A list of string representation of each row.</span>
+<span class="sd">        ndarray or str:</span>
+<span class="sd">            If single=True, returns one string representation. If single=False,</span>
+<span class="sd">            returns a list of string representations for each window.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_as_string</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">sep</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
-
         <span class="k">if</span> <span class="n">space</span><span class="p">:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="n">text</span>
 
-    <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_as_string</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">single</span><span class="p">:</span>
+        <span class="c1"># single time series (window_size, 1)</span>
+        <span class="k">return</span> <span class="n">_as_string</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># multiple windows (num_windows, window_size, 1)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">_as_string</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results</span><span class="p">)</span></div>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_from_string_to_integer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">trunc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">):</span>
@@ -258,6 +267,7 @@
 
 <span class="sd">    Transforms a list of list of string input as 3-D array of integers,</span>
 <span class="sd">    seperated by the indicated seperator and truncated based on `trunc`.</span>
+<span class="sd">    Handles empty strings by returning empty arrays.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        sep (str):</span>
@@ -275,7 +285,7 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ndarray:</span>
-<span class="sd">            An array of digits values.</span>
+<span class="sd">            An array of digits values. Empty arrays for empty strings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">string_list</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
@@ -284,8 +294,11 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Input is not a list of lists.&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">string_list</span><span class="p">:</span>
-            <span class="n">scalar</span> <span class="o">=</span> <span class="n">_from_string_to_integer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">trunc</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
-            <span class="n">sample</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scalar</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>  <span class="c1"># empty string</span>
+                <span class="n">sample</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">scalar</span> <span class="o">=</span> <span class="n">_from_string_to_integer</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">trunc</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+                <span class="n">sample</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">scalar</span><span class="p">)</span>
 
         <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
 
@@ -355,6 +368,47 @@
         <span class="n">values</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">decimal</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">values</span> <span class="o">+</span> <span class="n">minimum</span></div></div>
+
+
+<div class="viewcode-block" id="parse_anomaly_response"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.parse_anomaly_response">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_anomaly_response</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a list of lists of LLM responses to extract anomaly values and format them as strings.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        X (List[List[str]]):</span>
+<span class="sd">            List of lists of response texts from the LLM in the format</span>
+<span class="sd">            &quot;Answer: no anomalies&quot; or &quot;Answer: [val1, val2, ..., valN].&quot;</span>
+<span class="sd">            values must be within brackets.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List[List[str]]:</span>
+<span class="sd">            List of lists of parsed responses where each element is either</span>
+<span class="sd">            &quot;val1,val2,...,valN&quot; if anomalies are found, or empty string if</span>
+<span class="sd">            no anomalies are present.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_single_response</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;no anomalies&#39;</span> <span class="ow">in</span> <span class="n">text</span> <span class="ow">or</span> <span class="s1">&#39;no anomaly&#39;</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="c1"># match anything that consists of digits and commas</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\[([\d\s,]+)\]&#39;</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+            <span class="k">return</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">response_list</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
+        <span class="n">parsed_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">_parse_single_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_list</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parsed_list</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
 
               </div>

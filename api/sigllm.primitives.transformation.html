@@ -253,7 +253,8 @@ number of decimal points.</p>
 <code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">errors</span><span class="o">=</span><span class="default_value">'ignore'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_integer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format a nested list of text into an array of integers.</p>
 <p>Transforms a list of list of string input as 3-D array of integers,
-seperated by the indicated seperator and truncated based on <cite>trunc</cite>.</p>
+seperated by the indicated seperator and truncated based on <cite>trunc</cite>.
+Handles empty strings by returning empty arrays.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -269,7 +270,7 @@ to <cite>‘ignore’</cite>.
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>An array of digits values.</p>
+<dd class="field-even"><p>An array of digits values. Empty arrays for empty strings.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>ndarray</p>
@@ -279,22 +280,49 @@ to <cite>‘ignore’</cite>.
 
 <dl class="py function">
 <dt id="sigllm.primitives.transformation.format_as_string">
-<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_string" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">space</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">single</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.format_as_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Format X to a list of string.</p>
-<p>Transform a 2-D array of integers to a list of strings,
-seperated by the indicated seperator and space.</p>
+<p>Transform an array of integers to string(s), separated by the
+indicated separator and space. Handles two cases:
+- If single=True, treats X as a single time series (window_size, 1)
+- If single=False, treats X as multiple windows (num_windows, window_size, 1)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in X. Default to <cite>‘,’</cite>.</p></li>
 <li><p><strong>space</strong> (<em>bool</em>) – Whether to add space between each digit in the result. Default to <cite>False</cite>.</p></li>
+<li><p><strong>single</strong> (<em>bool</em>) – Whether to treat X as a single time series. If True, expects (window_size, 1)
+and returns a single string. If False, expects (num_windows, window_size, 1)
+and returns a list of strings. Default to <cite>False</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A list of string representation of each row.</p>
+<dd class="field-even"><p>If single=True, returns one string representation. If single=False,
+returns a list of string representations for each window.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>ndarray</p>
+<dd class="field-odd"><p>ndarray or str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="sigllm.primitives.transformation.parse_anomaly_response">
+<code class="sig-prename descclassname">sigllm.primitives.transformation.</code><code class="sig-name descname">parse_anomaly_response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/transformation.html#parse_anomaly_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.transformation.parse_anomaly_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a list of lists of LLM responses to extract anomaly values and format them as strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List of lists of response texts from the LLM in the format
+“Answer: no anomalies” or “Answer: [val1, val2, …, valN].”
+values must be within brackets.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of lists of parsed responses where each element is either
+“val1,val2,…,valN” if anomalies are found, or empty string if
+no anomalies are present.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[List[str]]</p>
 </dd>
 </dl>
 </dd></dl>

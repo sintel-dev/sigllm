@@ -284,8 +284,14 @@
 
         <span class="k">return</span> <span class="p">(</span><span class="s1">&#39;SigLLM:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">hyperparameters:</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SigLLM.detect"><a class="viewcode-back" href="../../api/sigllm.core.html#sigllm.core.SigLLM.detect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">visualization</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect anomalies in the given data..</span>
+<div class="viewcode-block" id="SigLLM.detect"><a class="viewcode-back" href="../../api/sigllm.core.html#sigllm.core.SigLLM.detect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+        <span class="n">normal</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">visualization</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Detect anomalies in the given data.</span>
 
 <span class="sd">        If ``visualization=True``, also return the visualization</span>
 <span class="sd">        outputs from the MLPipeline object.</span>
@@ -294,6 +300,10 @@
 <span class="sd">            data (DataFrame):</span>
 <span class="sd">                Input data, passed as a ``pandas.DataFrame`` containing</span>
 <span class="sd">                exactly two columns: timestamp and value.</span>
+<span class="sd">            normal (DataFrame, optional):</span>
+<span class="sd">                Normal reference data for one-shot prompting, passed as a ``pandas.DataFrame``</span>
+<span class="sd">                containing exactly two columns: timestamp and value. If None, zero-shot</span>
+<span class="sd">                prompting is used. Default to None.</span>
 <span class="sd">            visualization (bool):</span>
 <span class="sd">                If ``True``, also capture the ``visualization`` named</span>
 <span class="sd">                output from the ``MLPipeline`` and return it as a second</span>
@@ -308,6 +318,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fitted</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_mlpipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mlpipeline</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">normal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;normal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">normal</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mlpipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">visualization</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fitted</span> <span class="o">=</span> <span class="kc">True</span>

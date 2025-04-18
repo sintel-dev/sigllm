@@ -231,6 +231,8 @@
 <span class="sd">        padding (int):</span>
 <span class="sd">            Additional padding token to forecast to reduce short horizon predictions.</span>
 <span class="sd">            Default to `0`.</span>
+<span class="sd">        restrict_tokens (bool):</span>
+<span class="sd">            Whether to restrict tokens or not. Default to `False`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -243,6 +245,7 @@
         <span class="n">raw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">samples</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
         <span class="n">padding</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">restrict_tokens</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
@@ -252,6 +255,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">raw</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restrict_tokens</span> <span class="o">=</span> <span class="n">restrict_tokens</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
@@ -269,16 +273,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">add_special_tokens</span><span class="p">(</span><span class="n">special_tokens_dict</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">pad_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">eos_token</span>  <span class="c1"># indicate the end of the time series</span>
 
-        <span class="c1"># invalid tokens</span>
-        <span class="n">valid_tokens</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">VALID_NUMBERS</span><span class="p">:</span>
-            <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
-            <span class="n">valid_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+        <span class="c1"># Only set up invalid tokens if restriction is enabled</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrict_tokens</span><span class="p">:</span>
+            <span class="n">valid_tokens</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">VALID_NUMBERS</span><span class="p">:</span>
+                <span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+                <span class="n">valid_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
 
-        <span class="n">valid_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_tokens</span>
-        <span class="p">]</span>
+            <span class="n">valid_tokens</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">convert_tokens_to_ids</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_tokens</span>
+            <span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
@@ -288,12 +295,15 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
-<div class="viewcode-block" id="HF.detect"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF.detect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="HF.detect"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF.detect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Use HF to detect anomalies of a signal.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            X (ndarray):</span>
 <span class="sd">                Input sequences of strings containing signal values</span>
+<span class="sd">            normal (str, optional):</span>
+<span class="sd">                A normal reference sequence for one-shot prompting. If None,</span>
+<span class="sd">                zero-shot prompting is used. Default to None.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            list, list:</span>
@@ -304,31 +314,67 @@
         <span class="n">max_tokens</span> <span class="o">=</span> <span class="n">input_length</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anomalous_percent</span><span class="p">)</span>
         <span class="n">all_responses</span><span class="p">,</span> <span class="n">all_generate_ids</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 
+        <span class="c1"># Prepare the one-shot example if provided</span>
+        <span class="n">one_shot_message</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">normal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">one_shot_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;one_shot_prefix&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">normal</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+
         <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
             <span class="n">system_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;system_message&#39;</span><span class="p">]</span>
-            <span class="n">user_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;user_message&#39;</span><span class="p">]</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">system_message</span><span class="p">,</span> <span class="n">user_message</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="s1">&#39;[RESPONSE]&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrict_tokens</span><span class="p">:</span>
+                <span class="n">user_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;user_message&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">user_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;user_message_2&#39;</span><span class="p">]</span>
 
-            <span class="n">input_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="c1"># Combine messages with one-shot example if provided</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+                <span class="n">system_message</span><span class="p">,</span>
+                <span class="n">one_shot_message</span><span class="p">,</span>
+                <span class="n">user_message</span><span class="p">,</span>
+                <span class="n">text</span><span class="p">,</span>
+                <span class="s1">&#39;[RESPONSE]&#39;</span><span class="p">,</span>
+            <span class="p">])</span>
+
+            <span class="n">input_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
 
             <span class="n">tokenized_input</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s1">&#39;pt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cuda&#39;</span><span class="p">)</span>
 
-            <span class="n">generate_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
-                <span class="o">**</span><span class="n">tokenized_input</span><span class="p">,</span>
-                <span class="n">do_sample</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">max_new_tokens</span><span class="o">=</span><span class="n">max_tokens</span><span class="p">,</span>
-                <span class="n">temperature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
-                <span class="n">top_p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">top_p</span><span class="p">,</span>
-                <span class="n">bad_words_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span><span class="p">,</span>
-                <span class="n">renormalize_logits</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">num_return_sequences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="n">generate_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;do_sample&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;max_new_tokens&#39;</span><span class="p">:</span> <span class="n">max_tokens</span><span class="p">,</span>
+                <span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">temp</span><span class="p">,</span>
+                <span class="s1">&#39;top_p&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_p</span><span class="p">,</span>
+                <span class="s1">&#39;renormalize_logits&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;num_return_sequences&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">samples</span><span class="p">,</span>
+            <span class="p">}</span>
 
-            <span class="n">responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">(</span>
-                <span class="n">generate_ids</span><span class="p">[:,</span> <span class="n">input_length</span><span class="p">:],</span>
-                <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="c1"># Only add bad_words_ids if token restriction is enabled</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrict_tokens</span><span class="p">:</span>
+                <span class="n">generate_kwargs</span><span class="p">[</span><span class="s1">&#39;bad_words_ids&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">invalid_tokens</span>
+
+            <span class="n">generate_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">tokenized_input</span><span class="p">,</span> <span class="o">**</span><span class="n">generate_kwargs</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrict_tokens</span><span class="p">:</span>
+                <span class="n">responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">(</span>
+                    <span class="n">generate_ids</span><span class="p">[:,</span> <span class="n">input_length</span><span class="p">:],</span>
+                    <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># Extract only the part after [RESPONSE]</span>
+                <span class="c1"># Get the full generated text</span>
+                <span class="n">full_responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">batch_decode</span><span class="p">(</span>
+                    <span class="n">generate_ids</span><span class="p">,</span>
+                    <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">clean_up_tokenization_spaces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">responses</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">full_response</span> <span class="ow">in</span> <span class="n">full_responses</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">response</span> <span class="o">=</span> <span class="n">full_response</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;[RESPONSE]&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                        <span class="n">responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                        <span class="n">responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># If no [RESPONSE] found, return empty string</span>
+
             <span class="n">all_responses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">responses</span><span class="p">)</span>
             <span class="n">all_generate_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">generate_ids</span><span class="p">)</span>
 

@@ -221,13 +221,13 @@ by padding to both sides and merge overlapping.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>y</strong> (<em>ndarray</em>) – A 1-dimensional array of indices.</p></li>
+<li><p><strong>y</strong> (<em>ndarray</em>) – A 1-dimensional array of indices. Can be empty if no anomalies are found.</p></li>
 <li><p><strong>timestamp</strong> (<em>ndarray</em>) – List of full timestamp of the signal.</p></li>
 <li><p><strong>padding_size</strong> (<em>int</em>) – Number of steps to pad on both sides of a timestamp point. Default to <cite>50</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of intervals (start, end, score).</p>
+<dd class="field-even"><p>List of intervals (start, end, score). Empty list if no anomalies are found.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>List[Tuple]</p>

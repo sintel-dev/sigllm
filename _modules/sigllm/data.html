@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sigllm.data &#8212; sigllm 0.0.4.dev0 documentation</title>
+    
+  <link rel="stylesheet" href="../../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/dai-logo-white.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="../../index.html">
+    
+      <img src="../../_static/dai-logo-white-200.png" class="logo" alt="logo" />
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../readme.html">SigLLM</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../api/sigllm.html">API Reference</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../contributing.html">Contributing</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../authors.html">Credits</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../history.html">History</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/sintel-dev/sigllm" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for sigllm.data</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Data Management module.</span>
+
+<span class="sd">This module contains functions that allow downloading demo data from Amazon S3,</span>
+<span class="sd">as well as load and work with other data stored locally.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">orion.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">format_csv</span><span class="p">,</span> <span class="n">load_csv</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">DATA_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+<span class="n">BUCKET</span> <span class="o">=</span> <span class="s1">&#39;sintel-sigllm&#39;</span>
+<span class="n">S3_URL</span> <span class="o">=</span> <span class="s1">&#39;https://</span><span class="si">{}</span><span class="s1">.s3.amazonaws.com/</span><span class="si">{}</span><span class="s1">&#39;</span>
+
+
+<div class="viewcode-block" id="download_normal"><a class="viewcode-back" href="../../api/sigllm.data.html#sigllm.data.download_normal">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">download_normal</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data_path</span><span class="o">=</span><span class="n">DATA_PATH</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the CSV with the given name from S3.</span>
+
+<span class="sd">    If the CSV has never been loaded before, it will be downloaded</span>
+<span class="sd">    from the [sintel-sigllm bucket](https://sintel-sigllm.s3.amazonaws.com) or</span>
+<span class="sd">    the S3 bucket specified following the `s3://{bucket}/path/to/the.csv` format,</span>
+<span class="sd">    and then cached inside the `data` folder, within the `sigllm` package</span>
+<span class="sd">    directory, and then returned.</span>
+
+<span class="sd">    Otherwise, if it has been downloaded and cached before, it will be directly</span>
+<span class="sd">    loaded from the `sigllm/data` folder without contacting S3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            Name of the CSV to load.</span>
+<span class="sd">        data_path (str):</span>
+<span class="sd">            Path to store data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame:</span>
+<span class="sd">            A pandas.DataFrame is returned containing all the data.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If the normal file doesn&#39;t exist locally and can&#39;t</span>
+<span class="sd">        be downloaded from S3.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;s3://&#39;</span><span class="p">):</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">bucket</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="n">S3_URL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">bucket</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_normal.csv&#39;</span><span class="p">)</span>
+            <span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">S3_URL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">BUCKET</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_normal.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Downloading CSV </span><span class="si">%s</span><span class="s1"> from </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">data</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Could not download or find normal file for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">. &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;Please ensure the file exists at </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1"> or can be &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;downloaded from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="p">)</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Error processing normal file for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="n">error_msg</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_normal"><a class="viewcode-back" href="../../api/sigllm.data.html#sigllm.data.load_normal">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">load_normal</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">timestamp_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value_column</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load normal data from file or download if needed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str):</span>
+<span class="sd">            Name or path of the normal data.</span>
+<span class="sd">        timestamp_column (str or int):</span>
+<span class="sd">            Column index or name for timestamp.</span>
+<span class="sd">        value_column (str or int):</span>
+<span class="sd">            Column index or name for values.</span>
+<span class="sd">        start (int or timestamp):</span>
+<span class="sd">            Optional. If specified, this will be start of the sub-sequence.</span>
+<span class="sd">        end (int or timestamp):</span>
+<span class="sd">            Optional. If specified, this will be end of the sub-sequence.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame:</span>
+<span class="sd">            Loaded subsequence with `timestamp` and `value` columns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">load_csv</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">timestamp_column</span><span class="p">,</span> <span class="n">value_column</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">download_normal</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">format_csv</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># handle start or end is specified</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="ow">or</span> <span class="n">end</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">])):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">&amp;=</span> <span class="n">data</span><span class="p">[</span><span class="n">timestamp_column</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">start</span>
+            <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">mask</span> <span class="o">&amp;=</span> <span class="n">data</span><span class="p">[</span><span class="n">timestamp_column</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">end</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">data</span></div>
+</pre></div>
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="../../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, MIT Data To AI Lab.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
