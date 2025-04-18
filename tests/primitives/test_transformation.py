@@ -9,6 +9,7 @@ from sigllm.primitives.transformation import (
     _from_string_to_integer,
     format_as_integer,
     format_as_string,
+    parse_anomaly_response,
 )
 
 
@@ -44,6 +45,14 @@ class FormatAsStringTest(unittest.TestCase):
         output = format_as_string(data)
 
         assert output == expected
+
+    def test_format_as_string_single(self):
+        data = np.array([1, 2, 3, 4, 5])
+        expected = '1,2,3,4,5'
+
+        output = format_as_string(data, single=True)
+
+        np.testing.assert_array_equal(output, expected)
 
 
 class FromStringToIntegerTest(unittest.TestCase):
@@ -131,6 +140,16 @@ def test_format_as_integer_list():
     np.testing.assert_equal(output, expected)
 
 
+def test_format_as_integer_empty():
+    data = [['']]
+
+    expected = np.array([[np.array([], dtype=float)]])
+
+    output = format_as_integer(data)
+
+    np.testing.assert_equal(output, expected)
+
+
 def test_format_as_integer_2d_shape_mismatch():
     data = [['1,2,3,4,5'], ['1, 294., 3 , j34,5'], ['!232, 23,3,4,5']]
 
@@ -138,6 +157,18 @@ def test_format_as_integer_2d_shape_mismatch():
         [[np.array([1.0, 2, 3, 4, 5])], [np.array([1.0, 3, 5])], [np.array([23.0, 3, 4, 5])]],
         dtype=object,
     )
+
+    output = format_as_integer(data)
+
+    for out, exp in list(zip(output, expected)):
+        for o, e in list(zip(out, exp)):
+            np.testing.assert_equal(o, e)
+
+
+def test_format_as_integer_mixed():
+    data = [[''], ['1,2,3']]
+
+    expected = np.array([[np.array([], dtype=float)], [np.array([1.0, 2.0, 3.0])]], dtype=object)
 
     output = format_as_integer(data)
 
@@ -311,3 +342,57 @@ def test_float2scalar_scalar2float_integration():
     output = scalar2float.transform(transformed, minimum, decimal)
 
     np.testing.assert_allclose(output, expected, rtol=1e-2)
+
+
+class ParseAnomalyResponseTest(unittest.TestCase):
+    def test_no_anomalies(self):
+        data = [['Answer: no anomalies'], ['Answer: no anomaly'], ['no anomaly, with extra']]
+        expected = [[''], [''], ['']]
+
+        output = parse_anomaly_response(data)
+        self.assertEqual(output, expected)
+
+    def test_single_anomaly(self):
+        data = [['Answer: [123]'], ['Answer: [456]', 'answer: [789]']]
+        expected = [['123'], ['456', '789']]
+
+        output = parse_anomaly_response(data)
+        self.assertEqual(output, expected)
+
+    def test_multiple_anomalies(self):
+        data = [['Answer: [123, 456, 789]'], ['Answer: [111, 222, 333]']]
+        expected = [['123,456,789'], ['111,222,333']]
+
+        output = parse_anomaly_response(data)
+        self.assertEqual(output, expected)
+
+    def test_mixed_responses(self):
+        data = [['Answer: no anomalies', 'Answer: [123, 456]'], ['Answer: [789]', 'no anomaly']]
+        expected = [['', '123,456'], ['789', '']]
+
+        output = parse_anomaly_response(data)
+        self.assertEqual(output, expected)
+
+    def test_different_formats(self):
+        data = [
+            ['Answer: [123, 456]', 'Answer: [ 789 , 101 ]'],
+            ['Answer: [1,2,3]', 'Answer: [ 4 , 5 , 6 ]'],
+        ]
+        expected = [['123,456', '789,101'], ['1,2,3', '4,5,6']]
+
+        output = parse_anomaly_response(data)
+        self.assertEqual(output, expected)
+
+    def test_empty_responses(self):
+        data = [[''], ['Answer: no anomalies'], ['answer'], ['no anomly']]
+        expected = [[''], [''], [''], ['']]
+
+        output = parse_anomaly_response(data)
+        self.assertEqual(output, expected)
+
+    def test_invalid_format(self):
+        data = [['Answer: invalid format'], ['Answer: [123, abc]']]
+        expected = [[''], ['']]
+
+        output = parse_anomaly_response(data)
+        self.assertEqual(output, expected)

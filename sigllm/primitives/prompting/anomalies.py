@@ -35,6 +35,7 @@ def val2idx(y, X):
             idx_win_list.append(indices)
         idx_list.append(idx_win_list)
     idx_list = np.array(idx_list, dtype=object)
+
     return idx_list
 
 
@@ -57,7 +58,6 @@ def find_anomalies_in_windows(y, alpha=0.5):
     idx_list = []
     for samples in y:
         min_vote = np.ceil(alpha * len(samples))
-        # print(type(samples.tolist()))
 
         flattened_res = np.concatenate(samples.tolist())
 
@@ -67,6 +67,7 @@ def find_anomalies_in_windows(y, alpha=0.5):
 
         idx_list.append(final_list)
     idx_list = np.array(idx_list, dtype=object)
+
     return idx_list
 
 
@@ -112,7 +113,7 @@ def format_anomalies(y, timestamp, padding_size=50):
 
     Args:
         y (ndarray):
-            A 1-dimensional array of indices.
+            A 1-dimensional array of indices. Can be empty if no anomalies are found.
         timestamp (ndarray):
             List of full timestamp of the signal.
         padding_size (int):
@@ -120,8 +121,12 @@ def format_anomalies(y, timestamp, padding_size=50):
 
     Returns:
         List[Tuple]:
-            List of intervals (start, end, score).
+            List of intervals (start, end, score). Empty list if no anomalies are found.
     """
+    # Handle empty array case
+    if len(y) == 0:
+        return []
+
     y = timestamp[y]  # Convert list of indices into list of timestamps
     start, end = timestamp[0], timestamp[-1]
     interval = timestamp[1] - timestamp[0]
@@ -151,4 +156,5 @@ def format_anomalies(y, timestamp, padding_size=50):
             merged_intervals.append(current_interval)  # Append the current interval if no overlap
 
     merged_intervals = [(interval[0], interval[1], 0) for interval in merged_intervals]
+
     return merged_intervals

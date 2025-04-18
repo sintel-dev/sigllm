@@ -1,0 +1,174 @@
+{
+    "primitives": [
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate",
+        "sklearn.impute.SimpleImputer",
+        "sigllm.primitives.transformation.Float2Scalar",
+        "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences",
+        "sigllm.primitives.transformation.format_as_string",
+        
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate",
+        "sklearn.impute.SimpleImputer",
+        "sigllm.primitives.transformation.Float2Scalar",
+        "sigllm.primitives.transformation.format_as_string",
+        
+        "sigllm.primitives.prompting.huggingface.HF",
+        "sigllm.primitives.transformation.parse_anomaly_response",
+        "sigllm.primitives.transformation.format_as_integer",
+        "sigllm.primitives.prompting.anomalies.val2idx",
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences",
+        "sigllm.primitives.prompting.anomalies.format_anomalies"
+    ],
+    "init_params": {
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
+            "time_column": "timestamp",
+            "interval": 21600,
+            "method": "mean"
+        },
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#2": {
+            "time_column": "normal_timestamp",
+            "interval": 21600,
+            "method": "mean"
+        },
+        "sigllm.primitives.transformation.Float2Scalar#1": {
+            "decimal": 2,
+            "rescale": true
+        },
+        "sigllm.primitives.transformation.Float2Scalar#2": {
+            "decimal": 2,
+            "rescale": true
+        },
+        "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences#1": {
+            "window_size": 200,
+            "step_size": 40
+        },
+        "sigllm.primitives.transformation.format_as_string#1": {
+            "space": false
+        },
+        "sigllm.primitives.transformation.format_as_string#2": {
+            "space": false,
+            "single": true
+        },
+        "sigllm.primitives.prompting.huggingface.HF#1": {
+            "name": "mistralai/Mistral-7B-Instruct-v0.2",
+            "anomalous_percent": 0.5,
+            "samples": 1,
+            "temp": 0.01
+        },
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
+            "alpha": 0.4
+        },
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences#1": {
+            "beta": 0.5
+        }
+    },
+    "input_names": { 
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
+            "X": "X",
+            "timestamp": "timestamp"
+        },
+        "sklearn.impute.SimpleImputer#1": {
+            "X": "X_processed"
+        },
+        "sigllm.primitives.transformation.Float2Scalar#1": {
+            "X": "X_imputed"
+        },
+        "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences#1": {
+            "X": "X_scalar"
+        },
+        "sigllm.primitives.transformation.format_as_string#1": {
+            "X": "X_sequences"
+        },
+
+
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#2": {
+            "X": "normal",
+            "timestamp": "normal_timestamp"
+        },
+        "sklearn.impute.SimpleImputer#2": {
+            "X": "normal_processed"
+        },
+        "sigllm.primitives.transformation.Float2Scalar#2": {
+            "X": "normal_imputed"
+        },
+        "sigllm.primitives.transformation.format_as_string#2": {
+            "X": "normal_scalar"
+        },
+
+
+        "sigllm.primitives.prompting.huggingface.HF#1": {
+            "X": "X_str",
+            "normal": "normal_str"
+        },
+        "sigllm.primitives.transformation.parse_anomaly_response#1": {
+            "X": "y_hat"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "X": "y_parsed"
+        },
+        "sigllm.primitives.prompting.anomalies.val2idx#1": {
+            "y": "y_intermediate",
+            "X": "X_sequences"
+        },
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
+            "y": "y_idx"
+        },
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences#1": {
+            "y": "y_windows"
+        },
+        "sigllm.primitives.prompting.anomalies.format_anomalies#1": {
+            "y": "y_merged"
+        }
+    },
+    "output_names": {        
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
+            "X": "X_processed",
+            "index": "timestamp"
+        },
+        "sklearn.impute.SimpleImputer#1": {
+            "X": "X_imputed"
+        },
+        "sigllm.primitives.transformation.Float2Scalar#1": {
+            "X": "X_scalar"
+        },
+        "sigllm.primitives.prompting.timeseries_preprocessing.rolling_window_sequences#1": {
+            "X": "X_sequences"
+        },
+        "sigllm.primitives.transformation.format_as_string#1": {
+            "X": "X_str"
+        },
+
+        "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#2": {
+            "X": "normal_processed",
+            "index": "normal_timestamp"
+        },
+        "sklearn.impute.SimpleImputer#2": {
+            "X": "normal_imputed"
+        },
+        "sigllm.primitives.transformation.Float2Scalar#2": {
+            "X": "normal_scalar"
+        },
+        "sigllm.primitives.transformation.format_as_string#2": {
+            "X": "normal_str"
+        },
+
+        "sigllm.primitives.prompting.huggingface.HF#1": {
+            "y": "y_hat"
+        },
+        "sigllm.primitives.transformation.parse_anomaly_response#1": {
+            "X": "y_parsed"
+        },
+        "sigllm.primitives.transformation.format_as_integer#1": {
+            "X": "y_intermediate"
+        },
+        "sigllm.primitives.prompting.anomalies.val2idx#1": {
+            "y": "y_idx"
+        },
+        "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows#1": {
+            "y": "y_windows"
+        },
+        "sigllm.primitives.prompting.anomalies.merge_anomalous_sequences#1": {
+            "y": "y_merged"
+        }
+    }
+}
