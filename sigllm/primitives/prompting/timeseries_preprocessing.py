@@ -37,5 +37,4 @@ def rolling_window_sequences(X, window_size=500, step_size=100):
         out_X.append(X[start:end])
         X_index.append(index[start])
         start = start + step_size
-
     return np.asarray(out_X), np.asarray(X_index), window_size, step_size
