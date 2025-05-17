@@ -27,8 +27,7 @@ from orion.evaluation import contextual_confusion_matrix
 from orion.progress import TqdmLogger
 
 from sigllm import SigLLM
-
-# from sigllm.data import load_normal
+from sigllm.data import load_normal
 
 warnings.simplefilter('ignore')
 
@@ -56,9 +55,9 @@ PIPELINE_DIR = os.path.join(os.path.dirname(__file__), 'pipelines')
 
 PIPELINES = {
     'mistral_prompter_restricted': 'mistral_prompter',
-    # 'mistral_prompter_0shot': 'mistral_prompter_0shot',
-    # 'mistral_prompter_1shot': 'mistral_prompter_1shot',
-}  # ['mistral_prompter_0shot', 'mistral_prompter_1shot']
+    'mistral_prompter_0shot': 'mistral_prompter_0shot',
+    'mistral_prompter_1shot': 'mistral_prompter_1shot',
+}
 
 
 def _get_pipeline_directory(pipeline_name):
@@ -122,8 +121,8 @@ def _evaluate_signal(
     truth = load_anomalies(signal)
 
     normal = None
-    # if few_shot:
-    #     normal = load_normal(signal)
+    if few_shot:
+        normal = load_normal(signal)
 
     try:
         LOGGER.info(

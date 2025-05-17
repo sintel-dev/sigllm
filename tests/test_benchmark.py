@@ -324,12 +324,18 @@ class TestEvaluateSignal(TestCase):
             self.pipeline_name, hyperparameters=self.hyperparameters
         )
 
+    @patch('sigllm.benchmark.load_normal')
     @patch('sigllm.benchmark.load_anomalies')
     @patch('sigllm.benchmark._load_signal')
     @patch('sigllm.benchmark.SigLLM')
     def test__evaluate_signal_with_few_shot(
-        self, mock_sigllm, mock_load_signal, mock_load_anomalies
+        self,
+        mock_sigllm,
+        mock_load_signal,
+        mock_load_anomalies,
+        mock_load_normal,
     ):
+        mock_load_normal.return_value = self.test_data
         mock_load_signal.return_value = (None, self.test_data)
         mock_load_anomalies.return_value = self.truth_data
 
@@ -349,8 +355,9 @@ class TestEvaluateSignal(TestCase):
 
         assert isinstance(result, dict)
         self.assertEqual(result['status'], 'OK')
-        # TODO: fix this call to make normal a pandas dataframe
-        mock_pipeline.detect.assert_called_once_with(self.test_data, normal=None)
+
+        mock_pipeline.detect.assert_called_once_with(self.test_data, normal=self.test_data)
+        mock_load_normal.assert_called_once_with(self.signal_name)
         mock_load_signal.assert_called_once_with(self.signal_name, self.test_split)
         mock_load_anomalies.assert_called_once_with(self.signal_name)
         mock_sigllm.assert_called_once_with(
