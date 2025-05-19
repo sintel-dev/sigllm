@@ -1,0 +1,642 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sigllm.benchmark &#8212; sigllm 0.0.4.dev0 documentation</title>
+    
+  <link rel="stylesheet" href="../../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../_static/dai-logo-white.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="../../index.html">
+    
+      <img src="../../_static/dai-logo-white-200.png" class="logo" alt="logo" />
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../readme.html">SigLLM</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../api/sigllm.html">API Reference</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../contributing.html">Contributing</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../authors.html">Credits</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../history.html">History</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/sintel-dev/sigllm" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for sigllm.benchmark</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">concurrent</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">glob</span><span class="w"> </span><span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlblocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_pipelines_paths</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">orion.benchmark</span><span class="w"> </span><span class="kn">import</span> <span class="n">_load_signal</span><span class="p">,</span> <span class="n">_parse_confusion_matrix</span><span class="p">,</span> <span class="n">_sort_leaderboard</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">orion.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_anomalies</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">orion.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">CONTEXTUAL_METRICS</span> <span class="k">as</span> <span class="n">METRICS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">orion.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextual_confusion_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">orion.progress</span><span class="w"> </span><span class="kn">import</span> <span class="n">TqdmLogger</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sigllm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SigLLM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sigllm.data</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_normal</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="n">LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">BUCKET</span> <span class="o">=</span> <span class="s1">&#39;sintel-sigllm&#39;</span>
+<span class="n">S3_URL</span> <span class="o">=</span> <span class="s1">&#39;https://</span><span class="si">{}</span><span class="s1">.s3.amazonaws.com/</span><span class="si">{}</span><span class="s1">&#39;</span>
+
+<span class="n">BENCHMARK_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s1">&#39;..&#39;</span><span class="p">),</span> <span class="s1">&#39;benchmark&#39;</span>
+<span class="p">)</span>
+
+<span class="n">BENCHMARK_DATA</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">S3_URL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">BUCKET</span><span class="p">,</span> <span class="s1">&#39;datasets.csv&#39;</span><span class="p">),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">to_dict</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">BENCHMARK_PARAMS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">S3_URL</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">BUCKET</span><span class="p">,</span> <span class="s1">&#39;parameters.csv&#39;</span><span class="p">),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">applymap</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">to_dict</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">PIPELINE_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;pipelines&#39;</span><span class="p">)</span>
+
+<span class="n">PIPELINES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;mistral_prompter_restricted&#39;</span><span class="p">:</span> <span class="s1">&#39;mistral_prompter&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mistral_prompter_0shot&#39;</span><span class="p">:</span> <span class="s1">&#39;mistral_prompter_0shot&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;mistral_prompter_1shot&#39;</span><span class="p">:</span> <span class="s1">&#39;mistral_prompter_1shot&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_pipeline_directory</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span>
+
+    <span class="n">pipelines_paths</span> <span class="o">=</span> <span class="n">get_pipelines_paths</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">base_path</span> <span class="ow">in</span> <span class="n">pipelines_paths</span><span class="p">:</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">pipeline_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">number_of_parts</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">folder_parts</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">number_of_parts</span><span class="p">):</span>
+            <span class="n">folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="o">*</span><span class="n">parts</span><span class="p">[:</span><span class="n">folder_parts</span><span class="p">])</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">folder_parts</span><span class="p">:])</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+            <span class="n">json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">json_path</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_pipeline_hyperparameter</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="n">dataset_name</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="p">):</span>
+    <span class="n">hyperparameters_</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">hyperparameters_</span> <span class="o">=</span> <span class="n">hyperparameters_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dataset_name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">hyperparameters_</span>
+        <span class="n">hyperparameters_</span> <span class="o">=</span> <span class="n">hyperparameters_</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">hyperparameters_</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hyperparameters_</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">hyperparameters_</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">hyperparameters_</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">hyperparameters_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">hyperparameters_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dataset_name</span> <span class="ow">and</span> <span class="n">pipeline_name</span><span class="p">:</span>
+        <span class="n">pipeline_path</span> <span class="o">=</span> <span class="n">_get_pipeline_directory</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pipeline_path</span><span class="p">:</span>
+            <span class="n">pipeline_dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">pipeline_path</span><span class="p">)</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">pipeline_path</span><span class="p">,</span> <span class="n">pipeline_dirname</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">dataset_name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+                <span class="n">hyperparameters_</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">hyperparameters_</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_augment_hyperparameters</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="n">few_shot</span><span class="p">):</span>
+    <span class="n">hyperparameters_</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">few_shot</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">hyperparameter</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;time_segments_aggregate&#39;</span> <span class="ow">in</span> <span class="n">hyperparameter</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">hyperparameter</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hyperparameter</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">hyperparameters_</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">number</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">hyperparameters_</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_evaluate_signal</span><span class="p">(</span>
+    <span class="n">pipeline</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">hyperparameter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">test_split</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">few_shot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">anomaly_path</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">_load_signal</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">test_split</span><span class="p">)</span>
+    <span class="n">truth</span> <span class="o">=</span> <span class="n">load_anomalies</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+    <span class="n">normal</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">few_shot</span><span class="p">:</span>
+        <span class="n">normal</span> <span class="o">=</span> <span class="n">load_normal</span><span class="p">(</span><span class="n">signal</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s1">&#39;Scoring pipeline </span><span class="si">%s</span><span class="s1"> on signal </span><span class="si">%s</span><span class="s1"> (test split: </span><span class="si">%s</span><span class="s1">)&#39;</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">test_split</span>
+        <span class="p">)</span>
+
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span>
+        <span class="n">pipeline</span> <span class="o">=</span> <span class="n">SigLLM</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="n">hyperparameter</span><span class="p">)</span>
+        <span class="n">anomalies</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="n">normal</span><span class="p">)</span>
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">scorer</span><span class="p">(</span><span class="n">truth</span><span class="p">,</span> <span class="n">anomalies</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">scorer</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;OK&#39;</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+        <span class="n">LOGGER</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+            <span class="s1">&#39;Exception scoring pipeline </span><span class="si">%s</span><span class="s1"> on signal </span><span class="si">%s</span><span class="s1"> (test split: </span><span class="si">%s</span><span class="s1">), error </span><span class="si">%s</span><span class="s1">.&#39;</span><span class="p">,</span>
+            <span class="n">pipeline</span><span class="p">,</span>
+            <span class="n">signal</span><span class="p">,</span>
+            <span class="n">test_split</span><span class="p">,</span>
+            <span class="n">ex</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">elapsed</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
+        <span class="n">anomalies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;score&#39;</span><span class="p">])</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+
+        <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;ERROR&#39;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;confusion_matrix&#39;</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">_parse_confusion_matrix</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">truth</span><span class="p">)</span>
+
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;elapsed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">elapsed</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;split&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_split</span>
+
+    <span class="k">if</span> <span class="n">anomaly_path</span><span class="p">:</span>
+        <span class="n">anomalies</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">anomaly_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">del</span> <span class="n">pipeline</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">scores</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_run_job</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="c1"># Reset random seed</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span>
+
+    <span class="p">(</span>
+        <span class="n">pipeline</span><span class="p">,</span>
+        <span class="n">pipeline_name</span><span class="p">,</span>
+        <span class="n">dataset</span><span class="p">,</span>
+        <span class="n">signal</span><span class="p">,</span>
+        <span class="n">hyperparameter</span><span class="p">,</span>
+        <span class="n">metrics</span><span class="p">,</span>
+        <span class="n">test_split</span><span class="p">,</span>
+        <span class="n">few_shot</span><span class="p">,</span>
+        <span class="n">iteration</span><span class="p">,</span>
+        <span class="n">cache_dir</span><span class="p">,</span>
+        <span class="n">anomaly_dir</span><span class="p">,</span>
+        <span class="n">run_id</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="n">anomaly_path</span> <span class="o">=</span> <span class="n">anomaly_dir</span>
+    <span class="k">if</span> <span class="n">anomaly_dir</span><span class="p">:</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">anomaly_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pipeline_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">signal</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">dataset</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">anomaly_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">+</span> <span class="s1">&#39;_anomalies.csv&#39;</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s1">&#39;Evaluating pipeline </span><span class="si">%s</span><span class="s1"> on signal </span><span class="si">%s</span><span class="s1"> dataset </span><span class="si">%s</span><span class="s1"> (test split: </span><span class="si">%s</span><span class="s1">); iteration </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">pipeline_name</span><span class="p">,</span>
+        <span class="n">signal</span><span class="p">,</span>
+        <span class="n">dataset</span><span class="p">,</span>
+        <span class="n">test_split</span><span class="p">,</span>
+        <span class="n">iteration</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">output</span> <span class="o">=</span> <span class="n">_evaluate_signal</span><span class="p">(</span>
+        <span class="n">pipeline</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">hyperparameter</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">test_split</span><span class="p">,</span> <span class="n">few_shot</span><span class="p">,</span> <span class="n">anomaly_path</span>
+    <span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([</span><span class="n">output</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="n">scores</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="n">dataset</span><span class="p">)</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;pipeline&#39;</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="p">)</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;signal&#39;</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;iteration&#39;</span><span class="p">,</span> <span class="n">iteration</span><span class="p">)</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;run_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_id</span>
+
+    <span class="k">if</span> <span class="n">cache_dir</span><span class="p">:</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pipeline_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">signal</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">dataset</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">base_path</span> <span class="o">+</span> <span class="s1">&#39;_scores.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">scores</span>
+
+
+<div class="viewcode-block" id="benchmark"><a class="viewcode-back" href="../../api/sigllm.benchmark.html#sigllm.benchmark.benchmark">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">benchmark</span><span class="p">(</span>
+    <span class="n">pipelines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">datasets</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">metrics</span><span class="o">=</span><span class="n">METRICS</span><span class="p">,</span>
+    <span class="n">rank</span><span class="o">=</span><span class="s1">&#39;f1&#39;</span><span class="p">,</span>
+    <span class="n">test_split</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">workers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">cache_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">anomaly_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">resume</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run pipelines on the given datasets and evaluate the performance.</span>
+
+<span class="sd">    The pipelines are used to analyze the given signals and later on the</span>
+<span class="sd">    detected anomalies are scored against the known anomalies using the</span>
+<span class="sd">    indicated metrics.</span>
+
+<span class="sd">    Finally, the scores obtained with each metric are averaged accross all the signals,</span>
+<span class="sd">    ranked by the indicated metric and returned on a ``pandas.DataFrame``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pipelines (dict or list): dictionary with pipeline names as keys and their</span>
+<span class="sd">            JSON paths as values. If a list is given, it should be of JSON paths,</span>
+<span class="sd">            and the paths themselves will be used as names. If not give, all verified</span>
+<span class="sd">            pipelines will be used for evaluation.</span>
+<span class="sd">        datasets (dict or list): dictionary of dataset name as keys and list of signals as</span>
+<span class="sd">            values. If a list is given then it will be under a generic name ``dataset``.</span>
+<span class="sd">            If not given, all benchmark datasets will be used used.</span>
+<span class="sd">        hyperparameters (dict or list): dictionary with pipeline names as keys</span>
+<span class="sd">            and their hyperparameter JSON paths or dictionaries as values. If a list is</span>
+<span class="sd">            given, it should be of corresponding order to pipelines.</span>
+<span class="sd">        metrics (dict or list): dictionary with metric names as keys and</span>
+<span class="sd">            scoring functions as values. If a list is given, it should be of scoring</span>
+<span class="sd">            functions, and they ``__name__`` value will be used as the metric name.</span>
+<span class="sd">            If not given, all the available metrics will be used.</span>
+<span class="sd">        rank (str): Sort and rank the pipelines based on the given metric.</span>
+<span class="sd">            If not given, rank using the first metric.</span>
+<span class="sd">        test_split (bool or float): Whether to use the prespecified train-test split. If</span>
+<span class="sd">            float, then it should be between 0.0 and 1.0 and represent the proportion of</span>
+<span class="sd">            the signal to include in the test split. If not given, use ``False``.</span>
+<span class="sd">        iterations (int):</span>
+<span class="sd">            Number of iterations to perform over each signal and pipeline. Defaults to 1.</span>
+<span class="sd">        workers (int):</span>
+<span class="sd">            If ``workers`` is given as an integer value other than 0 or 1, a multiprocessing</span>
+<span class="sd">            Pool is used to distribute the computation across the indicated number of workers.</span>
+<span class="sd">        show_progress (bool):</span>
+<span class="sd">            Whether to use tqdm to keep track of the progress. Defaults to ``True``.</span>
+<span class="sd">        cache_dir (str):</span>
+<span class="sd">            If a ``cache_dir`` is given, intermediate results are stored in the indicated directory</span>
+<span class="sd">            as CSV files as they get computted. This allows inspecting results while the benchmark</span>
+<span class="sd">            is still running and also recovering results in case the process does not finish</span>
+<span class="sd">            properly. Defaults to ``None``.</span>
+<span class="sd">        anomaly_dir (str):</span>
+<span class="sd">            If a ``anomaly_dir`` is given, detected anomalies will get dumped in the specificed</span>
+<span class="sd">            directory as csv files. Defaults to ``None``.</span>
+<span class="sd">        resume (bool):</span>
+<span class="sd">            Whether to continue running the experiments in the benchmark from the current</span>
+<span class="sd">            progress in ``cache_dir``.</span>
+<span class="sd">        output_path (str): Location to save the intermediatry results. If not given,</span>
+<span class="sd">            intermediatry results will not be saved.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pandas.DataFrame:</span>
+<span class="sd">            A table containing the scores obtained with each scoring function accross</span>
+<span class="sd">            all the signals for each pipeline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pipelines</span> <span class="o">=</span> <span class="n">pipelines</span> <span class="ow">or</span> <span class="n">PIPELINES</span>
+    <span class="n">datasets</span> <span class="o">=</span> <span class="n">datasets</span> <span class="ow">or</span> <span class="n">BENCHMARK_DATA</span>
+    <span class="n">run_id</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;RUN_ID&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())[:</span><span class="mi">10</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pipelines</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">pipelines</span> <span class="o">=</span> <span class="p">{</span><span class="n">pipeline</span><span class="p">:</span> <span class="n">pipeline</span> <span class="k">for</span> <span class="n">pipeline</span> <span class="ow">in</span> <span class="n">pipelines</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">datasets</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dataset&#39;</span><span class="p">:</span> <span class="n">datasets</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">pipeline</span><span class="p">:</span> <span class="n">hyperparameter</span>
+            <span class="k">for</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">hyperparameter</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pipelines</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">hyperparameters</span><span class="p">)</span>
+        <span class="p">}</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metrics</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">metrics_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">metric</span><span class="p">):</span>
+                <span class="n">metrics_</span><span class="p">[</span><span class="n">metric</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">metric</span>
+            <span class="k">elif</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">METRICS</span><span class="p">:</span>
+                <span class="n">metrics_</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span> <span class="o">=</span> <span class="n">METRICS</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown metric: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metric</span><span class="p">))</span>
+
+        <span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics_</span>
+
+    <span class="k">if</span> <span class="n">cache_dir</span><span class="p">:</span>
+        <span class="n">cache_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">cache_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">anomaly_dir</span><span class="p">:</span>
+        <span class="n">anomaly_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">anomaly_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">anomaly_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">jobs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">signals</span> <span class="ow">in</span> <span class="n">datasets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">pipeline_name</span><span class="p">,</span> <span class="n">pipeline</span> <span class="ow">in</span> <span class="n">pipelines</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">hyperparameter</span> <span class="o">=</span> <span class="n">_get_pipeline_hyperparameter</span><span class="p">(</span><span class="n">hyperparameters</span><span class="p">,</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">)</span>
+            <span class="n">parameters</span> <span class="o">=</span> <span class="n">BENCHMARK_PARAMS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+            <span class="n">few_shot</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="s1">&#39;1shot&#39;</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="n">hyperparameter</span> <span class="o">=</span> <span class="n">_augment_hyperparameters</span><span class="p">(</span><span class="n">hyperparameter</span><span class="p">,</span> <span class="n">few_shot</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">test_split</span><span class="p">,)</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">signal</span> <span class="ow">in</span> <span class="n">signals</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">resume</span><span class="p">:</span>
+                        <span class="n">experiment</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span>
+                            <span class="n">cache_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pipeline_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">signal</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">dataset</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">iteration</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="n">experiment</span> <span class="o">+</span> <span class="s1">&#39;*.csv&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">LOGGER</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;skipping </span><span class="si">{</span><span class="n">experiment</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                            <span class="k">continue</span>
+
+                    <span class="n">args</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">pipeline</span><span class="p">,</span>
+                        <span class="n">pipeline_name</span><span class="p">,</span>
+                        <span class="n">dataset</span><span class="p">,</span>
+                        <span class="n">signal</span><span class="p">,</span>
+                        <span class="n">hyperparameter</span><span class="p">,</span>
+                        <span class="n">metrics</span><span class="p">,</span>
+                        <span class="n">test_split</span><span class="p">,</span>
+                        <span class="n">few_shot</span><span class="p">,</span>
+                        <span class="n">iteration</span><span class="p">,</span>
+                        <span class="n">cache_dir</span><span class="p">,</span>
+                        <span class="n">anomaly_dir</span><span class="p">,</span>
+                        <span class="n">run_id</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">jobs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">workers</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">_run_job</span><span class="p">,</span> <span class="n">jobs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pool</span> <span class="o">=</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ProcessPoolExecutor</span><span class="p">(</span><span class="n">workers</span><span class="p">)</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_run_job</span><span class="p">,</span> <span class="n">jobs</span><span class="p">)</span>
+
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">TqdmLogger</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">show_progress</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">jobs</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">scores</span><span class="p">:</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output_path</span><span class="p">:</span>
+            <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Saving benchmark report to </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+            <span class="n">scores</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_sort_leaderboard</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">rank</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+
+    <span class="n">LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;No scores to be recorded.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../api/sigllm.benchmark.html#sigllm.benchmark.main">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">pipelines</span><span class="p">,</span> <span class="n">datasets</span><span class="p">,</span> <span class="n">resume</span><span class="p">,</span> <span class="n">workers</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">cache_dir</span><span class="p">,</span> <span class="n">anomaly_dir</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Main to call benchmark function.&quot;&quot;&quot;</span>
+    <span class="c1"># output path</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BENCHMARK_PATH</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
+
+    <span class="c1"># metrics</span>
+    <span class="k">del</span> <span class="n">METRICS</span><span class="p">[</span><span class="s1">&#39;accuracy&#39;</span><span class="p">]</span>
+    <span class="n">METRICS</span><span class="p">[</span><span class="s1">&#39;confusion_matrix&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">contextual_confusion_matrix</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">weighted</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">fun</span> <span class="ow">in</span> <span class="n">METRICS</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">benchmark</span><span class="p">(</span>
+        <span class="n">pipelines</span><span class="o">=</span><span class="n">pipelines</span><span class="p">,</span>
+        <span class="n">datasets</span><span class="o">=</span><span class="n">datasets</span><span class="p">,</span>
+        <span class="n">metrics</span><span class="o">=</span><span class="n">metrics</span><span class="p">,</span>
+        <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
+        <span class="n">workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span>
+        <span class="n">resume</span><span class="o">=</span><span class="n">resume</span><span class="p">,</span>
+        <span class="n">cache_dir</span><span class="o">=</span><span class="n">cache_dir</span><span class="p">,</span>
+        <span class="n">anomaly_dir</span><span class="o">=</span><span class="n">anomaly_dir</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pipelines&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">PIPELINES</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--datasets&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">BENCHMARK_DATA</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--resume&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-w&#39;</span><span class="p">,</span> <span class="s1">&#39;--workers&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output_path&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;results.csv&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--cache_dir&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cache&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ad&#39;</span><span class="p">,</span> <span class="s1">&#39;--anomaly_dir&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;anomaly_dir&#39;</span><span class="p">)</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">dataset</span> <span class="ow">in</span> <span class="n">BENCHMARK_DATA</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">datasets</span><span class="p">]):</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">datasets</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">dataset</span><span class="p">,</span> <span class="n">BENCHMARK_DATA</span><span class="p">[</span><span class="n">dataset</span><span class="p">])</span> <span class="k">for</span> <span class="n">dataset</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">datasets</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="o">**</span><span class="nb">vars</span><span class="p">(</span><span class="n">config</span><span class="p">))</span>
+</pre></div>
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="../../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, MIT Data To AI Lab.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

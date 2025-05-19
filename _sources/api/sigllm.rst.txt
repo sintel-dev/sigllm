@@ -15,6 +15,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   sigllm.benchmark
    sigllm.core
    sigllm.data
 
