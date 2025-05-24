@@ -7,7 +7,7 @@
 	    "sigllm.primitives.transformation.format_as_string",
         
         "sigllm.primitives.prompting.huggingface.HF",
-        "sigllm.primitives.transformation.parse_anomaly_response",
+        "sigllm.primitives.prompting.anomalies.parse_anomaly_response",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.prompting.anomalies.val2idx",
         "sigllm.primitives.prompting.anomalies.find_anomalies_in_windows",
