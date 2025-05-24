@@ -9,7 +9,6 @@ from sigllm.primitives.transformation import (
     _from_string_to_integer,
     format_as_integer,
     format_as_string,
-    parse_anomaly_response,
 )
 
 
@@ -342,57 +341,3 @@ def test_float2scalar_scalar2float_integration():
     output = scalar2float.transform(transformed, minimum, decimal)
 
     np.testing.assert_allclose(output, expected, rtol=1e-2)
-
-
-class ParseAnomalyResponseTest(unittest.TestCase):
-    def test_no_anomalies(self):
-        data = [['Answer: no anomalies'], ['Answer: no anomaly'], ['no anomaly, with extra']]
-        expected = [[''], [''], ['']]
-
-        output = parse_anomaly_response(data)
-        self.assertEqual(output, expected)
-
-    def test_single_anomaly(self):
-        data = [['Answer: [123]'], ['Answer: [456]', 'answer: [789]']]
-        expected = [['123'], ['456', '789']]
-
-        output = parse_anomaly_response(data)
-        self.assertEqual(output, expected)
-
-    def test_multiple_anomalies(self):
-        data = [['Answer: [123, 456, 789]'], ['Answer: [111, 222, 333]']]
-        expected = [['123,456,789'], ['111,222,333']]
-
-        output = parse_anomaly_response(data)
-        self.assertEqual(output, expected)
-
-    def test_mixed_responses(self):
-        data = [['Answer: no anomalies', 'Answer: [123, 456]'], ['Answer: [789]', 'no anomaly']]
-        expected = [['', '123,456'], ['789', '']]
-
-        output = parse_anomaly_response(data)
-        self.assertEqual(output, expected)
-
-    def test_different_formats(self):
-        data = [
-            ['Answer: [123, 456]', 'Answer: [ 789 , 101 ]'],
-            ['Answer: [1,2,3]', 'Answer: [ 4 , 5 , 6 ]'],
-        ]
-        expected = [['123,456', '789,101'], ['1,2,3', '4,5,6']]
-
-        output = parse_anomaly_response(data)
-        self.assertEqual(output, expected)
-
-    def test_empty_responses(self):
-        data = [[''], ['Answer: no anomalies'], ['answer'], ['no anomly']]
-        expected = [[''], [''], [''], ['']]
-
-        output = parse_anomaly_response(data)
-        self.assertEqual(output, expected)
-
-    def test_invalid_format(self):
-        data = [['Answer: invalid format'], ['Answer: [123, abc]']]
-        expected = [[''], ['']]
-
-        output = parse_anomaly_response(data)
-        self.assertEqual(output, expected)
