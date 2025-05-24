@@ -4,6 +4,7 @@
 
 This module contains functions that help filter LLMs results to get the final anomalies.
 """
+
 import ast
 import re
 
@@ -11,14 +12,16 @@ import numpy as np
 
 PATTERN = r'\[([\d\s,]+)\]'
 
+
 def _clean_response(text):
     text = text.strip().lower()
-    text = re.sub(r",+", ",", text)
+    text = re.sub(r',+', ',', text)
 
     if 'no anomalies' in text or 'no anomaly' in text:
         return ''
 
     return text
+
 
 def _parse_list_response(text):
     clean = _clean_response(text)
@@ -33,6 +36,7 @@ def _parse_list_response(text):
 
     return ''
 
+
 def _parse_interval_response(text):
     clean = _clean_response(text)
     match = re.finditer(PATTERN, clean)
@@ -43,11 +47,12 @@ def _parse_interval_response(text):
             interval = ast.literal_eval(m.group())
             if len(interval) == 2:
                 start, end = ast.literal_eval(m.group())
-                values.extend(list(range(start, end+1)))
-            
+                values.extend(list(range(start, end + 1)))
+
         return values
 
     return []
+
 
 def parse_anomaly_response(X, interval=False):
     """Parse a list of lists of LLM responses to extract anomaly values and format them as strings.
@@ -77,6 +82,7 @@ def parse_anomaly_response(X, interval=False):
         result.append(parsed_list)
 
     return result
+
 
 def val2idx(y, X):
     """Convert detected anomalies values into indices.
