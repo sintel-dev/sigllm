@@ -5,7 +5,83 @@
 This module contains functions that help filter LLMs results to get the final anomalies.
 """
 
+import ast
+import re
+
 import numpy as np
+
+PATTERN = r'\[([\d\s,]+)\]'
+
+
+def _clean_response(text):
+    text = text.strip().lower()
+    text = re.sub(r',+', ',', text)
+
+    if 'no anomalies' in text or 'no anomaly' in text:
+        return ''
+
+    return text
+
+
+def _parse_list_response(text):
+    clean = _clean_response(text)
+
+    # match anything that consists of digits and commas
+    match = re.search(PATTERN, clean)
+
+    if match:
+        values = match.group(1)
+        values = [val.strip() for val in values.split(',') if val.strip()]
+        return ','.join(values)
+
+    return ''
+
+
+def _parse_interval_response(text):
+    clean = _clean_response(text)
+    match = re.finditer(PATTERN, clean)
+
+    if match:
+        values = list()
+        for m in match:
+            interval = ast.literal_eval(m.group())
+            if len(interval) == 2:
+                start, end = ast.literal_eval(m.group())
+                values.extend(list(range(start, end + 1)))
+
+        return values
+
+    return []
+
+
+def parse_anomaly_response(X, interval=False):
+    """Parse a list of lists of LLM responses to extract anomaly values and format them as strings.
+
+    Args:
+        X (List[List[str]]):
+            List of lists of response texts from the LLM in the format
+            "Answer: no anomalies" or "Answer: [val1, val2, ..., valN]."
+            values must be within brackets.
+        interval (bool):
+            Whether to parse the response as a list "Answer: [val1, val2, ..., valN]."
+            or list of intervals "Answer: [[s1, e1], [s2, e2], ..., [sn, en]]."
+
+    Returns:
+        List[List[str]]:
+            List of lists of parsed responses where each element is either
+            "val1,val2,...,valN" if anomalies are found, or empty string if
+            no anomalies are present.
+    """
+    method = _parse_list_response
+    if interval:
+        method = _parse_interval_response
+
+    result = []
+    for response_list in X:
+        parsed_list = [method(response) for response in response_list]
+        result.append(parsed_list)
+
+    return result
 
 
 def val2idx(y, X):
