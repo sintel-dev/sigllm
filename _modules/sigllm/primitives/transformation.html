@@ -368,47 +368,6 @@
         <span class="n">values</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">decimal</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">values</span> <span class="o">+</span> <span class="n">minimum</span></div></div>
-
-
-<div class="viewcode-block" id="parse_anomaly_response"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.parse_anomaly_response">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">parse_anomaly_response</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a list of lists of LLM responses to extract anomaly values and format them as strings.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        X (List[List[str]]):</span>
-<span class="sd">            List of lists of response texts from the LLM in the format</span>
-<span class="sd">            &quot;Answer: no anomalies&quot; or &quot;Answer: [val1, val2, ..., valN].&quot;</span>
-<span class="sd">            values must be within brackets.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        List[List[str]]:</span>
-<span class="sd">            List of lists of parsed responses where each element is either</span>
-<span class="sd">            &quot;val1,val2,...,valN&quot; if anomalies are found, or empty string if</span>
-<span class="sd">            no anomalies are present.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_single_response</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="s1">&#39;no anomalies&#39;</span> <span class="ow">in</span> <span class="n">text</span> <span class="ow">or</span> <span class="s1">&#39;no anomaly&#39;</span> <span class="ow">in</span> <span class="n">text</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;&#39;</span>
-
-        <span class="c1"># match anything that consists of digits and commas</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\[([\d\s,]+)\]&#39;</span>
-        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">values</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
-            <span class="k">return</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="s1">&#39;&#39;</span>
-
-    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">response_list</span> <span class="ow">in</span> <span class="n">X</span><span class="p">:</span>
-        <span class="n">parsed_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">_parse_single_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_list</span><span class="p">]</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parsed_list</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">result</span></div>
 </pre></div>
 
               </div>

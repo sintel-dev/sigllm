@@ -260,6 +260,31 @@ by padding to both sides and merge overlapping.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="sigllm.primitives.prompting.anomalies.parse_anomaly_response">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">parse_anomaly_response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">interval</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#parse_anomaly_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.parse_anomaly_response" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse a list of lists of LLM responses to extract anomaly values and format them as strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – List of lists of response texts from the LLM in the format
+“Answer: no anomalies” or “Answer: [val1, val2, …, valN].”
+values must be within brackets.</p></li>
+<li><p><strong>interval</strong> (<em>bool</em>) – Whether to parse the response as a list “Answer: [val1, val2, …, valN].”
+or list of intervals “Answer: [[s1, e1], [s2, e2], …, [sn, en]].”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of lists of parsed responses where each element is either
+“val1,val2,…,valN” if anomalies are found, or empty string if
+no anomalies are present.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="sigllm.primitives.prompting.anomalies.val2idx">
 <code class="sig-prename descclassname">sigllm.primitives.prompting.anomalies.</code><code class="sig-name descname">val2idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">X</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/anomalies.html#val2idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.anomalies.val2idx" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert detected anomalies values into indices.</p>
