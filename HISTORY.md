@@ -1,5 +1,15 @@
 # History
 
+## 0.0.4 – 2025-05-29
+
+New benchmarking suite
+
+* Add parse list of intervals to ``parse_anomaly_response`` – [Issue #43](https://github.com/sintel-dev/sigllm/issues/43) by @sarahmish
+* Add paper benchmark results – [Issue #41](https://github.com/sintel-dev/sigllm/issues/41) by @sarahmish
+* Enable Unrestricted LLM Output with Parsing + Add One-Shot Anomaly Detection Support – [Issue #39](https://github.com/sintel-dev/sigllm/issues/39) by @scherkao31
+* Add benchmarking suite to ``sigllm`` – [Issue #36](https://github.com/sintel-dev/sigllm/issues/36) by @sarahmish
+
+
 ## 0.0.3 - 2025-02-06
 
 Internal improvements and removing support for Python 3.8
