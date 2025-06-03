@@ -205,3 +205,10 @@ convention = "google"
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 99
 max-line-length = 99
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    "def main",
+    "if __name__ == .__main__.:"
+]
