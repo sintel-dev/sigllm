@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import re
 import json
 import logging
 import os
@@ -22,6 +22,20 @@ DEFAULT_PAD_TOKEN = '<pad>'
 VALID_NUMBERS = list('0123456789')
 
 DEFAULT_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
+
+def get_examples(text, k=3):
+  """
+  Extracts the content within the first three sets of parentheses in a string.
+
+  Args:
+    text (str): Input string.
+
+  Returns:
+    list:
+        A list containing the content within the first three sets of parentheses. 
+  """
+  matches = re.findall(r'\(([^)]*)\)', text)
+  return matches[:k]
 
 
 class HF:
@@ -61,7 +75,7 @@ class HF:
         raw=False,
         samples=10,
         padding=0,
-        restrict_tokens=False,
+        restrict_tokens=False
     ):
         self.name = name
         self.sep = sep
@@ -72,7 +86,6 @@ class HF:
         self.samples = samples
         self.padding = padding
         self.restrict_tokens = restrict_tokens
-
         self.tokenizer = AutoTokenizer.from_pretrained(self.name, use_fast=False)
 
         # special tokens
@@ -111,12 +124,14 @@ class HF:
 
         self.model.eval()
 
-    def detect(self, X, normal=None, **kwargs):
+    def detect(self, X, dim=1, normal=None, **kwargs):
         """Use HF to detect anomalies of a signal.
 
         Args:
             X (ndarray):
-                Input sequences of strings containing signal values
+                Input sequences of strings containing signal values.
+            dim (int, optional):
+                Number of dimensions of the time series. Default to None.
             normal (str, optional):
                 A normal reference sequence for one-shot prompting. If None,
                 zero-shot prompting is used. Default to None.
@@ -140,7 +155,13 @@ class HF:
             if self.restrict_tokens:
                 user_message = PROMPTS['user_message']
             else:
-                user_message = PROMPTS['user_message_2']
+                user_message = PROMPTS['user_message_unrestricted']
+
+            if dim > 1:
+                examples = get_examples(text)
+                examples = ' '.join([f'({ex})' for ex in examples])
+
+                user_message = PROMPTS['user_message_multivariate'].format(dim, examples)
 
             # Combine messages with one-shot example if provided
             message = ' '.join([

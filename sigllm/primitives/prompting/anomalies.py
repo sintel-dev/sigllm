@@ -14,6 +14,7 @@ PATTERN = r'\[([\d\s,]+)\]'
 
 
 def _clean_response(text):
+    print(text)
     text = text.strip().lower()
     text = re.sub(r',+', ',', text)
 
@@ -78,6 +79,7 @@ def parse_anomaly_response(X, interval=False):
 
     result = []
     for response_list in X:
+        print(response_list)
         parsed_list = [method(response) for response in response_list]
         result.append(parsed_list)
 
@@ -131,6 +133,9 @@ def find_anomalies_in_windows(y, alpha=0.5):
         ndarray:
             A 2-dimensional array containing final anomalous indices of each windows.
     """
+    if isinstance(y, list):
+        y = np.array(y, dtype=object)
+
     idx_list = []
     for samples in y:
         min_vote = np.ceil(alpha * len(samples))
@@ -203,6 +208,7 @@ def format_anomalies(y, timestamp, padding_size=50):
     if len(y) == 0:
         return []
 
+    y = y[y < len(timestamp)].astype(int)
     y = timestamp[y]  # Convert list of indices into list of timestamps
     start, end = timestamp[0], timestamp[-1]
     interval = timestamp[1] - timestamp[0]
