@@ -47,7 +47,7 @@
         "sigllm.primitives.prompting.huggingface.HF#1": {
             "X": "X_str"
         },
-        "sigllm.primitives.transformation.parse_anomaly_response#1": {
+        "sigllm.primitives.prompting.anomalies.parse_anomaly_response#1": {
             "X": "y_hat"
         },
         "sigllm.primitives.transformation.format_as_integer#1": {
@@ -64,7 +64,7 @@
         "sigllm.primitives.prompting.huggingface.HF#1": {
             "y": "y_hat"
         },
-        "sigllm.primitives.transformation.parse_anomaly_response#1": {
+        "sigllm.primitives.prompting.anomalies.parse_anomaly_response#1": {
             "X": "y_parsed"
         },
         "sigllm.primitives.transformation.format_as_integer#1": {

@@ -14,7 +14,6 @@ PATTERN = r'\[([\d\s,]+)\]'
 
 
 def _clean_response(text):
-    print(text)
     text = text.strip().lower()
     text = re.sub(r',+', ',', text)
 
@@ -79,7 +78,6 @@ def parse_anomaly_response(X, interval=False):
 
     result = []
     for response_list in X:
-        print(response_list)
         parsed_list = [method(response) for response in response_list]
         result.append(parsed_list)
 
