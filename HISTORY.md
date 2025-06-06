@@ -1,9 +1,10 @@
 # History
 
-## 0.0.4 – 2025-05-29
+## 0.0.4 – 2025-06-06
 
 New benchmarking suite
 
+* Fix primitive names in pipeline – [Issue #46](https://github.com/sintel-dev/sigllm/issues/46) by @sarahmish
 * Add parse list of intervals to ``parse_anomaly_response`` – [Issue #43](https://github.com/sintel-dev/sigllm/issues/43) by @sarahmish
 * Add paper benchmark results – [Issue #41](https://github.com/sintel-dev/sigllm/issues/41) by @sarahmish
 * Enable Unrestricted LLM Output with Parsing + Add One-Shot Anomaly Detection Support – [Issue #39](https://github.com/sintel-dev/sigllm/issues/39) by @scherkao31
