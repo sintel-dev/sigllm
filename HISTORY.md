@@ -1,6 +1,6 @@
 # History
 
-## 0.0.4 – 2025-06-06
+## 0.0.4 – 2025-07-31
 
 New benchmarking suite
 
