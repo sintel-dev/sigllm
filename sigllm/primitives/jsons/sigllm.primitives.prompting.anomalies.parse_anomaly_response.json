@@ -1,0 +1,33 @@
+{
+    "name": "sigllm.primitives.prompting.anomalies.parse_anomaly_response",
+    "contributors": ["Salim Cherkaoui"],
+    "description": "Parse LLM responses to extract anomaly values from text format.",
+    "classifiers": {
+        "type": "transformer",
+        "subtype": "parser"
+    },
+    "modalities": ["text"],
+    "primitive": "sigllm.primitives.prompting.anomalies.parse_anomaly_response",
+    "produce": {
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"            
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "interval": {
+                "type": "bool",
+                "default": false
+            }
+        }
+    }
+} 

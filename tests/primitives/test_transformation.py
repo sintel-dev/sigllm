@@ -45,6 +45,14 @@ class FormatAsStringTest(unittest.TestCase):
 
         assert output == expected
 
+    def test_format_as_string_single(self):
+        data = np.array([1, 2, 3, 4, 5])
+        expected = '1,2,3,4,5'
+
+        output = format_as_string(data, single=True)
+
+        np.testing.assert_array_equal(output, expected)
+
 
 class FromStringToIntegerTest(unittest.TestCase):
     def test__from_string_to_integer_default(self):
@@ -131,6 +139,16 @@ def test_format_as_integer_list():
     np.testing.assert_equal(output, expected)
 
 
+def test_format_as_integer_empty():
+    data = [['']]
+
+    expected = np.array([[np.array([], dtype=float)]])
+
+    output = format_as_integer(data)
+
+    np.testing.assert_equal(output, expected)
+
+
 def test_format_as_integer_2d_shape_mismatch():
     data = [['1,2,3,4,5'], ['1, 294., 3 , j34,5'], ['!232, 23,3,4,5']]
 
@@ -138,6 +156,18 @@ def test_format_as_integer_2d_shape_mismatch():
         [[np.array([1.0, 2, 3, 4, 5])], [np.array([1.0, 3, 5])], [np.array([23.0, 3, 4, 5])]],
         dtype=object,
     )
+
+    output = format_as_integer(data)
+
+    for out, exp in list(zip(output, expected)):
+        for o, e in list(zip(out, exp)):
+            np.testing.assert_equal(o, e)
+
+
+def test_format_as_integer_mixed():
+    data = [[''], ['1,2,3']]
+
+    expected = np.array([[np.array([], dtype=float)], [np.array([1.0, 2.0, 3.0])]], dtype=object)
 
     output = format_as_integer(data)
 

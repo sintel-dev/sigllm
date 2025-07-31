@@ -6,34 +6,43 @@ import re
 import numpy as np
 
 
-def format_as_string(X, sep=',', space=False):
+def format_as_string(X, sep=',', space=False, single=False):
     """Format X to a list of string.
 
-    Transform a 2-D array of integers to a list of strings,
-    seperated by the indicated seperator and space.
+    Transform an array of integers to string(s), separated by the
+    indicated separator and space. Handles two cases:
+    - If single=True, treats X as a single time series (window_size, 1)
+    - If single=False, treats X as multiple windows (num_windows, window_size, 1)
 
     Args:
         sep (str):
             String to separate each element in X. Default to `','`.
         space (bool):
             Whether to add space between each digit in the result. Default to `False`.
+        single (bool):
+            Whether to treat X as a single time series. If True, expects (window_size, 1)
+            and returns a single string. If False, expects (num_windows, window_size, 1)
+            and returns a list of strings. Default to `False`.
 
     Returns:
-        ndarray:
-            A list of string representation of each row.
+        ndarray or str:
+            If single=True, returns one string representation. If single=False,
+            returns a list of string representations for each window.
     """
 
     def _as_string(x):
         text = sep.join(list(map(str, x.flatten())))
-
         if space:
             text = ' '.join(text)
-
         return text
 
-    results = list(map(_as_string, X))
-
-    return np.array(results)
+    if single:
+        # single time series (window_size, 1)
+        return _as_string(X)
+    else:
+        # multiple windows (num_windows, window_size, 1)
+        results = list(map(_as_string, X))
+        return np.array(results)
 
 
 def _from_string_to_integer(text, sep=',', trunc=None, errors='ignore'):
@@ -74,6 +83,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
 
     Transforms a list of list of string input as 3-D array of integers,
     seperated by the indicated seperator and truncated based on `trunc`.
+    Handles empty strings by returning empty arrays.
 
     Args:
         sep (str):
@@ -91,7 +101,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
 
     Returns:
         ndarray:
-            An array of digits values.
+            An array of digits values. Empty arrays for empty strings.
     """
     result = list()
     for string_list in X:
@@ -100,8 +110,11 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
             raise ValueError('Input is not a list of lists.')
 
         for text in string_list:
-            scalar = _from_string_to_integer(text, sep, trunc, errors)
-            sample.append(scalar)
+            if not text:  # empty string
+                sample.append(np.array([], dtype=float))
+            else:
+                scalar = _from_string_to_integer(text, sep, trunc, errors)
+                sample.append(scalar)
 
         result.append(sample)
 

@@ -113,7 +113,7 @@ namespaces = false
 version = {attr = 'sigllm.__version__'}
 
 [tool.bumpversion]
-current_version = "0.0.3"
+current_version = "0.0.4.dev1"
 parse = '(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+)(\.(?P<release>[a-z]+)(?P<candidate>\d+))?'
 serialize = [
     '{major}.{minor}.{patch}.{release}{candidate}',
@@ -205,3 +205,10 @@ convention = "google"
 [tool.ruff.lint.pycodestyle]
 max-doc-length = 99
 max-line-length = 99
+
+[tool.coverage.report]
+exclude_also = [
+    "def __repr__",
+    "def main",
+    "if __name__ == .__main__.:"
+]
