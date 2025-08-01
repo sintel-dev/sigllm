@@ -31,7 +31,7 @@ def test_rolling_window_sequences(values, window_size, step_size):
         np.array([0, 1, 2, 3, 4]),
         3,
         1,
-        1
+        1,
     )
 
     result = rolling_window_sequences(values, window_size, step_size)
@@ -44,12 +44,7 @@ def test_rolling_window_sequences(values, window_size, step_size):
 
 
 def test_rolling_window_sequences_multivariate(window_size, step_size):
-    values = np.array([
-       [0.555, 2.345],
-       [1.501, 5.903],
-       [9.116, 3.068],
-       [7.432, 4.532]
-    ])
+    values = np.array([[0.555, 2.345], [1.501, 5.903], [9.116, 3.068], [7.432, 4.532]])
 
     expected = (
         np.array([
@@ -59,7 +54,7 @@ def test_rolling_window_sequences_multivariate(window_size, step_size):
         np.array([0, 1]),
         3,
         1,
-        2
+        2,
     )
 
     result = rolling_window_sequences(values, window_size, step_size)
