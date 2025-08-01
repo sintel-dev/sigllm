@@ -206,7 +206,6 @@ def format_anomalies(y, timestamp, padding_size=50):
     if len(y) == 0:
         return []
 
-    print(y)
     y = y[y < len(timestamp)].astype(int)
     y = timestamp[y]  # Convert list of indices into list of timestamps
     start, end = timestamp[0], timestamp[-1]

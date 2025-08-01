@@ -30,7 +30,7 @@ def rolling_window_sequences(X, window_size=500, step_size=100):
     out_X = list()
     X_index = list()
     dim = X.shape[1]
-    
+
     start = 0
     max_start = len(X) - window_size + 1
     while start < max_start:

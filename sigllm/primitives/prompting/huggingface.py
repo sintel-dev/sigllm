@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-import re
 import json
 import logging
 import os
+import re
 
 import torch
 from tqdm import tqdm
@@ -23,19 +23,19 @@ VALID_NUMBERS = list('0123456789')
 
 DEFAULT_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
 
+
 def get_examples(text, k=3):
-  """
-  Extracts the content within the first three sets of parentheses in a string.
+    """Extracts the content within the first three sets of parentheses in a string.
 
-  Args:
-    text (str): Input string.
+    Args:
+        text (str): Input string.
 
-  Returns:
-    list:
-        A list containing the content within the first three sets of parentheses. 
-  """
-  matches = re.findall(r'\(([^)]*)\)', text)
-  return matches[:k]
+    Returns:
+        list:
+            A list containing the content within the first three sets of parentheses.
+    """
+    matches = re.findall(r'\(([^)]*)\)', text)
+    return matches[:k]
 
 
 class HF:
@@ -75,7 +75,7 @@ class HF:
         raw=False,
         samples=10,
         padding=0,
-        restrict_tokens=False
+        restrict_tokens=False,
     ):
         self.name = name
         self.sep = sep
@@ -131,7 +131,7 @@ class HF:
             X (ndarray):
                 Input sequences of strings containing signal values.
             dim (int, optional):
-                Number of dimensions of the time series. Default to None.
+                Number of dimensions of the time series. Default to 1.
             normal (str, optional):
                 A normal reference sequence for one-shot prompting. If None,
                 zero-shot prompting is used. Default to None.
