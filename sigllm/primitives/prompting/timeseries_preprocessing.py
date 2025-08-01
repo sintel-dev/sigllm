@@ -26,10 +26,14 @@ def rolling_window_sequences(X, window_size=500, step_size=100):
             * rolling window sequences.
             * first index value of each input sequence.
     """
+    if X.ndim == 1:
+        dim = 1
+    else:
+        dim = X.shape[1]
+
     index = range(len(X))
     out_X = list()
     X_index = list()
-    dim = X.shape[1]
 
     start = 0
     max_start = len(X) - window_size + 1
