@@ -18,6 +18,11 @@
                 "type": "ndarray"
             },
             {
+                "name": "dim",
+                "type": "int",
+                "default": 1
+            },
+            {
                 "name": "normal",
                 "type": "ndarray",
                 "default": null

@@ -1,6 +1,7 @@
 {
     "system_message": "You are an expert in time series analysis. Your task is to detect anomalies in time series data.",
     "user_message": "Below is a [SEQUENCE], please return the anomalies in that sequence in [RESPONSE]. Only return the numbers. [SEQUENCE]",
-    "user_message_2": "Below is a [SEQUENCE], analyze the following time series and identify any anomalies. If you find anomalies, provide their values in the format [first_anomaly, ..., last_anomaly]. If no anomalies are found, respond with 'no anomalies'. Be concise, do not write code, do not perform any calculations, just give your answers as told.: [SEQUENCE]",
+    "user_message_unrestricted": "Below is a [SEQUENCE], analyze the following time series and identify any anomalies. If you find anomalies, provide their values in the format [first_anomaly, ..., last_anomaly]. If no anomalies are found, respond with 'no anomalies'. Be concise, do not write code, do not perform any calculations, just give your answers as told.: [SEQUENCE]",
+    "user_message_multivariate": "Below is a multivariate time series of {} dimensions with the following format \"{}\".\nYour job is to detect ranges of anomalies in this time series, in terms of the x-axis coordinates. List one by one in a list.\nFor example, if ranges (including two endpoints) [5, 12], [71, 74], and [105, 131], are anomalies, then output \"[[5,12], [71, 74], [105, 131]]\".\nIf no anomalies are found, respond with 'no anomalies'. Be concise, do not write code, do not perform any calculations, just give your answers as told.\n[SEQUENCE]\n",
     "one_shot_prefix": "Here is a normal reference of the time series: [NORMAL]"
 }
