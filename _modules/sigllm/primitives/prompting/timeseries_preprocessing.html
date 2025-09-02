@@ -210,6 +210,11 @@
 <span class="sd">            * rolling window sequences.</span>
 <span class="sd">            * first index value of each input sequence.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dim</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
     <span class="n">index</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
     <span class="n">out_X</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
     <span class="n">X_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
@@ -221,7 +226,7 @@
         <span class="n">out_X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">])</span>
         <span class="n">X_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">[</span><span class="n">start</span><span class="p">])</span>
         <span class="n">start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">step_size</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">out_X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_index</span><span class="p">),</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">out_X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X_index</span><span class="p">),</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">dim</span></div>
 </pre></div>
 
               </div>

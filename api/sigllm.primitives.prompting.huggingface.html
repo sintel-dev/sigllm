@@ -213,12 +213,13 @@ Default to <cite>0</cite>.</p></li>
 </dl>
 <dl class="py method">
 <dt id="sigllm.primitives.prompting.huggingface.HF.detect">
-<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">normal</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF.detect" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">detect</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">dim</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">normal</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#HF.detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.HF.detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Use HF to detect anomalies of a signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values</p></li>
+<li><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values.</p></li>
+<li><p><strong>dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dimensions of the time series. Default to 1.</p></li>
 <li><p><strong>normal</strong> (<em>str</em><em>, </em><em>optional</em>) – A normal reference sequence for one-shot prompting. If None,
 zero-shot prompting is used. Default to None.</p></li>
 </ul>
@@ -236,6 +237,26 @@ zero-shot prompting is used. Default to None.</p></li>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt id="sigllm.primitives.prompting.huggingface.get_examples">
+<code class="sig-prename descclassname">sigllm.primitives.prompting.huggingface.</code><code class="sig-name descname">get_examples</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/prompting/huggingface.html#get_examples"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.prompting.huggingface.get_examples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the content within the first k sets of parentheses in a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Input string.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Number of examples to return.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list containing the content within the first k sets of parentheses.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

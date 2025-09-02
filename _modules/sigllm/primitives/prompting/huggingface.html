@@ -183,10 +183,10 @@
                 
   <h1>Source code for sigllm.primitives.prompting.huggingface</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
@@ -206,6 +206,23 @@
 <span class="n">VALID_NUMBERS</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="s1">&#39;0123456789&#39;</span><span class="p">)</span>
 
 <span class="n">DEFAULT_MODEL</span> <span class="o">=</span> <span class="s1">&#39;mistralai/Mistral-7B-Instruct-v0.2&#39;</span>
+
+
+<div class="viewcode-block" id="get_examples"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.get_examples">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_examples</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the content within the first k sets of parentheses in a string.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text (str):</span>
+<span class="sd">            Input string.</span>
+<span class="sd">        k (int):</span>
+<span class="sd">            Number of examples to return.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list:</span>
+<span class="sd">            A list containing the content within the first k sets of parentheses.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\(([^)]*)\)&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">matches</span><span class="p">[:</span><span class="n">k</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="HF"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">HF</span><span class="p">:</span>
@@ -256,7 +273,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">samples</span> <span class="o">=</span> <span class="n">samples</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">padding</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">restrict_tokens</span> <span class="o">=</span> <span class="n">restrict_tokens</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">use_fast</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># special tokens</span>
@@ -295,12 +311,14 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
 
-<div class="viewcode-block" id="HF.detect"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF.detect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="HF.detect"><a class="viewcode-back" href="../../../../api/sigllm.primitives.prompting.huggingface.html#sigllm.primitives.prompting.huggingface.HF.detect">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Use HF to detect anomalies of a signal.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            X (ndarray):</span>
-<span class="sd">                Input sequences of strings containing signal values</span>
+<span class="sd">                Input sequences of strings containing signal values.</span>
+<span class="sd">            dim (int, optional):</span>
+<span class="sd">                Number of dimensions of the time series. Default to 1.</span>
 <span class="sd">            normal (str, optional):</span>
 <span class="sd">                A normal reference sequence for one-shot prompting. If None,</span>
 <span class="sd">                zero-shot prompting is used. Default to None.</span>
@@ -324,7 +342,13 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrict_tokens</span><span class="p">:</span>
                 <span class="n">user_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;user_message&#39;</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">user_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;user_message_2&#39;</span><span class="p">]</span>
+                <span class="n">user_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;user_message_unrestricted&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">dim</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">examples</span> <span class="o">=</span> <span class="n">get_examples</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+                <span class="n">examples</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">ex</span><span class="si">}</span><span class="s1">)&#39;</span> <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">examples</span><span class="p">])</span>
+
+                <span class="n">user_message</span> <span class="o">=</span> <span class="n">PROMPTS</span><span class="p">[</span><span class="s1">&#39;user_message_multivariate&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">examples</span><span class="p">)</span>
 
             <span class="c1"># Combine messages with one-shot example if provided</span>
             <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
