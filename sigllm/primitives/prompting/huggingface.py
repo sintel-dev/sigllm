@@ -25,14 +25,17 @@ DEFAULT_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
 
 
 def get_examples(text, k=3):
-    """Extracts the content within the first three sets of parentheses in a string.
+    """Extracts the content within the first k sets of parentheses in a string.
 
     Args:
-        text (str): Input string.
+        text (str): 
+            Input string.
+        k (int):
+            Number of examples to return.
 
     Returns:
         list:
-            A list containing the content within the first three sets of parentheses.
+            A list containing the content within the first k sets of parentheses.
     """
     matches = re.findall(r'\(([^)]*)\)', text)
     return matches[:k]
