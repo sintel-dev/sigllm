@@ -28,7 +28,7 @@ def get_examples(text, k=3):
     """Extracts the content within the first k sets of parentheses in a string.
 
     Args:
-        text (str): 
+        text (str):
             Input string.
         k (int):
             Number of examples to return.
