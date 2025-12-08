@@ -23,7 +23,7 @@ class DigitInterleave(MultivariateFormattingMethod):
             return result_str
 
         result = [
-            separator.join(interleave_digits(timestamp) for timestamp in window) + separator  # Add comma at the end
+            separator.join(interleave_digits(timestamp) for timestamp in window) + separator
             for window in data
         ]
         return result
@@ -37,13 +37,10 @@ class DigitInterleave(MultivariateFormattingMethod):
             total_digits = len(interleaved_str)
             num_values = total_digits // width_used
 
-            # Reconstruct each original value
             values = []
             for value_idx in range(num_values):
-                # Collect digits for this value from each position
                 value_digits = []
                 for digit_pos in range(width_used):
-                    # Calculate position in interleaved string
                     pos = digit_pos * num_values + value_idx
                     if pos < total_digits:
                         value_digits.append(interleaved_str[pos])
@@ -58,7 +55,7 @@ class DigitInterleave(MultivariateFormattingMethod):
                 deinterleave_timestamp(timestamp)
                 for sample in entry
                 for timestamp in sample.lstrip(separator).rstrip(separator).split(separator)[:trunc]
-                if timestamp.strip()  # Skip empty strings
+                if timestamp.strip()
             ]
             for entry in data
         ], dtype=object)

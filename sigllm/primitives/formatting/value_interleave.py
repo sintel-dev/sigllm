@@ -8,13 +8,12 @@ class ValueInterleave(MultivariateFormattingMethod):
 
 
     def format_as_string(self, data: np.ndarray, digits_per_timestamp = 3, separator = ",") -> str:
-        #print(data[0])
         max_digits = max(len(str(abs(int(v)))) for window in data for ts in window for v in ts)
         width_used = max(digits_per_timestamp, max_digits)
         self.metadata['width_used'] = width_used    
         result = [
             separator.join(''.join(str(int(val)).zfill(width_used)[:width_used] for val in timestamp)
-            for timestamp in window) + separator  # Add comma at the end
+            for timestamp in window) + separator
             for window in data
         ]
         return result

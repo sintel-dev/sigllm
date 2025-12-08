@@ -136,7 +136,7 @@ class MultivariateFormattingMethod:
                 print(data.shape)
 
         string_data = self.format_as_string(data, **self.config)
-        LLM_mock_output = np.array(string_data).reshape(-1, 1) # pretend only one sample
+        LLM_mock_output = np.array(string_data).reshape(-1, 1)
         if verbose:
             print(LLM_mock_output)
         integer_data = self.format_as_integer(LLM_mock_output, **self.config)
