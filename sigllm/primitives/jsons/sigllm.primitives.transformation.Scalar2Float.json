@@ -4,7 +4,7 @@
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
     ],
-    "description": "Transform scalar values to float.",
+    "description": "Transform scalar values to float using metadata from Float2Scalar.",
     "classifiers": {
         "type": "preprocessor",
         "subtype": "transformer"
@@ -19,14 +19,8 @@
                 "type": "ndarray"
             },
             {
-                "name": "minimum",
-                "type": "float",
-                "default": 0
-            },
-            {
-                "name": "decimal",
-                "type": "int",
-                "default": 2
+                "name": "metadata",
+                "type": "dict"
             }
         ],
         "output": [

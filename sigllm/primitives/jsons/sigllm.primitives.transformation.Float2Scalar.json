@@ -4,7 +4,7 @@
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
     ],
-    "description": "Transform float values into scalar.",
+    "description": "Transform float values into scalar using either scaling (multiply by 10^decimal) or binning (K-means clustering).",
     "classifiers": {
         "type": "preprocessor",
         "subtype": "transformer"
@@ -34,23 +34,31 @@
                 "type": "ndarray"
             },
             {
-                "name": "minimum",
-                "type": "float"
-            },
-            {
-                "name": "decimal",
-                "type": "int"
+                "name": "metadata",
+                "type": "dict"
             }
         ]
     },
     "hyperparameters": {
         "fixed": {
+            "strategy": {
+                "type": "str",
+                "description": "Discretization strategy: 'scaling' or 'binning'",
+                "default": "scaling"
+            },
+            "n_clusters": {
+                "type": "int",
+                "description": "Number of clusters (binning strategy only)",
+                "default": 100
+            },
             "decimal": {
                 "type": "int",
+                "description": "Number of decimal places (scaling strategy only)",
                 "default": 2
             },
             "rescale": {
                 "type": "bool",
+                "description": "Rescale so minimum becomes 0 (scaling strategy only)",
                 "default": true
             }
         }

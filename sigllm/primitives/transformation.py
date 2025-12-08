@@ -5,6 +5,7 @@ import re
 
 import numpy as np
 
+from sklearn.cluster import KMeans
 
 def format_as_string(X, sep=',', space=False, single=False):
     """Format X to a list of string.
@@ -141,46 +142,123 @@ class Float2Scalar:
             Whether to rescale the array such that the minimum value becomes 0. Default to `True`.
     """
 
-    def __init__(self, decimal=2, rescale=True):
+    def __init__(self, strategy='scaling', n_clusters=100, decimal=2, rescale=True):
+        self.strategy = strategy
+        self.n_clusters = n_clusters
         self.decimal = decimal
         self.rescale = rescale
+        
+        # State variables
         self.minimum = None
+        self.centroids = None
+        self.labels = None
 
     def fit(self, X):
-        """Learn minimum value in fit data."""
-        self.minimum = np.min(X)
+        """Learn parameters from data.
+        
+        For scaling: learns the minimum value.
+        For binning: learns K-means cluster centroids.
+        """
+        if self.strategy == 'scaling':
+            self.minimum = np.min(X)
+        elif self.strategy == 'binning':
+            centroids_list = []
+            labels = []
+            for col in X.T:
+                if self.n_clusters >= len(np.unique(col)):
+                    centroids = np.unique(col)
+                else:     
+                    kmeans = KMeans(n_clusters=self.n_clusters, random_state=0)
+                    kmeans.fit(col.reshape(-1, 1))
+                    centroids = np.sort(kmeans.cluster_centers_.ravel())
+                    
+                col_labels = np.argmin(np.abs(col[:, None] - centroids[None, :]), axis=1)
+
+                labels.append(col_labels)
+                centroids_list.append(centroids)
+            
+            self.labels = np.column_stack(labels)
+            self.centroids = centroids_list
+        else:
+            raise ValueError(f"Unknown strategy '{self.strategy}'. Use 'scaling' or 'binning'.")
 
     def transform(self, X):
-        """Transform data."""
-        if self.rescale:
-            X = X - self.minimum
+        """Transform data to integer representation.
+        
+        Returns:
+            tuple: (values, metadata) where metadata is a dict containing:
+                - For scaling: {'strategy': 'scaling', 'minimum': float, 'decimal': int}
+                - For binning: {'strategy': 'binning', 'centroids': list}
+        """
+        print(f"[Float2Scalar] Using strategy: {self.strategy}")
+        if self.strategy == 'scaling':
+            if self.rescale:
+                X = X - self.minimum
 
-        sign = 1 * (X >= 0) - 1 * (X < 0)
-        values = np.abs(X)
+            sign = 1 * (X >= 0) - 1 * (X < 0)
+            values = np.abs(X)
 
-        values = sign * (values * 10**self.decimal).astype(int)
+            values = sign * np.round(values * 10**self.decimal).astype(int)
 
-        return values, self.minimum, self.decimal
+            metadata = {
+                'strategy': 'scaling',
+                'minimum': self.minimum,
+                'decimal': self.decimal
+            }
+            return values, metadata
+        
+        elif self.strategy == 'binning':
+            # Re-fit to get labels for this X (transform is same as fit for binning)
+            self.fit(X)
+            metadata = {
+                'strategy': 'binning',
+                'centroids': self.centroids
+            }
+            return self.labels, metadata
+        
+        else:
+            raise ValueError(f"Unknown strategy '{self.strategy}'. Use 'scaling' or 'binning'.")
 
 
 class Scalar2Float:
     """Convert an array of integer values to float.
 
-    Transforms an array of integers to an array floats.
-    Shift values by minimum and include a predetermined
-    number of decimal points.
-
-        105, 200, 310, 483, 500, 0 -> 1.05, 2., 3.1, 4.8342, 5, 0
-
-    Args:
-        minimum (float):
-            Bias to shift the data. Captured from Float2Scalar.
-        decimal (int):
-            Number of decimal points to keep from the float representation. Default to `2`.
+    Transforms an array of integers back to floats using the metadata from Float2Scalar.
+    
+    - 'scaling': Divide by 10^decimal and add minimum offset.
+        Example: 105, 200, 310, 483, 500, 0 -> 1.05, 2., 3.1, 4.83, 5, 0
+    
+    - 'binning': Map cluster indices back to centroid values.
     """
 
-    def transform(self, X, minimum=0, decimal=2):
-        """Convert data from integer to float."""
-        values = X * 10 ** (-decimal)
-
-        return values + minimum
+    def transform(self, X, metadata):
+        """Convert data from integer back to float.
+        
+        Args:
+            X (ndarray): Integer values to convert.
+            metadata (dict): Metadata from Float2Scalar containing strategy and parameters.
+        
+        Returns:
+            ndarray: Float values.
+        """
+        strategy = metadata.get('strategy', 'binning')
+        print(f"[Scalar2Float] Using strategy: {strategy}")
+        print(f"[Scalar2Float] Full metadata: {metadata}")
+        
+        if strategy == 'scaling':
+            minimum = metadata.get('minimum', 0)
+            decimal = metadata.get('decimal', 2)
+            values = X * 10 ** (-decimal)
+            return values + minimum
+        
+        elif strategy == 'binning':
+            centroids = metadata.get('centroids')
+            if centroids is None:
+                raise ValueError("centroids must be provided in metadata for binning strategy")
+            base_centroids = np.asarray(centroids[0]) 
+            idx = np.clip(X.astype(int), 0, len(base_centroids) - 1)
+            X_pred = np.take(base_centroids, idx)
+            return X_pred
+        
+        else:
+            raise ValueError(f"Unknown strategy '{strategy}'. Use 'scaling' or 'binning'.")
