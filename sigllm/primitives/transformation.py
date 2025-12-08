@@ -127,28 +127,13 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
 
 
 class Float2Scalar:
-    """Convert an array of float values to scalar.
-
-    Transforms an array of floats to an array integers. With the
-    option to rescale such that the minimum value becomes zero
-    and you can keep certain decimal points.
-
-        1.05, 2., 3.1, 4.8342, 5, 0 -> 105, 200, 310, 483, 500, 0
-
-    Args:
-        decimal (int):
-            Number of decimal points to keep from the float representation. Default to `2`.
-        rescale (bool):
-            Whether to rescale the array such that the minimum value becomes 0. Default to `True`.
-    """
+    """Convert an array of float values to scalar."""
 
     def __init__(self, strategy='scaling', n_clusters=100, decimal=2, rescale=True):
         self.strategy = strategy
         self.n_clusters = n_clusters
         self.decimal = decimal
         self.rescale = rescale
-        
-        # State variables
         self.minimum = None
         self.centroids = None
         self.labels = None
@@ -183,13 +168,7 @@ class Float2Scalar:
             raise ValueError(f"Unknown strategy '{self.strategy}'. Use 'scaling' or 'binning'.")
 
     def transform(self, X):
-        """Transform data to integer representation.
-        
-        Returns:
-            tuple: (values, metadata) where metadata is a dict containing:
-                - For scaling: {'strategy': 'scaling', 'minimum': float, 'decimal': int}
-                - For binning: {'strategy': 'binning', 'centroids': list}
-        """
+        """Transform data."""
         print(f"[Float2Scalar] Using strategy: {self.strategy}")
         if self.strategy == 'scaling':
             if self.rescale:
@@ -232,15 +211,7 @@ class Scalar2Float:
     """
 
     def transform(self, X, metadata):
-        """Convert data from integer back to float.
-        
-        Args:
-            X (ndarray): Integer values to convert.
-            metadata (dict): Metadata from Float2Scalar containing strategy and parameters.
-        
-        Returns:
-            ndarray: Float values.
-        """
+        """Transform data."""
         strategy = metadata.get('strategy', 'binning')
         print(f"[Scalar2Float] Using strategy: {strategy}")
         print(f"[Scalar2Float] Full metadata: {metadata}")

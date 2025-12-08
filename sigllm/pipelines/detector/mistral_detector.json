@@ -20,7 +20,8 @@
             "method": "mean"
         },
         "sigllm.primitives.transformation.Float2Scalar#1": {
-            "n_clusters": 100
+            "decimal": 2,
+            "rescale": true
         },
         "sigllm.primitives.forecasting.custom.rolling_window_sequences#1": {
             "target_column": 0,
@@ -32,7 +33,7 @@
         },
         "sigllm.primitives.forecasting.huggingface.HF#1": {
             "name": "mistralai/Mistral-7B-Instruct-v0.2",
-            "steps": 2
+            "steps": 5
         },
         "sigllm.primitives.transformation.format_as_integer#1": {
             "trunc": 1,

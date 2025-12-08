@@ -4,7 +4,7 @@
         "Sarah Alnegheimish <smish@mit.edu>",
         "Linh Nguyen <linhnk@mit.edu>"
     ],
-    "description": "Transform scalar values to float using metadata from Float2Scalar.",
+    "description": "Transform scalar values to float.",
     "classifiers": {
         "type": "preprocessor",
         "subtype": "transformer"
