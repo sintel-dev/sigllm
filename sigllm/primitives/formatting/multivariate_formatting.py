@@ -1,7 +1,7 @@
 import numpy as np
 from mlblocks import MLPipeline
 import pandas as pd
-
+import time
 class MultivariateFormattingMethod:
     def __init__(self, method_name: str, verbose: bool = False, **kwargs):
         self.method_name = method_name
@@ -54,9 +54,21 @@ class MultivariateFormattingMethod:
                             pipeline_name = 'mistral_detector',
                             stride = 1,
                             n_clusters = 2,
-                            strategy = 'binning'):
+                            strategy = 'scaling',
+                            steps_ahead = None):
+        """
+        Run the forecasting pipeline.
+        """
         pipeline = MLPipeline(pipeline_name)
         digits_per_timestamp = self.config.get('digits_per_timestamp', 2)
+        
+        num_dims = len(data.columns) - 1
+        
+        if steps_ahead is not None:
+            max_steps = max(steps_ahead)
+            hf_steps = max_steps * (num_dims + 1) # adding some padding here
+        else:
+            hf_steps = 2
 
         test_hyperparameters = {
             "mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1": {
@@ -65,13 +77,14 @@ class MultivariateFormattingMethod:
             "sigllm.primitives.forecasting.custom.rolling_window_sequences#1": {
                 "target_column": 0,
                 "window_size": window_size,
-                "target_size": 1,
+                "target_size": max(steps_ahead) if steps_ahead else 1,
                 "step_size": stride,
             },
             "sigllm.primitives.forecasting.huggingface.HF#1": {
                 "samples": samples,
                 "temp": temp,
                 "multivariate_allowed_symbols": multivariate_allowed_symbols,
+                "steps": hf_steps,
             },
         }
         
@@ -83,12 +96,14 @@ class MultivariateFormattingMethod:
 
         elif strategy == 'scaling':
             test_hyperparameters["sigllm.primitives.transformation.Float2Scalar#1"] = {
-                "strategy": "scaling",
                 "decimal": digits_per_timestamp,
                 "rescale": True,
             }
         else:
             raise ValueError(f"Invalid strategy: {strategy}")
+
+        print("STARTING PIPELINE: ")
+        time.sleep(10)
 
         pipeline.set_hyperparameters(test_hyperparameters)
         if normalize:
@@ -105,13 +120,17 @@ class MultivariateFormattingMethod:
         if verbose:
             print(f"y_hat example: {context['y_hat'][0][0]}")
 
+        if steps_ahead is not None:
+            return self._process_multi_step_results(
+                context, pipeline, steps_ahead, return_y_hat, verbose
+            )
+
         context['y_hat'] = self.format_as_integer(context['y_hat'], trunc=1)
         if verbose:
             print(f"y_hat example: {context['y_hat'][0][0]}")
         context = pipeline.fit(**context, start_=7, output_=10)
 
         errors = np.round(context['errors'], 7)
-        MAE = np.mean(abs(errors))
 
         if verbose:
             print(f"y_hat: {context['y_hat']}")
@@ -122,6 +141,53 @@ class MultivariateFormattingMethod:
             return errors, context['y_hat'], context['y']
         else:
             return errors
+
+    def _process_multi_step_results(self, context, pipeline, steps_ahead, return_y_hat, verbose):
+        """
+        Process results for multi-step-ahead prediction.
+        
+        For multi-step predictions with stride > 1, we skip aggregate_rolling_window
+        since there's no overlap between predictions. Each window gives one prediction
+        per step, indexed sequentially (0, 1, 2, ...) regardless of actual stride.
+        
+        Returns:
+            dict {step : {'errors': [...], 'y_hat': [...], 'y': [...]}}
+        """
+        y_hat_by_step = self.format_as_integer(
+            context['y_hat'], steps_ahead=steps_ahead
+        )
+        
+        results = {}
+        
+        for step in steps_ahead:
+            step_context = context.copy()
+            
+            y_hat_step = y_hat_by_step[step]
+            y_hat_float = np.array([[v if v is not None else np.nan for v in row] for row in y_hat_step], dtype=float)
+            step_context['y_hat'] = np.expand_dims(y_hat_float, axis=-1)
+            step_context = pipeline.fit(**step_context, start_=7, output_=7)
+            # Aggregate across samples using median, then squeeze
+            y_hat_agg = np.nanmedian(step_context['y_hat'], axis=1).squeeze() 
+            
+            # Get ground truth for this step
+            y_for_step = context['y'][:, step - 1] if context['y'].ndim > 1 else context['y']
+            
+            # Compute errors directly (residuals)
+            errors = np.round(y_hat_agg - y_for_step, 7)
+            
+            if verbose:
+                print(f"Step {step} - y_hat shape: {y_hat_agg.shape}, errors shape: {errors.shape}")
+            
+            results[step] = {
+                'errors': errors,
+                'y_hat': y_hat_agg,
+                'y': y_for_step,
+            }
+        
+        if return_y_hat:
+            return results
+        else:
+            return {step: results[step]['errors'] for step in steps_ahead}
     
 
     def test_multivariate_formatting_validity(self, data=None, verbose=False):
