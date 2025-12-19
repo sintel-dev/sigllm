@@ -1,0 +1,52 @@
+{
+    "name": "sigllm.primitives.forecasting.custom.CustomForecast",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Forecast time series using a custom LLM client. For OpenAI/HuggingFace, use gpt.py or huggingface.py instead.",
+    "classifiers": {
+        "type": "estimator",
+        "subtype": "regressor"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.forecasting.custom.CustomForecast",
+    "produce": {
+        "method": "forecast",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "client": {
+                "type": "object",
+                "description": "BaseLLMClient instance - must be provided"
+            },
+            "sep": {
+                "type": "str",
+                "default": ","
+            },
+            "steps": {
+                "type": "int",
+                "default": 1
+            },
+            "temp": {
+                "type": "float",
+                "default": 1
+            },
+            "samples": {
+                "type": "int",
+                "default": 1
+            }
+        }
+    }
+}
