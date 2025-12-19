@@ -1,0 +1,52 @@
+{
+    "name": "sigllm.primitives.prompting.custom.CustomDetect",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Detect anomalies in time series using a custom LLM client. For OpenAI/HuggingFace, use gpt.py or huggingface.py instead.",
+    "classifiers": {
+        "type": "estimator",
+        "subtype": "detector"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.prompting.custom.CustomDetect",
+    "produce": {
+        "method": "detect",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "y",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "client": {
+                "type": "object",
+                "description": "BaseLLMClient instance - must be provided"
+            },
+            "sep": {
+                "type": "str",
+                "default": ","
+            },
+            "anomalous_percent": {
+                "type": "float",
+                "default": 0.5
+            },
+            "temp": {
+                "type": "float",
+                "default": 1
+            },
+            "samples": {
+                "type": "int",
+                "default": 10
+            }
+        }
+    }
+}
