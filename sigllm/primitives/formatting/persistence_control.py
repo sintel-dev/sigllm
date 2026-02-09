@@ -1,6 +1,6 @@
-from .multivariate_formatting import MultivariateFormattingMethod
 import numpy as np
 
+from sigllm.primitives.formatting.multivariate_formatting import MultivariateFormattingMethod
 
 class PersistenceControl(MultivariateFormattingMethod):
     def __init__(self, verbose: bool = False, **kwargs):
@@ -19,9 +19,3 @@ class PersistenceControl(MultivariateFormattingMethod):
         ]
         out = np.array(result, dtype=object)
         return out
-
-
-
-if __name__ == "__main__":
-    method = PersistenceControl()
-    method.run_pipeline(stride=5)

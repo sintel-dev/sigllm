@@ -1,6 +1,6 @@
-from .multivariate_formatting import MultivariateFormattingMethod
 import numpy as np
 
+from sigllm.primitives.formatting.multivariate_formatting import MultivariateFormattingMethod
 
 class ValueInterleave(MultivariateFormattingMethod):
     def __init__(self, verbose: bool = False, **kwargs):
@@ -36,10 +36,3 @@ class ValueInterleave(MultivariateFormattingMethod):
         if result.ndim == 2:
             result = np.expand_dims(result, axis=-1)
         return result
-
-
-
-if __name__ == "__main__":
-    method = ValueInterleave(digits_per_timestamp=4)
-    method.test_multivariate_formatting_validity(verbose=False)
-    method.run_pipeline()

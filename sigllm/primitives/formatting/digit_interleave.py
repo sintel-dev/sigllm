@@ -1,5 +1,7 @@
-from .multivariate_formatting import MultivariateFormattingMethod
 import numpy as np
+
+from sigllm.primitives.formatting.multivariate_formatting import MultivariateFormattingMethod
+
 
 
 class DigitInterleave(MultivariateFormattingMethod):
@@ -60,13 +62,3 @@ class DigitInterleave(MultivariateFormattingMethod):
             for entry in data
         ], dtype=object)
         return result
-
-
-
-if __name__ == "__main__":
-    method = DigitInterleave(digits_per_timestamp=3)
-    method.test_multivariate_formatting_validity(verbose=False)
-    errs, y_hat, y = method.run_pipeline(return_y_hat=True)
-    print(errs)
-    print(y_hat)
-    print(y)

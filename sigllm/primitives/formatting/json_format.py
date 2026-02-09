@@ -1,6 +1,9 @@
-from .multivariate_formatting import MultivariateFormattingMethod
-import numpy as np
 import re
+
+import numpy as np
+
+from sigllm.primitives.formatting.multivariate_formatting import MultivariateFormattingMethod
+
 
 class JSONFormat(MultivariateFormattingMethod):
     def __init__(self, verbose: bool = False, **kwargs):
@@ -89,11 +92,3 @@ class JSONFormat(MultivariateFormattingMethod):
                 samples.append(flat)
             batch_rows.append(samples)
         return np.array(batch_rows, dtype=object)
-
-
-
-
-if __name__ == "__main__":
-    method = JSONFormat()
-    method.test_multivariate_formatting_validity(verbose=False)
-    method.run_pipeline(multivariate_allowed_symbols=["d", ":", ","])
