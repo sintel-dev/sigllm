@@ -1,0 +1,50 @@
+{
+    "name": "sigllm.primitives.formatting.json_format.format_as_integer",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Transform an ndarray of JSON-formatted string values to an ndarray of integers for multivariate data.",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "transformer"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.formatting.json_format.JSONFormat",
+    "produce": {
+        "method": "format_as_integer",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            },
+            {
+                "name": "trunc",
+                "type": "int",
+                "default": null
+            },
+            {
+                "name": "steps_ahead",
+                "type": "list",
+                "default": null
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "trunc": {
+                "type": "int",
+                "default": null
+            },
+            "steps_ahead": {
+                "type": "list",
+                "default": null
+            }
+        }
+    }
+}

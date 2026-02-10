@@ -14,11 +14,11 @@ class MultivariateFormattingMethod:
             test_multivariate_formatting_validity(self, verbose=verbose)
 
 
-    def format_as_string(self, data: np.ndarray, **kwargs) -> str:
+    def format_as_string(self, X: np.ndarray, **kwargs) -> str:
         raise NotImplementedError()
 
 
-    def format_as_integer(self, data: str, **kwargs) -> np.ndarray:
+    def format_as_integer(self, X: str, **kwargs) -> np.ndarray:
         raise NotImplementedError()
 
     

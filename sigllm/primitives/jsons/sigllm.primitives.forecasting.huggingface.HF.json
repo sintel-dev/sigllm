@@ -63,6 +63,10 @@
             "padding": {
                 "type": "int",
                 "default": 0
+            },
+            "multivariate_allowed_symbols": {
+                "type": "list",
+                "default": []
             }
         }
     }

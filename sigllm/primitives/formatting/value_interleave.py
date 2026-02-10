@@ -7,18 +7,18 @@ class ValueInterleave(MultivariateFormattingMethod):
         super().__init__("value_interleave", verbose=verbose, **kwargs)
 
 
-    def format_as_string(self, data: np.ndarray, digits_per_timestamp = 3, separator = ",") -> str:
-        max_digits = max(len(str(abs(int(v)))) for window in data for ts in window for v in ts)
+    def format_as_string(self, X: np.ndarray, digits_per_timestamp = 3, separator = ",", **kwargs) -> str:
+        max_digits = max(len(str(abs(int(v)))) for window in X for ts in window for v in ts)
         width_used = max(digits_per_timestamp, max_digits)
         self.metadata['width_used'] = width_used    
         result = [
             separator.join(''.join(str(int(val)).zfill(width_used)[:width_used] for val in timestamp)
             for timestamp in window) + separator
-            for window in data
+            for window in X
         ]
         return result
 
-    def format_as_integer(self, data: list[str], separator = ",", trunc = None, digits_per_timestamp = 3) -> np.ndarray:
+    def format_as_integer(self, X: list[str], separator = ",", trunc = None, digits_per_timestamp = 3, **kwargs) -> np.ndarray:
         width_used = self.metadata['width_used']
         
         def parse_timestamp(timestamp):
@@ -30,7 +30,7 @@ class ValueInterleave(MultivariateFormattingMethod):
                 for sample in entry
                 for timestamp in sample.lstrip(separator).rstrip(separator).split(separator)[:trunc]
             ]
-            for entry in data
+            for entry in X
         ], dtype=object)
 
         if result.ndim == 2:
