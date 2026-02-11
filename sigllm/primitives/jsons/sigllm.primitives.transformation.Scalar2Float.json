@@ -19,8 +19,14 @@
                 "type": "ndarray"
             },
             {
-                "name": "metadata",
-                "type": "dict"
+                "name": "minimum",
+                "type": "float",
+                "default": 0
+            },
+            {
+                "name": "decimal",
+                "type": "int",
+                "default": 2
             }
         ],
         "output": [

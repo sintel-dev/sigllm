@@ -7,6 +7,7 @@ import numpy as np
 
 from sklearn.cluster import KMeans
 
+
 def format_as_string(X, sep=',', space=False, single=False):
     """Format X to a list of string.
 
@@ -127,109 +128,144 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
 
 
 class Float2Scalar:
-    """Convert an array of float values to scalar."""
+    """Convert an array of float values to scalar.
 
-    def __init__(self, strategy='scaling', n_clusters=100, decimal=2, rescale=True):
-        self.strategy = strategy
-        self.n_clusters = n_clusters
+    Transforms an array of floats to an array integers. With the
+    option to rescale such that the minimum value becomes zero
+    and you can keep certain decimal points.
+
+        1.05, 2., 3.1, 4.8342, 5, 0 -> 105, 200, 310, 483, 500, 0
+
+    Args:
+        decimal (int):
+            Number of decimal points to keep from the float representation. Default to `2`.
+        rescale (bool):
+            Whether to rescale the array such that the minimum value becomes 0. Default to `True`.
+    """
+
+    def __init__(self, decimal=2, rescale=True):
         self.decimal = decimal
         self.rescale = rescale
         self.minimum = None
-        self.centroids = None
-        self.labels = None
 
     def fit(self, X):
-        """Learn parameters from data.
-        
-        For scaling: learns the minimum value.
-        For binning: learns K-means cluster centroids.
-        """
-        if self.strategy == 'scaling':
-            self.minimum = np.min(X)
-        elif self.strategy == 'binning':
-            centroids_list = []
-            labels = []
-            for col in X.T:
-                if self.n_clusters >= len(np.unique(col)):
-                    centroids = np.unique(col)
-                else:     
-                    kmeans = KMeans(n_clusters=self.n_clusters, random_state=0)
-                    kmeans.fit(col.reshape(-1, 1))
-                    centroids = np.sort(kmeans.cluster_centers_.ravel())
-                    
-                col_labels = np.argmin(np.abs(col[:, None] - centroids[None, :]), axis=1)
-
-                labels.append(col_labels)
-                centroids_list.append(centroids)
-            
-            self.labels = np.column_stack(labels)
-            self.centroids = centroids_list
-        else:
-            raise ValueError(f"Unknown strategy '{self.strategy}'. Use 'scaling' or 'binning'.")
+        """Learn minimum value in fit data."""
+        self.minimum = np.min(X)
 
     def transform(self, X):
         """Transform data."""
-        print(f"[Float2Scalar] Using strategy: {self.strategy}")
-        if self.strategy == 'scaling':
-            if self.rescale:
-                X = X - self.minimum
+        if self.rescale:
+            X = X - self.minimum
 
-            sign = 1 * (X >= 0) - 1 * (X < 0)
-            values = np.abs(X)
+        sign = 1 * (X >= 0) - 1 * (X < 0)
+        values = np.abs(X)
 
-            values = sign * np.round(values * 10**self.decimal).astype(int)
+        values = sign * (values * 10**self.decimal).astype(int)
 
-            metadata = {
-                'strategy': 'scaling',
-                'minimum': self.minimum,
-                'decimal': self.decimal
-            }
-            return values, metadata
-        
-        elif self.strategy == 'binning':
-            # Re-fit to get labels for this X (transform is same as fit for binning)
-            self.fit(X)
-            metadata = {
-                'strategy': 'binning',
-                'centroids': self.centroids
-            }
-            return self.labels, metadata
-        
-        else:
-            raise ValueError(f"Unknown strategy '{self.strategy}'. Use 'scaling' or 'binning'.")
+        return values, self.minimum, self.decimal
 
 
 class Scalar2Float:
     """Convert an array of integer values to float.
 
-    Transforms an array of integers back to floats using the metadata from Float2Scalar.
-    
-    - 'scaling': Divide by 10^decimal and add minimum offset.
-        Example: 105, 200, 310, 483, 500, 0 -> 1.05, 2., 3.1, 4.83, 5, 0
-    
-    - 'binning': Map cluster indices back to centroid values.
+    Transforms an array of integers to an array floats.
+    Shift values by minimum and include a predetermined
+    number of decimal points.
+
+        105, 200, 310, 483, 500, 0 -> 1.05, 2., 3.1, 4.8342, 5, 0
+
+    Args:
+        minimum (float):
+            Bias to shift the data. Captured from Float2Scalar.
+        decimal (int):
+            Number of decimal points to keep from the float representation. Default to `2`.
     """
 
-    def transform(self, X, metadata):
-        """Transform data."""
-        strategy = metadata.get('strategy', 'binning')
-        print(f"[Scalar2Float] Using strategy: {strategy}")
-        print(f"[Scalar2Float] Full metadata: {metadata}")
-        
-        if strategy == 'scaling':
-            minimum = metadata.get('minimum', 0)
-            decimal = metadata.get('decimal', 2)
-            values = X * 10 ** (-decimal)
-            return values + minimum
-        
-        elif strategy == 'binning':
-            centroids = metadata.get('centroids')
-            if centroids is None:
-                raise ValueError("centroids must be provided in metadata for binning strategy")
-            base_centroids = np.asarray(centroids[0]) 
-            idx = np.clip(X.astype(int), 0, len(base_centroids) - 1)
-            X_pred = np.take(base_centroids, idx)
-            return X_pred
-        
-        else:
-            raise ValueError(f"Unknown strategy '{strategy}'. Use 'scaling' or 'binning'.")
+    def transform(self, X, minimum=0, decimal=2):
+        """Convert data from integer to float."""
+        values = X * 10 ** (-decimal)
+
+        return values + minimum
+
+
+class Scalar2Cluster:
+    """Convert an array of float values to cluster indices using K-means.
+
+    Fits K-means on the input data and maps each value to the index of
+    its nearest centroid. Centroids are sorted in ascending order so that
+    cluster index 0 corresponds to the smallest centroid value.
+
+    Args:
+        n_clusters (int):
+            Number of K-means clusters. Default to ``100``.
+    """
+
+    def __init__(self, n_clusters=100):
+        self.n_clusters = n_clusters
+        self.centroids = None
+
+    def fit(self, X):
+        """Fit K-means on the data and store sorted centroids.
+
+        Args:
+            X (ndarray):
+                2-D array of shape ``(n_samples, n_features)``.
+        """
+        centroids_list = []
+        for col in X.T:
+            n_unique = len(np.unique(col))
+            if self.n_clusters >= n_unique:
+                centroids = np.sort(np.unique(col))
+            else:
+                kmeans = KMeans(n_clusters=self.n_clusters, random_state=0, n_init=10)
+                kmeans.fit(col.reshape(-1, 1))
+                centroids = np.sort(kmeans.cluster_centers_.ravel())
+            centroids_list.append(centroids)
+
+        self.centroids = centroids_list
+
+    def transform(self, X):
+        """Map each value to its nearest centroid index.
+
+        Args:
+            X (ndarray):
+                2-D array of shape ``(n_samples, n_features)``.
+
+        Returns:
+            tuple:
+                * **X** (ndarray) - Integer cluster labels with the same shape as input.
+                * **centroids** (list of ndarray) - Sorted centroid arrays, one per column.
+        """
+        labels_list = []
+        for i, col in enumerate(X.T):
+            centroids = self.centroids[i]
+            col_labels = np.argmin(np.abs(col[:, None] - centroids[None, :]), axis=1)
+            labels_list.append(col_labels)
+
+        labels = np.column_stack(labels_list) if len(labels_list) > 1 else labels_list[0].reshape(-1, 1)
+        return labels, self.centroids
+
+
+class Cluster2Scalar:
+    """Convert cluster indices back to float values using centroids.
+
+    Maps an array of integer cluster indices to the corresponding
+    centroid values produced by :class:`Scalar2Cluster`.
+    """
+
+    def transform(self, X, centroids):
+        """Convert cluster indices to centroid float values.
+
+        Args:
+            X (ndarray):
+                Integer cluster labels.
+            centroids (list of ndarray):
+                Sorted centroid arrays from :class:`Scalar2Cluster`.
+
+        Returns:
+            ndarray:
+                Float values corresponding to the centroid of each label.
+        """
+        base_centroids = np.asarray(centroids[0])
+        idx = np.clip(X.astype(int), 0, len(base_centroids) - 1)
+        return np.take(base_centroids, idx)

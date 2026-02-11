@@ -15,7 +15,7 @@ from orion import Orion
 LOGGER = logging.getLogger(__name__)
 
 INTERVAL_PRIMITIVE = 'mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1'
-FLOAT2SCALAR_PRIMITIVE = 'sigllm.primitives.transformation.Float2Scalar#1'
+DECIMAL_PRIMITIVE = 'sigllm.primitives.transformation.Float2Scalar#1'
 WINDOW_SIZE_PRIMITIVE = 'sigllm.primitives.forecasting.custom.rolling_window_sequences#1'
 
 
@@ -35,12 +35,8 @@ class SigLLM(Orion):
                 * A ``dict`` with an ``MLPipeline`` specification.
         interval (int):
             Number of time points between one sample and another.
-        strategy (str):
-            Discretization strategy: 'scaling' or 'binning'. Default to 'binning'.
         decimal (int):
-            Number of decimal points to keep (scaling strategy only).
-        n_clusters (int):
-            Number of clusters for binning (binning strategy only).
+            Number of decimal points to keep from the float representation.
         window_size (int):
             Size of the input window.
         hyperparameters (dict):
@@ -50,7 +46,7 @@ class SigLLM(Orion):
     DEFAULT_PIPELINE = 'mistral_detector'
 
     def _augment_hyperparameters(self, primitive, key, value):
-        if value is None:
+        if not value:
             return
 
         if self._hyperparameters is None:
@@ -65,9 +61,7 @@ class SigLLM(Orion):
         self,
         pipeline: Union[str, dict, MLPipeline] = None,
         interval: int = None,
-        strategy: str = None,
         decimal: int = None,
-        n_clusters: int = None,
         window_size: int = None,
         hyperparameters: dict = None,
     ):
@@ -77,15 +71,11 @@ class SigLLM(Orion):
         self._fitted = False
 
         self.interval = interval
-        self.strategy = strategy
         self.decimal = decimal
-        self.n_clusters = n_clusters
         self.window_size = window_size
 
         self._augment_hyperparameters(INTERVAL_PRIMITIVE, 'interval', interval)
-        self._augment_hyperparameters(FLOAT2SCALAR_PRIMITIVE, 'strategy', strategy)
-        self._augment_hyperparameters(FLOAT2SCALAR_PRIMITIVE, 'decimal', decimal)
-        self._augment_hyperparameters(FLOAT2SCALAR_PRIMITIVE, 'n_clusters', n_clusters)
+        self._augment_hyperparameters(DECIMAL_PRIMITIVE, 'decimal', decimal)
         self._augment_hyperparameters(WINDOW_SIZE_PRIMITIVE, 'window_size', window_size)
 
     def __repr__(self):
