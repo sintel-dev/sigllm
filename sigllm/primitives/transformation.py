@@ -158,7 +158,9 @@ class Float2Scalar:
         sign = 1 * (X >= 0) - 1 * (X < 0)
         values = np.abs(X)
 
-        values = sign * (values * 10**self.decimal).astype(int)
+        values = sign * (values * 10**self.decimal)
+        values = np.where(np.abs(values - np.rint(values)) < 1e-8, np.rint(values), np.floor(values))
+        values = values.astype(int)
 
         return values, self.minimum, self.decimal
 
