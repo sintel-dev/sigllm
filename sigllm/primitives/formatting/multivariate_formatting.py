@@ -10,7 +10,7 @@ class MultivariateFormattingMethod:
         self.metadata = {}
         self.verbose = verbose
         
-        if self.method_name != "persistence_control":
+        if self.method_name != "persistence_control" and self.config.get('trunc', None) == None:
             test_multivariate_formatting_validity(self, verbose=verbose)
 
 

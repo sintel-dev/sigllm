@@ -76,20 +76,28 @@ class JSONFormat(MultivariateFormattingMethod):
 
     def _format_as_integer_legacy(self, X, trunc=None):
         """
-        Legacy format_as_integer behavior.
+        Extract d0 values from parsed output.
         
-        - If trunc is None: returns all values (full round-trip for validation)
-        - If trunc is set: extracts only d0 values and truncates (for pipeline)
+        - trunc=None: return all d0 values (num_windows, num_samples, num_d0_values)
+        - trunc=int: return 3D array (num_windows, num_samples, trunc) 
         """
-        batch_rows = []
-        for window in X:
-            samples = []
-            for sample in window:
-                if trunc is None:
-                    tokens = re.findall(r'd\d+:(\d+)', sample)
-                    values = [int(v) for v in tokens]
-                else:
-                    values = self._extract_d0_values(sample)[:trunc]
-                samples.append(values)
-            batch_rows.append(samples)
-        return np.array(batch_rows, dtype=object)
+        if trunc is None:
+            batch_rows = []
+            for window in X:
+                samples = []
+                for sample in window:
+                    samples.append(self._extract_d0_values(sample))
+                batch_rows.append(samples)
+            return np.array(batch_rows, dtype=object)
+        
+        num_windows = len(X)
+        num_samples = len(X[0]) if num_windows > 0 else 0
+        result = np.zeros((num_windows, num_samples, trunc), dtype=int)
+        
+        for i, window in enumerate(X):
+            for j, sample in enumerate(window):
+                d0_values = self._extract_d0_values(sample)
+                for k in range(min(trunc, len(d0_values))):
+                    result[i, j, k] = d0_values[k]
+        
+        return result

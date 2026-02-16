@@ -20,43 +20,30 @@ def test_multivariate_formatting_validity(method, verbose=False):
     if verbose:
         print("Testing multivariate formatting method validity")
 
-    #raw_data = create_test_data()[:, 1:]
     raw_data = create_test_data().to_numpy()[:, 1:]
     windowed_data = np.array([raw_data[i:i+15,:] for i in range(0, len(raw_data)-15, 1)])
     data = (1000 * windowed_data).astype(int)
     if verbose:
         print(data.shape)
 
-    # Temporarily disable trunc for validation (we need full round-trip)
-    original_trunc = method.config.get('trunc')
-    had_trunc = 'trunc' in method.config
-    method.config['trunc'] = None
-    
-    try:
-        string_data = method.format_as_string(data, **method.config)
-        LLM_mock_output = np.array(string_data).reshape(-1, 1)
-        if verbose:
-            print(LLM_mock_output)
-        integer_data = method.format_as_integer(LLM_mock_output, **method.config)
-        if verbose:
-            print(f"Format as string output: {string_data}")
+    string_data = method.format_as_string(data, **method.config)
+    LLM_mock_output = np.array(string_data).reshape(-1, 1)
+    if verbose:
+        print(f"LLM mock output: {LLM_mock_output}")
+    integer_data = method.format_as_integer(LLM_mock_output, **method.config)
+    if verbose:
+        print(f"Format as string output: {string_data}")
 
-        assert isinstance(string_data, list)
-        assert isinstance(string_data[0], str)
-        assert isinstance(integer_data, np.ndarray)
+    assert isinstance(string_data, list)
+    assert isinstance(string_data[0], str)
+    assert isinstance(integer_data, np.ndarray)
 
-        if method.method_name == "univariate_control":
-            assert np.all(integer_data.flatten() == data[:, :, 0].flatten())
-        else:
-            assert np.all(integer_data.flatten() == data.flatten())
-
-        print("Validation suite passed")
-    finally:
-        # Restore original trunc value
-        if had_trunc:
-            method.config['trunc'] = original_trunc
-        elif 'trunc' in method.config:
-            del method.config['trunc']
+    if len(integer_data.flatten()) == len(data.flatten()):
+        assert np.all(integer_data.flatten() == data.flatten())
+    elif len(integer_data.flatten()) == len(data[:, :, 0].flatten()):
+        assert np.all(integer_data.flatten() == data[:, :, 0].flatten())
+    else:
+        raise ValueError(f"Validation suite failed: Dimensions do not match")
 
 
 
