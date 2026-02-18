@@ -91,7 +91,7 @@ def tutorials(c):
         if '.ipynb_checkpoints' not in ipynb_file:
             c.run((
                 'jupyter nbconvert --execute --ExecutePreprocessor.timeout=3600 '
-                f'--to=html --stdout {ipynb_file}'
+                f'--to=html --stdout "{ipynb_file}"'
             ), hide='out')
 
 
