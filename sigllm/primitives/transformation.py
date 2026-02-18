@@ -4,7 +4,6 @@
 import re
 
 import numpy as np
-
 from sklearn.cluster import KMeans
 
 
@@ -242,7 +241,9 @@ class Scalar2Cluster:
             col_labels = np.argmin(np.abs(col[:, None] - centroids[None, :]), axis=1)
             labels_list.append(col_labels)
 
-        labels = np.column_stack(labels_list) if len(labels_list) > 1 else labels_list[0].reshape(-1, 1)
+        labels = (
+            np.column_stack(labels_list) if len(labels_list) > 1 else labels_list[0].reshape(-1, 1)
+        )
         return labels, self.centroids
 
 
