@@ -17,5 +17,3 @@ __all__ = [
     'ValueInterleave',
     'DigitInterleave',
 ]
-
-

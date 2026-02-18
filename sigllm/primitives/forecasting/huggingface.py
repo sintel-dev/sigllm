@@ -54,7 +54,7 @@ class HF:
         raw=False,
         samples=1,
         padding=0,
-        multivariate_allowed_symbols = [],
+        multivariate_allowed_symbols=[],
     ):
         self.name = name
         self.sep = sep
