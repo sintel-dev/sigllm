@@ -4,6 +4,7 @@
 import re
 
 import numpy as np
+from sklearn.cluster import KMeans
 
 
 def format_as_string(X, sep=',', space=False, single=False):
@@ -188,3 +189,88 @@ class Scalar2Float:
         values = X * 10 ** (-decimal)
 
         return values + minimum
+
+
+class Scalar2Cluster:
+    """Convert an array of float values to cluster indices using K-means.
+
+    Fits K-means on the input data and maps each value to the index of
+    its nearest centroid. Centroids are sorted in ascending order so that
+    cluster index 0 corresponds to the smallest centroid value.
+
+    Args:
+        n_clusters (int):
+            Number of K-means clusters. Default to ``100``.
+    """
+
+    def __init__(self, n_clusters=100):
+        self.n_clusters = n_clusters
+        self.centroids = None
+
+    def fit(self, X):
+        """Fit K-means on the data and store sorted centroids.
+
+        Args:
+            X (ndarray):
+                2-D array of shape ``(n_samples, n_features)``.
+        """
+        centroids_list = []
+        for col in X.T:
+            n_unique = len(np.unique(col))
+            if self.n_clusters >= n_unique:
+                centroids = np.sort(np.unique(col))
+            else:
+                kmeans = KMeans(n_clusters=self.n_clusters, random_state=0, n_init=10)
+                kmeans.fit(col.reshape(-1, 1))
+                centroids = np.sort(kmeans.cluster_centers_.ravel())
+            centroids_list.append(centroids)
+
+        self.centroids = centroids_list
+
+    def transform(self, X):
+        """Map each value to its nearest centroid index.
+
+        Args:
+            X (ndarray):
+                2-D array of shape ``(n_samples, n_features)``.
+
+        Returns:
+            tuple:
+                * **X** (ndarray) - Integer cluster labels with the same shape as input.
+                * **centroids** (list of ndarray) - Sorted centroid arrays, one per column.
+        """
+        labels_list = []
+        for i, col in enumerate(X.T):
+            centroids = self.centroids[i]
+            col_labels = np.argmin(np.abs(col[:, None] - centroids[None, :]), axis=1)
+            labels_list.append(col_labels)
+
+        labels = (
+            np.column_stack(labels_list) if len(labels_list) > 1 else labels_list[0].reshape(-1, 1)
+        )
+        return labels, self.centroids
+
+
+class Cluster2Scalar:
+    """Convert cluster indices back to float values using centroids.
+
+    Maps an array of integer cluster indices to the corresponding
+    centroid values produced by :class:`Scalar2Cluster`.
+    """
+
+    def transform(self, X, centroids):
+        """Convert cluster indices to centroid float values.
+
+        Args:
+            X (ndarray):
+                Integer cluster labels.
+            centroids (list of ndarray):
+                Sorted centroid arrays from :class:`Scalar2Cluster`.
+
+        Returns:
+            ndarray:
+                Float values corresponding to the centroid of each label.
+        """
+        base_centroids = np.asarray(centroids[0])
+        idx = np.clip(X.astype(int), 0, len(base_centroids) - 1)
+        return np.take(base_centroids, idx)

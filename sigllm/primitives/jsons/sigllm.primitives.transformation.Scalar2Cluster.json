@@ -1,0 +1,49 @@
+{
+    "name": "sigllm.primitives.transformation.Scalar2Cluster",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Transform float values into cluster indices using K-means.",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "transformer"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.transformation.Scalar2Cluster",
+    "fit": {
+        "method": "fit",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "produce": {
+        "method": "transform",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            },
+            {
+                "name": "centroids",
+                "type": "list"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "n_clusters": {
+                "type": "int",
+                "default": 100
+            }
+        }
+    }
+}
