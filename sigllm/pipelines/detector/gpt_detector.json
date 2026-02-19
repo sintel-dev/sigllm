@@ -3,7 +3,7 @@
         "mlstars.custom.timeseries_preprocessing.time_segments_aggregate",
         "sklearn.impute.SimpleImputer",
         "sigllm.primitives.transformation.Float2Scalar",
-        "sigllm.primitives.forecasting.custom.rolling_window_sequences",
+        "mlstars.custom.timeseries_preprocessing.rolling_window_sequences",
         "sigllm.primitives.transformation.format_as_string",
         "sigllm.primitives.forecasting.gpt.GPT",
         "sigllm.primitives.transformation.format_as_integer",
@@ -23,7 +23,7 @@
             "decimal": 2,
             "rescale": true
         },
-        "sigllm.primitives.forecasting.custom.rolling_window_sequences#1": {
+        "mlstars.custom.timeseries_preprocessing.rolling_window_sequences#1": {
             "target_column": 0,
             "window_size": 140,
             "target_size": 1

@@ -26,6 +26,11 @@ def rolling_window_sequences(X, window_size=500, step_size=100):
             * rolling window sequences.
             * first index value of each input sequence.
     """
+    if X.ndim == 1:
+        dim = 1
+    else:
+        dim = X.shape[1]
+
     index = range(len(X))
     out_X = list()
     X_index = list()
@@ -37,4 +42,4 @@ def rolling_window_sequences(X, window_size=500, step_size=100):
         out_X.append(X[start:end])
         X_index.append(index[start])
         start = start + step_size
-    return np.asarray(out_X), np.asarray(X_index), window_size, step_size
+    return np.asarray(out_X), np.asarray(X_index), window_size, step_size, dim
