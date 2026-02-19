@@ -18,23 +18,26 @@ license = {text = 'MIT license'}
 requires-python = '>=3.9,<3.12'
 readme = 'README.md'
 dependencies = [
+    'pip<=24.1',
+    'setuptools',
+    'wheel',
     'numpy>=1.17.5,<2',
     'pandas>=1.0.0,<2',
     'scikit-learn>=0.22.1,<2',
     'orion-ml>=0.6,<0.8',
     'ml-stars>=0.2.1,<0.4',
     'openai>=1.46.0',
-    'tiktoken>=0.7.0',
-    'transformers>=4.44.2',
-    'torch>=1.4.0',
-    'accelerate>=0.34.2',
+    'tiktoken>=0.7.0,<1',
+    'transformers>=4.44.2,<5',
+    'torch>=2.0,<3',
+    'accelerate>=0.34.2,<1',
     'sentencepiece>=0.2.0'
 ]
 
 [project.optional-dependencies]
 test = [
-    'pytest>=3.4.2',
-    'pytest-cov>=2.6.0',
+    'pytest>=7,<9',
+    'pytest-cov>=4,<6',
     'pytest-runner>=2.11.1',
     'rundoc>=0.4.3,<0.5',
     'tomli>=2.0.0,<3',

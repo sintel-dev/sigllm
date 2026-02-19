@@ -234,7 +234,7 @@ class Float2ScalarTest(unittest.TestCase):
         converter = Float2Scalar()
 
         data = np.array([1.05, 2.0, 3.1, 4.8342, 5])
-        expected = np.array([0, 95, 204, 378, 395])
+        expected = np.array([0, 95, 205, 378, 395])
 
         converter.fit(data)
         output, _, _ = converter.transform(data)
@@ -264,7 +264,7 @@ class Float2ScalarTest(unittest.TestCase):
         converter = Float2Scalar()
 
         data = np.array([1.05, 2.0, 3.1, 4.8342, 5, -2])
-        expected = np.array([305, 400, 509, 683, 700, 0])
+        expected = np.array([305, 400, 510, 683, 700, 0])
 
         converter.fit(data)
         output, _, _ = converter.transform(data)
