@@ -18,9 +18,6 @@ license = {text = 'MIT license'}
 requires-python = '>=3.9,<3.12'
 readme = 'README.md'
 dependencies = [
-    'pip<=24.1',
-    'setuptools',
-    'wheel',
     'numpy>=1.17.5,<2',
     'pandas>=1.0.0,<2',
     'scikit-learn>=0.22.1,<2',
