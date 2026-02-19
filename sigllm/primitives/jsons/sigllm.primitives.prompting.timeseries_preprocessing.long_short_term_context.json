@@ -1,0 +1,73 @@
+{
+    "name": "sigllm.primitives.prompting.timeseries_preprocessing.long_short_term_context",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Process rolling window sequences to create long-term aggregated and short-term raw context windows",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "feature_extractor"
+    },
+    "modalities": [
+        "timeseries"
+    ],
+    "primitive": "sigllm.primitives.prompting.timeseries_preprocessing.long_short_term_context",
+    "produce": {
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            },
+            {
+                "name": "first_index",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            },
+            {
+                "name": "first_index",
+                "type": "ndarray"
+            },
+            {
+                "name": "window_size",
+                "type": "int"
+            },
+            {
+                "name": "step_size",
+                "type": "int"
+            },
+            {
+                "name": "dim",
+                "type": "int"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "L": {
+                "type": "int",
+                "default": 5
+            },
+            "W": {
+                "type": "int",
+                "default": null
+            },
+            "S": {
+                "type": "int",
+                "default": null
+            },
+            "step_size": {
+                "type": "int",
+                "default": 1
+            },
+            "aggregation_method": {
+                "type": "str",
+                "default": "mean"
+            }
+        }
+    }
+}
