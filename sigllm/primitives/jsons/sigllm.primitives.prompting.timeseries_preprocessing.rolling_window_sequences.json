@@ -36,6 +36,10 @@
             {
                 "name": "step_size", 
                 "type": "int"
+            },
+            {
+                "name": "dim",
+                "type": "int"
             }
         ]
     }, 

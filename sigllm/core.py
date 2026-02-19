@@ -16,7 +16,7 @@ LOGGER = logging.getLogger(__name__)
 
 INTERVAL_PRIMITIVE = 'mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1'
 DECIMAL_PRIMITIVE = 'sigllm.primitives.transformation.Float2Scalar#1'
-WINDOW_SIZE_PRIMITIVE = 'sigllm.primitives.forecasting.custom.rolling_window_sequences#1'
+WINDOW_SIZE_PRIMITIVE = 'mlstars.custom.timeseries_preprocessing.rolling_window_sequences#1'
 
 
 class SigLLM(Orion):

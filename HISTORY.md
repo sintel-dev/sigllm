@@ -1,5 +1,13 @@
 # History
 
+## 0.1.0 – 2025-10-06
+
+New multivariate Prompter pipeline
+
+* Update ``rolling_window_sequences`` primitives name – [Issue #48](https://github.com/sintel-dev/sigllm/issues/48) by @sarahmish
+* Multivariate prompter pipeline – [Issue #47](https://github.com/sintel-dev/sigllm/issues/47) by @sarahmish
+
+
 ## 0.0.4 – 2025-07-31
 
 New benchmarking suite
