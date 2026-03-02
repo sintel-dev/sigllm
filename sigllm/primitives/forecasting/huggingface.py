@@ -43,8 +43,8 @@ class HF:
             Additional padding token to forecast to reduce short horizon predictions.
             Default to `0`.
         multivariate_allowed_symbols (list):
-            List of token strings to allow in addition to digits when generating
-            (e.g. ``["d", ":", ","]`` for JSON-style output). Default to `[]`.
+            List of token strings to allow in addition to digits when generating. 
+            Default to `[]`.
     """
 
     def __init__(
