@@ -34,28 +34,36 @@ class DigitInterleave(MultivariateFormattingMethod):
         return result
 
     def format_as_integer(
-        self, X: list[str], separator=',', trunc=None, digits_per_timestamp=3, target_column=None, **kwargs
+        self,
+        X: list[str],
+        separator=',',
+        trunc=None,
+        digits_per_timestamp=3,
+        target_column=None,
+        **kwargs,
     ) -> np.ndarray:
-        """Parse interleaved digit strings back to integer arrays for the target dimension.
+        """Parse interleaved digit strings back to integer arrays for the target column.
 
         Args:
             X (list[str]):
-                list of strings, each string is a concatenation of 
+                list of strings, each string is a concatenation of
                 interleaved digit values separated by separator.
             separator (str):
                 separator between values
-            trunc (int): 
-                Number of timestamps to extract from each sample. If None, all timestamps are extracted.
+            trunc (int):
+                Number of timestamps to extract from each sample.
+                If None, all timestamps are extracted.
             digits_per_timestamp (int):
                 Number of digits to extract from each timestamp.
             target_column (int):
-                Which dimension to extract (default 0). Can also be set via config.
+                Which column to extract (default 0). Can also be set via config.
 
         Returns:
-            np.ndarray that holds int values for the target dimension for each sample in each window.
+            np.ndarray that holds int values for the target column for each sample in each window.
         """
         width_used = self.metadata['width_used']
-        target_column = target_column if target_column is not None else self.config.get('target_column', 0)
+        if target_column is None:
+            target_column = self.config.get('target_column', 0)
 
         def deinterleave_timestamp_target_column(interleaved_str):
             """Convert interleaved digits back to original values and extract target dimension."""

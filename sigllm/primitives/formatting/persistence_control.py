@@ -23,13 +23,16 @@ class PersistenceControl(MultivariateFormattingMethod):
         Returns:
             List of strings, one per window, containing only the target dimension values.
         """
-        target_column = target_column if target_column is not None else self.config.get('target_column', 0)
+        if target_column is None:
+            target_column = self.config.get('target_column', 0)
         result = []
         for row in X[:, :, target_column]:
             result.append(separator.join(map(str, row.flatten())))
         return result
 
-    def format_as_integer(self, X: list[str], separator=',', target_column=None, **kwargs) -> np.ndarray:
+    def format_as_integer(
+        self, X: list[str], separator=',', target_column=None, **kwargs
+    ) -> np.ndarray:
         """Parse string representation back to integer array (last value only).
 
         Args:
@@ -45,7 +48,6 @@ class PersistenceControl(MultivariateFormattingMethod):
             np.ndarray that holds the last int value for each window.
         """
         result = [
-            [[int(entry.lstrip(separator).rstrip(separator).split(separator)[-1])]]
-            for entry in X
+            [[int(entry.lstrip(separator).rstrip(separator).split(separator)[-1])]] for entry in X
         ]
         return np.array(result, dtype=int)

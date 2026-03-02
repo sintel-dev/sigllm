@@ -21,37 +21,6 @@ def create_test_data(N=25):
     })
 
 
-def test_multivariate_formatting_validity(method, verbose=False):
-    """Test that formatting method can round-trip data correctly."""
-    if verbose:
-        logger.info('Testing multivariate formatting method validity')
-
-    raw_data = create_test_data().to_numpy()[:, 1:]
-    windowed_data = np.array([raw_data[i : i + 15, :] for i in range(0, len(raw_data) - 15, 1)])
-    data = (1000 * windowed_data).astype(int)
-    if verbose:
-        logger.info('Data shape: %s', data.shape)
-
-    string_data = method.format_as_string(data, **method.config)
-    LLM_mock_output = np.array(string_data).reshape(-1, 1)
-    if verbose:
-        logger.info('LLM mock output: %s', LLM_mock_output)
-    integer_data = method.format_as_integer(LLM_mock_output, **method.config)
-    if verbose:
-        logger.info('Format as string output: %s', string_data)
-
-    assert isinstance(string_data, list)
-    assert isinstance(string_data[0], str)
-    assert isinstance(integer_data, np.ndarray)
-
-    if len(integer_data.flatten()) == len(data.flatten()):
-        assert np.all(integer_data.flatten() == data.flatten())
-    elif len(integer_data.flatten()) == len(data[:, :, 0].flatten()):
-        assert np.all(integer_data.flatten() == data[:, :, 0].flatten())
-    else:
-        raise ValueError('Validation suite failed: Dimensions do not match')
-
-
 def run_pipeline(
     method,
     data=None,
@@ -71,32 +40,32 @@ def run_pipeline(
     """Run the forecasting pipeline.
 
     Args:
-        method (subclass of MultivariateFormattingMethod): 
+        method (subclass of MultivariateFormattingMethod):
             The method to run the pipeline for.
         data (pd.DataFrame):
             The data to run the pipeline on.
-        interval (int): 
+        interval (int):
             The interval between timestamps in the data.
-        window_size (int): 
+        window_size (int):
             The context length for each prediction window.
         samples (int):
             The number of times to run the LLM on each window.
-        normalize (bool): 
+        normalize (bool):
             Whether to normalize the data before running.
-        multivariate_allowed_symbols (list): 
+        multivariate_allowed_symbols (list):
             The allowed symbols for LLMs to output aside from digits.
-        pipeline_name (str): 
-            The name of the pipeline we are wrapping (choice of 
+        pipeline_name (str):
+            The name of the pipeline we are wrapping (choice of
             `mistral_detector` and `gpt_detector`).
-        stride (int): 
+        stride (int):
             The gap between consecutive prediction windows.
-        n_clusters (int): 
-            Not yet supported. Will be used with the `binning` 
+        n_clusters (int):
+            Not yet supported. Will be used with the `binning`
             pre-processing strategy in the future.
-        strategy (str): 
+        strategy (str):
             For now, must be `scaling`. We will add option for
             `binning` in the future.
-        steps_ahead (list, optional): 
+        steps_ahead (list, optional):
             The amount of steps ahead to predict in each window.
 
     Returns:

@@ -25,30 +25,31 @@ class JSONFormat(MultivariateFormattingMethod):
         return out
 
     def format_as_integer(self, X, trunc=None, steps_ahead=None, target_column=None, **kwargs):
-        """Parse model output and extract values for the target dimension for specified steps ahead.
+        """Parse model output and extract values for the target column for specified steps ahead.
 
         Args:
-            X (str): 
+            X (str):
                 Model output containing tokens like "d0:1,d1:2,d0:3,d1:4..."
-            trunc (int, optional): 
+            trunc (int, optional):
                 Legacy parameter for truncation (used when steps_ahead is None)
-            steps_ahead (list): 
+            steps_ahead (list):
                 List of step indices to extract (e.g., [1,3,5,10])
                 If None, trunc is used to determine the number of values to extract.
             target_column (int):
                 Which dimension to extract (default 0). Can also be set via config.
 
         Returns:
-            If steps_ahead is None: 
+            If steps_ahead is None:
                 np.array of shape (batch, samples) with truncated flat values
-            If steps_ahead is provided: 
+            If steps_ahead is provided:
                 dict mapping step -> np.array of target_column values at that step
         """
         if trunc is None:
             trunc = self.config.get('trunc')
         if steps_ahead is None and 'steps_ahead' in self.config:
             steps_ahead = self.config.get('steps_ahead')
-        target_column = target_column if target_column is not None else self.config.get('target_column', 0)
+        if target_column is None:
+            target_column = self.config.get('target_column', 0)
 
         if steps_ahead is None:
             return self._format_as_integer_legacy(X, trunc, target_column)
@@ -77,20 +78,21 @@ class JSONFormat(MultivariateFormattingMethod):
         """Extract values for the target dimension from parsed output.
 
         Args:
-            X (str): 
+            X (str):
                 Model output containing tokens like "d0:1,d1:2,d0:3,d1:4..."
             trunc (int, optional):
                 If None, return all values in a 2D array (num_windows, num_samples) where
                     each cell is a list of values for that sample.
                 If int, return 3D array (num_windows, num_samples, trunc) taking the first
-                    trunc values for each sample. None-padded if trunc is larger 
+                    trunc values for each sample. None-padded if trunc is larger
                     than the number of values.
             target_column (int):
                 Which dimension to extract (default 0).
 
         Returns:
-            np.array of shape (num_windows, num_samples, num_values) or (num_windows, num_samples, trunc)
-            that hold values for the target dimension for each sample in each window.
+            np.array of shape (num_windows, num_samples, num_values)
+            or (num_windows, num_samples, trunc) that hold values
+            for the target column for each sample in each window.
         """
         if trunc is None:
             batch_rows = []
@@ -114,7 +116,7 @@ class JSONFormat(MultivariateFormattingMethod):
         return result
 
     def _extract_dim_values(self, sample, dim):
-        """Helper function to extract all values for a given dimension from a sample string in order.
+        """Helper function to extract values for a given column from a sample string in order.
 
         For "d0:1,d1:2,d0:3,d1:4" with dim=0, returns [1, 3].
         For "d0:1,d1:2,d0:3,d1:4" with dim=1, returns [2, 4].
