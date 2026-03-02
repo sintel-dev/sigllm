@@ -34,33 +34,51 @@ class DigitInterleave(MultivariateFormattingMethod):
         return result
 
     def format_as_integer(
-        self, X: list[str], separator=',', trunc=None, digits_per_timestamp=3, **kwargs
+        self, X: list[str], separator=',', trunc=None, digits_per_timestamp=3, target_column=None, **kwargs
     ) -> np.ndarray:
-        """Parse interleaved digit strings back to integer arrays."""
-        width_used = self.metadata['width_used']
+        """Parse interleaved digit strings back to integer arrays for the target dimension.
 
-        def deinterleave_timestamp(interleaved_str):
-            """Convert interleaved digits back to original values."""
+        Args:
+            X (list[str]):
+                list of strings, each string is a concatenation of 
+                interleaved digit values separated by separator.
+            separator (str):
+                separator between values
+            trunc (int): 
+                Number of timestamps to extract from each sample. If None, all timestamps are extracted.
+            digits_per_timestamp (int):
+                Number of digits to extract from each timestamp.
+            target_column (int):
+                Which dimension to extract (default 0). Can also be set via config.
+
+        Returns:
+            np.ndarray that holds int values for the target dimension for each sample in each window.
+        """
+        width_used = self.metadata['width_used']
+        target_column = target_column if target_column is not None else self.config.get('target_column', 0)
+
+        def deinterleave_timestamp_target_column(interleaved_str):
+            """Convert interleaved digits back to original values and extract target dimension."""
             total_digits = len(interleaved_str)
             num_values = total_digits // width_used
 
-            values = []
-            for value_idx in range(num_values):
-                value_digits = []
-                for digit_pos in range(width_used):
-                    pos = digit_pos * num_values + value_idx
-                    if pos < total_digits:
-                        value_digits.append(interleaved_str[pos])
+            if target_column >= num_values:
+                return np.array([None])
 
-                if value_digits:
-                    values.append(int(''.join(value_digits)))
+            value_digits = []
+            for digit_pos in range(width_used):
+                pos = digit_pos * num_values + target_column
+                if pos < total_digits:
+                    value_digits.append(interleaved_str[pos])
 
-            return np.array(values)[:trunc] if trunc else np.array(values)
+            if value_digits:
+                return np.array([int(''.join(value_digits))])
+            return np.array([None])
 
         result = np.array(
             [
                 [
-                    deinterleave_timestamp(timestamp)
+                    deinterleave_timestamp_target_column(timestamp)
                     for sample in entry
                     for timestamp in sample
                     .lstrip(separator)

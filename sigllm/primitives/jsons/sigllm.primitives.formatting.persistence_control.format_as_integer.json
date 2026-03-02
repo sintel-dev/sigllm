@@ -1,31 +1,21 @@
 {
-    "name": "sigllm.primitives.formatting.json_format.format_as_integer",
+    "name": "sigllm.primitives.formatting.persistence_control.format_as_integer",
     "contributors": [
         "Allen Baranov <baranov@mit.edu>"
     ],
-    "description": "Transform an ndarray of JSON-formatted string values to an ndarray of integers for multivariate data.",
+    "description": "Parse persistence strings back to integer array (last value per window only).",
     "classifiers": {
         "type": "preprocessor",
         "subtype": "transformer"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.formatting.json_format.JSONFormat",
+    "primitive": "sigllm.primitives.formatting.persistence_control.PersistenceControl",
     "produce": {
         "method": "format_as_integer",
         "args": [
             {
                 "name": "X",
                 "type": "list"
-            },
-            {
-                "name": "trunc",
-                "type": "int",
-                "default": null
-            },
-            {
-                "name": "steps_ahead",
-                "type": "list",
-                "default": null
             },
             {
                 "name": "target_column",
@@ -42,13 +32,9 @@
     },
     "hyperparameters": {
         "fixed": {
-            "trunc": {
-                "type": "int",
-                "default": null
-            },
-            "steps_ahead": {
-                "type": "list",
-                "default": null
+            "separator": {
+                "type": "string",
+                "default": ","
             },
             "target_column": {
                 "type": "int",

@@ -1,15 +1,15 @@
 {
-    "name": "sigllm.primitives.formatting.json_format.format_as_integer",
+    "name": "sigllm.primitives.formatting.value_concatenation.format_as_integer",
     "contributors": [
         "Allen Baranov <baranov@mit.edu>"
     ],
-    "description": "Transform an ndarray of JSON-formatted string values to an ndarray of integers for multivariate data.",
+    "description": "Parse concatenated value strings back to integer arrays for the target dimension.",
     "classifiers": {
         "type": "preprocessor",
         "subtype": "transformer"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.formatting.json_format.JSONFormat",
+    "primitive": "sigllm.primitives.formatting.value_concatenation.ValueConcatenation",
     "produce": {
         "method": "format_as_integer",
         "args": [
@@ -23,8 +23,8 @@
                 "default": null
             },
             {
-                "name": "steps_ahead",
-                "type": "list",
+                "name": "num_dims",
+                "type": "int",
                 "default": null
             },
             {
@@ -42,12 +42,16 @@
     },
     "hyperparameters": {
         "fixed": {
+            "separator": {
+                "type": "string",
+                "default": ","
+            },
             "trunc": {
                 "type": "int",
                 "default": null
             },
-            "steps_ahead": {
-                "type": "list",
+            "num_dims": {
+                "type": "int",
                 "default": null
             },
             "target_column": {

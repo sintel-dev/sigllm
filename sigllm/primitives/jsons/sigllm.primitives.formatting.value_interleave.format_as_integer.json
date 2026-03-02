@@ -1,15 +1,15 @@
 {
-    "name": "sigllm.primitives.formatting.json_format.format_as_integer",
+    "name": "sigllm.primitives.formatting.value_interleave.format_as_integer",
     "contributors": [
         "Allen Baranov <baranov@mit.edu>"
     ],
-    "description": "Transform an ndarray of JSON-formatted string values to an ndarray of integers for multivariate data.",
+    "description": "Parse interleaved value strings back to integer arrays for the target dimension.",
     "classifiers": {
         "type": "preprocessor",
         "subtype": "transformer"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.formatting.json_format.JSONFormat",
+    "primitive": "sigllm.primitives.formatting.value_interleave.ValueInterleave",
     "produce": {
         "method": "format_as_integer",
         "args": [
@@ -20,11 +20,6 @@
             {
                 "name": "trunc",
                 "type": "int",
-                "default": null
-            },
-            {
-                "name": "steps_ahead",
-                "type": "list",
                 "default": null
             },
             {
@@ -42,12 +37,12 @@
     },
     "hyperparameters": {
         "fixed": {
+            "separator": {
+                "type": "string",
+                "default": ","
+            },
             "trunc": {
                 "type": "int",
-                "default": null
-            },
-            "steps_ahead": {
-                "type": "list",
                 "default": null
             },
             "target_column": {

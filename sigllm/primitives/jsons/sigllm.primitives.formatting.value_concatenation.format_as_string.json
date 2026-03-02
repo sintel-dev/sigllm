@@ -1,0 +1,36 @@
+{
+    "name": "sigllm.primitives.formatting.value_concatenation.format_as_string",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Transform an ndarray of multivariate values to strings with concatenated values per window.",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "transformer"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.formatting.value_concatenation.ValueConcatenation",
+    "produce": {
+        "method": "format_as_string",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "list"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "separator": {
+                "type": "string",
+                "default": ","
+            }
+        }
+    }
+}

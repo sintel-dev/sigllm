@@ -71,22 +71,33 @@ def run_pipeline(
     """Run the forecasting pipeline.
 
     Args:
-        method (subclass of MultivariateFormattingMethod): The method to run the pipeline for.
-        data (pd.DataFrame): The data to run the pipeline on.
-        interval (int): The interval between timestamps in the data.
-        window_size (int): The context length for each prediction window.
-        samples (int): The number of times to run the LLM on each window.
-        normalize (bool): Whether to normalize the data before running.
-        multivariate_allowed_symbols (list): The allowed symbols for LLMs
-            to output aside from digits.
-        pipeline_name: The name of the pipeline we are wrapping
-            (choice of `mistral_detector` and `gpt_detector`).
-        stride: The gap between consecutive prediction windows.
-        n_clusters: Not yet supported. Will be used with the `binning`
+        method (subclass of MultivariateFormattingMethod): 
+            The method to run the pipeline for.
+        data (pd.DataFrame):
+            The data to run the pipeline on.
+        interval (int): 
+            The interval between timestamps in the data.
+        window_size (int): 
+            The context length for each prediction window.
+        samples (int):
+            The number of times to run the LLM on each window.
+        normalize (bool): 
+            Whether to normalize the data before running.
+        multivariate_allowed_symbols (list): 
+            The allowed symbols for LLMs to output aside from digits.
+        pipeline_name (str): 
+            The name of the pipeline we are wrapping (choice of 
+            `mistral_detector` and `gpt_detector`).
+        stride (int): 
+            The gap between consecutive prediction windows.
+        n_clusters (int): 
+            Not yet supported. Will be used with the `binning` 
             pre-processing strategy in the future.
-        strategy: For now, must be `scaling`. We will add option for
+        strategy (str): 
+            For now, must be `scaling`. We will add option for
             `binning` in the future.
-        steps_ahead: The amount of steps ahead to predict in each window.
+        steps_ahead (list, optional): 
+            The amount of steps ahead to predict in each window.
 
     Returns:
         The errors, y_hat, and y for the pipeline.
@@ -109,7 +120,7 @@ def run_pipeline(
         'mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1': {
             'interval': interval
         },
-        'sigllm.primitives.forecasting.custom.rolling_window_sequences#1': {
+        'mlstars.custom.timeseries_preprocessing.rolling_window_sequences#1': {
             'target_column': 0,
             'window_size': window_size,
             'target_size': max(steps_ahead) if steps_ahead else 1,

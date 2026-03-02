@@ -1,20 +1,23 @@
 import numpy as np
 import pandas as pd
 
-from sigllm.primitives.formatting.utils import test_multivariate_formatting_validity
-
 
 class MultivariateFormattingMethod:
-    """Base class for multivariate formatting methods."""
+    """Base class for multivariate formatting methods.
+
+    Subclasses implement format_as_string and format_as_integer to convert
+    between numpy arrays and string representations for LLM input/output.
+
+    The target_column parameter (default 0) can be passed to subclass methods
+    or set via config to specify which dimension to extract. This should
+    match the target_column parameter used in rolling_window_sequences.
+    """
 
     def __init__(self, method_name: str, verbose: bool = False, **kwargs):
         self.method_name = method_name
         self.config = kwargs
         self.metadata = {}
         self.verbose = verbose
-
-        if self.method_name != 'persistence_control' and self.config.get('trunc', None) is None:
-            test_multivariate_formatting_validity(self, verbose=verbose)
 
     def format_as_string(self, X: np.ndarray, **kwargs) -> str:
         """Format array as string representation."""

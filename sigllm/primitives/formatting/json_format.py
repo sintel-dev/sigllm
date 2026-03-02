@@ -24,37 +24,45 @@ class JSONFormat(MultivariateFormattingMethod):
         out = [window_to_json(window) for window in X]
         return out
 
-    def format_as_integer(self, X, trunc=None, steps_ahead=None, **kwargs):
-        """Parse model output and extract d0 values for specified steps ahead.
+    def format_as_integer(self, X, trunc=None, steps_ahead=None, target_column=None, **kwargs):
+        """Parse model output and extract values for the target dimension for specified steps ahead.
 
         Args:
-            X: Model output containing tokens like "d0:1,d1:2,d0:3,d1:4..."
-            trunc: Legacy parameter for truncation (used when steps_ahead is None)
-            steps_ahead: List of step indices to extract (e.g., [1,3,5,10])
-                         If None, uses legacy behavior with trunc parameter.
+            X (str): 
+                Model output containing tokens like "d0:1,d1:2,d0:3,d1:4..."
+            trunc (int, optional): 
+                Legacy parameter for truncation (used when steps_ahead is None)
+            steps_ahead (list): 
+                List of step indices to extract (e.g., [1,3,5,10])
+                If None, trunc is used to determine the number of values to extract.
+            target_column (int):
+                Which dimension to extract (default 0). Can also be set via config.
 
         Returns:
-            If steps_ahead is None: np.array of shape (batch, samples) with truncated flat values
-            If steps_ahead is provided: dict mapping step -> np.array of d0 values at that step
+            If steps_ahead is None: 
+                np.array of shape (batch, samples) with truncated flat values
+            If steps_ahead is provided: 
+                dict mapping step -> np.array of target_column values at that step
         """
         if trunc is None:
             trunc = self.config.get('trunc')
         if steps_ahead is None and 'steps_ahead' in self.config:
             steps_ahead = self.config.get('steps_ahead')
+        target_column = target_column if target_column is not None else self.config.get('target_column', 0)
 
         if steps_ahead is None:
-            return self._format_as_integer_legacy(X, trunc)
+            return self._format_as_integer_legacy(X, trunc, target_column)
 
         results_by_step = {step: [] for step in steps_ahead}
 
         for window in X:
             step_samples = {step: [] for step in steps_ahead}
             for sample in window:
-                d0_values = self._extract_d0_values(sample)
+                dim_values = self._extract_dim_values(sample, target_column)
                 for step in steps_ahead:
                     idx = step - 1
-                    if idx < len(d0_values):
-                        step_samples[step].append(d0_values[idx])
+                    if idx < len(dim_values):
+                        step_samples[step].append(dim_values[idx])
                     else:
                         step_samples[step].append(None)
             for step in steps_ahead:
@@ -65,41 +73,55 @@ class JSONFormat(MultivariateFormattingMethod):
 
         return results_by_step
 
-    def _extract_d0_values(self, sample):
-        """Extract all d0 values from a sample string in order.
+    def _format_as_integer_legacy(self, X, trunc=None, target_column=0):
+        """Extract values for the target dimension from parsed output.
 
-        For "d0:1,d1:2,d0:3,d1:4", returns [1, 3].
-        """
-        tokens = re.findall(r'd(\d+):(\d+)', sample)
-        d0_values = []
-        for dim_str, val_str in tokens:
-            if dim_str == '0':
-                d0_values.append(int(val_str))
-        return d0_values
+        Args:
+            X (str): 
+                Model output containing tokens like "d0:1,d1:2,d0:3,d1:4..."
+            trunc (int, optional):
+                If None, return all values in a 2D array (num_windows, num_samples) where
+                    each cell is a list of values for that sample.
+                If int, return 3D array (num_windows, num_samples, trunc) taking the first
+                    trunc values for each sample. None-padded if trunc is larger 
+                    than the number of values.
+            target_column (int):
+                Which dimension to extract (default 0).
 
-    def _format_as_integer_legacy(self, X, trunc=None):
-        """Extract d0 values from parsed output.
-
-        - trunc=None: return all d0 values (num_windows, num_samples, num_d0_values)
-        - trunc=int: return 3D array (num_windows, num_samples, trunc)
+        Returns:
+            np.array of shape (num_windows, num_samples, num_values) or (num_windows, num_samples, trunc)
+            that hold values for the target dimension for each sample in each window.
         """
         if trunc is None:
             batch_rows = []
             for window in X:
                 samples = []
                 for sample in window:
-                    samples.append(self._extract_d0_values(sample))
+                    samples.append(self._extract_dim_values(sample, target_column))
                 batch_rows.append(samples)
             return np.array(batch_rows, dtype=object)
 
         num_windows = len(X)
         num_samples = len(X[0]) if num_windows > 0 else 0
-        result = np.zeros((num_windows, num_samples, trunc), dtype=int)
+        result = np.full((num_windows, num_samples, trunc), fill_value=None)
 
         for i, window in enumerate(X):
             for j, sample in enumerate(window):
-                d0_values = self._extract_d0_values(sample)
-                for k in range(min(trunc, len(d0_values))):
-                    result[i, j, k] = d0_values[k]
+                dim_values = self._extract_dim_values(sample, target_column)
+                for k in range(min(trunc, len(dim_values))):
+                    result[i, j, k] = dim_values[k]
 
         return result
+
+    def _extract_dim_values(self, sample, dim):
+        """Helper function to extract all values for a given dimension from a sample string in order.
+
+        For "d0:1,d1:2,d0:3,d1:4" with dim=0, returns [1, 3].
+        For "d0:1,d1:2,d0:3,d1:4" with dim=1, returns [2, 4].
+        """
+        tokens = re.findall(r'd(\d+):(\d+)', sample)
+        dim_values = []
+        for dim_str, val_str in tokens:
+            if dim_str == str(dim):
+                dim_values.append(int(val_str))
+        return dim_values

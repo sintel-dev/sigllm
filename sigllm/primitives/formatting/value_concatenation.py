@@ -16,11 +16,35 @@ class ValueConcatenation(MultivariateFormattingMethod):
             result.append(separator.join(map(str, row.flatten())))
         return result
 
-    def format_as_integer(self, X: list[str], separator=',', trunc=None, **kwargs) -> np.ndarray:
-        """Parse string representation back to integer array."""
+    def format_as_integer(self, X: list[str], separator=',', trunc=None, num_dims=None, target_column=None, **kwargs) -> np.ndarray:
+        """Extract values for the target dimension from each sample in each window as ints.
+        
+        Args:
+            X (list[str]):
+                list of strings, each string is a concatenation of num_dims values separated by separator
+            separator (str):
+                separator between values
+            trunc (int): 
+                Number of values to extract from each sample. If None, all values are extracted.
+            num_dims (int): 
+                Number of dimensions (mandatory if num_dims is not provided in config)
+            target_column (int):
+                Which dimension to extract (default 0). Can also be set via config.
+
+        Returns:
+            np.ndarray that holds int values for the target dimension for each sample in each window.
+        """
+        num_dims = num_dims or self.config.get("num_dims")
+        if num_dims is None:
+            raise ValueError("Cannot parse concatenated values without knowing the number of dimensions.")
+
+        target_column = target_column if target_column is not None else self.config.get("target_column", 0)
+
         result = [
             [
-                np.array([int(x) for x in entry.lstrip(separator).split(separator) if x])[:trunc]
+                np.array(
+                    [int(x) for x in entry.lstrip(separator).split(separator) if x]
+                )[target_column::num_dims][:trunc]
                 for entry in row
             ]
             for row in X
