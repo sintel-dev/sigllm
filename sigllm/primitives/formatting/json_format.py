@@ -1,6 +1,6 @@
 import re
-
 from collections import defaultdict
+
 import numpy as np
 
 from sigllm.primitives.formatting.multivariate_formatting import MultivariateFormattingMethod
