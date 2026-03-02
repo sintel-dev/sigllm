@@ -1,5 +1,6 @@
 import re
 
+from collections import defaultdict
 import numpy as np
 
 from sigllm.primitives.formatting.multivariate_formatting import MultivariateFormattingMethod
@@ -54,10 +55,10 @@ class JSONFormat(MultivariateFormattingMethod):
         if steps_ahead is None:
             return self._format_as_integer_legacy(X, trunc, target_column)
 
-        results_by_step = {step: [] for step in steps_ahead}
+        results_by_step = defaultdict(list)
 
         for window in X:
-            step_samples = {step: [] for step in steps_ahead}
+            step_samples = defaultdict(list)
             for sample in window:
                 dim_values = self._extract_dim_values(sample, target_column)
                 for step in steps_ahead:
