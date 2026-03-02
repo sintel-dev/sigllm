@@ -97,7 +97,7 @@ def format_as_integer(X, sep=',', trunc=None, errors='ignore'):
             to `'ignore'`.
             - If 'ignore', then invalid values will be ignored in the result.
             - If 'filter', then invalid values will be filtered out of the string.
-            - If 'raise', then encountering invalud values will raise an exception.
+            - If 'raise', then encountering invalid values will raise an exception.
             - If 'coerce', then invalid values will be set as NaN.
 
     Returns:
@@ -212,7 +212,11 @@ class Scalar2Cluster:
 
         Args:
             X (ndarray):
-                2-D array of shape ``(n_samples, n_features)``.
+                2-D array of shape (n_samples, n_features)
+
+        Returns:
+            No output. The method stores the fitted centroids in the
+            class instance instead.
         """
         centroids_list = []
         for col in X.T:
@@ -235,9 +239,10 @@ class Scalar2Cluster:
                 2-D array of shape ``(n_samples, n_features)``.
 
         Returns:
-            tuple:
-                * **X** (ndarray) - Integer cluster labels with the same shape as input.
-                * **centroids** (list of ndarray) - Sorted centroid arrays, one per column.
+            X (ndarray):
+                Integer cluster labels with the same shape as input.
+            centroids (list of ndarray):
+                Sorted centroid arrays, one per column.
         """
         labels_list = []
         for i, col in enumerate(X.T):
@@ -255,7 +260,7 @@ class Cluster2Scalar:
     """Convert cluster indices back to float values using centroids.
 
     Maps an array of integer cluster indices to the corresponding
-    centroid values produced by :class:`Scalar2Cluster`.
+    centroid values produced by Scalar2Cluster.
     """
 
     def transform(self, X, centroids):
@@ -265,7 +270,7 @@ class Cluster2Scalar:
             X (ndarray):
                 Integer cluster labels.
             centroids (list of ndarray):
-                Sorted centroid arrays from :class:`Scalar2Cluster`.
+                Sorted centroid arrays from Scalar2Cluster.
 
         Returns:
             ndarray:
