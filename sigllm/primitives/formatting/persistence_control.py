@@ -21,7 +21,9 @@ class PersistenceControl(MultivariateFormattingMethod):
                 Which dimension to encode (default 0). Can also be set via config.
 
         Returns:
-            List of strings, one per window, containing only the target dimension values.
+            list[str]:
+                List of strings, one per window, containing only
+                the target dimension values.
         """
         if target_column is None:
             target_column = self.config.get('target_column', 0)

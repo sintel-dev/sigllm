@@ -35,7 +35,9 @@ class ValueConcatenation(MultivariateFormattingMethod):
                 Which dimension to extract (default 0). Can also be set via config.
 
         Returns:
-            np.ndarray that holds int values for the target column for each sample in each window.
+            np.ndarray:
+                Array that holds int values for the target column
+                for each sample in each window.
         """
         num_dims = num_dims or self.config.get('num_dims')
         if num_dims is None:
