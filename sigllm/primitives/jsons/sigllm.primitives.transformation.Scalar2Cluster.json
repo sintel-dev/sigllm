@@ -43,6 +43,10 @@
             "n_clusters": {
                 "type": "int",
                 "default": 100
+            },
+            "fit_fraction": {
+                "type": "float",
+                "default": 1.0
             }
         }
     }

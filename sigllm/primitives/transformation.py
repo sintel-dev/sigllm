@@ -201,10 +201,15 @@ class Scalar2Cluster:
     Args:
         n_clusters (int):
             Number of K-means clusters. Default to ``100``.
+        fit_fraction (float):
+            Fraction of data to use for fitting K-means (0 < fit_fraction <= 1).
+            If less than 1, only the first fit_fraction of rows are used for fitting.
+            Default to ``1.0`` (use all data).
     """
 
-    def __init__(self, n_clusters=100):
+    def __init__(self, n_clusters=100, fit_fraction=1.0):
         self.n_clusters = n_clusters
+        self.fit_fraction = fit_fraction
         self.centroids = None
 
     def fit(self, X):
@@ -218,8 +223,12 @@ class Scalar2Cluster:
             No output. The method stores the fitted centroids in the
             class instance instead.
         """
+        n_samples = X.shape[0]
+        n_fit = max(1, int(n_samples * self.fit_fraction))
+        X_fit = X[:n_fit]
+        
         centroids_list = []
-        for col in X.T:
+        for col in X_fit.T:
             n_unique = len(np.unique(col))
             if self.n_clusters >= n_unique:
                 centroids = np.sort(np.unique(col))

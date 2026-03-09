@@ -3,10 +3,11 @@
         "mlstars.custom.timeseries_preprocessing.time_segments_aggregate",
         "sklearn.impute.SimpleImputer",
         "sigllm.primitives.transformation.Scalar2Cluster",
-        "sigllm.primitives.forecasting.custom.rolling_window_sequences",
+        "mlstars.custom.timeseries_preprocessing.rolling_window_sequences",
         "sigllm.primitives.transformation.format_as_string",
         "sigllm.primitives.forecasting.huggingface.HF",
         "sigllm.primitives.transformation.format_as_integer",
+        "sigllm.primitives.transformation.Cluster2Scalar",
         "sigllm.primitives.transformation.Cluster2Scalar",
         "sigllm.primitives.postprocessing.aggregate_rolling_window",
         "numpy.reshape",
@@ -20,9 +21,10 @@
             "method": "mean"
         },
         "sigllm.primitives.transformation.Scalar2Cluster#1": {
-            "n_clusters": 100
+            "n_clusters": 100,
+            "fit_fraction": 1.0
         },
-        "sigllm.primitives.forecasting.custom.rolling_window_sequences#1": {
+        "mlstars.custom.timeseries_preprocessing.rolling_window_sequences#1": {
             "target_column": 0,
             "window_size": 140,
             "target_size": 1
@@ -51,10 +53,13 @@
         "sigllm.primitives.transformation.Scalar2Cluster#1": {
             "X": "y"
         },
+        "sigllm.primitives.transformation.Cluster2Scalar#1": {
+            "X": "y"
+        },
         "sigllm.primitives.transformation.format_as_integer#1": {
             "X": "y_hat"
         },
-        "sigllm.primitives.transformation.Cluster2Scalar#1": {
+        "sigllm.primitives.transformation.Cluster2Scalar#2": {
             "X": "y_hat"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
@@ -78,6 +83,9 @@
             "X": "y_hat"
         },
         "sigllm.primitives.transformation.Cluster2Scalar#1": {
+            "X": "y"
+        },
+        "sigllm.primitives.transformation.Cluster2Scalar#2": {
             "X": "y_hat"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
