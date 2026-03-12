@@ -70,16 +70,10 @@ In addtion, the `SigLLM` object takes in a `decimal` argument to determine how m
 from sigllm import SigLLM
 
 hyperparameters = {
-    "orion.primitives.timeseries_anomalies.find_anomalies#1": {
-        "fixed_threshold": False
-    }
+    'orion.primitives.timeseries_anomalies.find_anomalies#1': {'fixed_threshold': False}
 }
 
-sigllm = SigLLM(
-    pipeline='gpt_detector',
-    decimal=0,
-    hyperparameters=hyperparameters
-)
+sigllm = SigLLM(pipeline='gpt_detector', decimal=0, hyperparameters=hyperparameters)
 ```
 
 Now that we have initialized the pipeline, we are ready to use it to detect anomalies:

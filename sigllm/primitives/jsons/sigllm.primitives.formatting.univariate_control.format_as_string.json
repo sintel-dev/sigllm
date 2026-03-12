@@ -1,0 +1,40 @@
+{
+    "name": "sigllm.primitives.formatting.univariate_control.format_as_string",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Transform an ndarray to strings containing only the target dimension (univariate control).",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "transformer"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.formatting.univariate_control.UnivariateControl",
+    "produce": {
+        "method": "format_as_string",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "list"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "separator": {
+                "type": "string",
+                "default": ","
+            },
+            "target_column": {
+                "type": "int",
+                "default": 0
+            }
+        }
+    }
+}

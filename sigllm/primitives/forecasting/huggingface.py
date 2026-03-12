@@ -14,6 +14,7 @@ DEFAULT_UNK_TOKEN = '<unk>'
 DEFAULT_PAD_TOKEN = '<pad>'
 
 VALID_NUMBERS = list('0123456789')
+VALID_MULTIVARIATE_SYMBOLS = []
 
 DEFAULT_MODEL = 'mistralai/Mistral-7B-Instruct-v0.2'
 
@@ -41,6 +42,9 @@ class HF:
         padding (int):
             Additional padding token to forecast to reduce short horizon predictions.
             Default to `0`.
+        multivariate_allowed_symbols (list):
+            List of token strings to allow in addition to digits when generating.
+            Default to `[]`.
     """
 
     def __init__(
@@ -53,6 +57,7 @@ class HF:
         raw=False,
         samples=1,
         padding=0,
+        multivariate_allowed_symbols=VALID_MULTIVARIATE_SYMBOLS,
     ):
         self.name = name
         self.sep = sep
@@ -62,6 +67,7 @@ class HF:
         self.raw = raw
         self.samples = samples
         self.padding = padding
+        self.multivariate_allowed_symbols = multivariate_allowed_symbols
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.name, use_fast=False)
 
@@ -84,6 +90,9 @@ class HF:
         for number in VALID_NUMBERS:
             token = self.tokenizer.convert_tokens_to_ids(number)
             valid_tokens.append(token)
+
+        for symbol in self.multivariate_allowed_symbols:
+            valid_tokens.append(self.tokenizer.convert_tokens_to_ids(symbol))
 
         valid_tokens.append(self.tokenizer.convert_tokens_to_ids(self.sep))
         self.invalid_tokens = [
@@ -116,7 +125,7 @@ class HF:
             tokenized_input = self.tokenizer([text], return_tensors='pt').to('cuda')
 
             input_length = tokenized_input['input_ids'].shape[1]
-            average_length = input_length / len(text.split(','))
+            average_length = input_length / len(text.split(self.sep))
             max_tokens = (average_length + self.padding) * self.steps
 
             generate_ids = self.model.generate(

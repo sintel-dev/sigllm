@@ -1,0 +1,40 @@
+{
+    "name": "sigllm.primitives.formatting.value_interleave.format_as_string",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Transform an ndarray of multivariate values to strings with interleaved fixed-width values per timestamp.",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "transformer"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.formatting.value_interleave.ValueInterleave",
+    "produce": {
+        "method": "format_as_string",
+        "args": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "list"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "digits_per_timestamp": {
+                "type": "int",
+                "default": 3
+            },
+            "separator": {
+                "type": "string",
+                "default": ","
+            }
+        }
+    }
+}
