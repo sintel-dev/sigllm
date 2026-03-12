@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>sigllm.primitives.forecasting.huggingface module &#8212; sigllm 0.1.1.dev0 documentation</title>
+    <title>sigllm.primitives.formatting.persistence_control module &#8212; sigllm 0.1.1.dev0 documentation</title>
     
   <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -40,8 +40,8 @@
     <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="sigllm.primitives.formatting package" href="sigllm.primitives.formatting.html" />
-    <link rel="prev" title="sigllm.primitives.forecasting.gpt module" href="sigllm.primitives.forecasting.gpt.html" />
+    <link rel="next" title="sigllm.primitives.formatting.univariate_control module" href="sigllm.primitives.formatting.univariate_control.html" />
+    <link rel="prev" title="sigllm.primitives.formatting.multivariate_formatting module" href="sigllm.primitives.formatting.multivariate_formatting.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en" />
   </head>
@@ -186,49 +186,50 @@
               
               <div>
                 
-  <section id="module-sigllm.primitives.forecasting.huggingface">
-<span id="sigllm-primitives-forecasting-huggingface-module"></span><h1>sigllm.primitives.forecasting.huggingface module<a class="headerlink" href="#module-sigllm.primitives.forecasting.huggingface" title="Permalink to this headline">¶</a></h1>
+  <section id="module-sigllm.primitives.formatting.persistence_control">
+<span id="sigllm-primitives-formatting-persistence-control-module"></span><h1>sigllm.primitives.formatting.persistence_control module<a class="headerlink" href="#module-sigllm.primitives.formatting.persistence_control" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt id="sigllm.primitives.forecasting.huggingface.HF">
-<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.forecasting.huggingface.</code><code class="sig-name descname">HF</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">'mistralai/Mistral-7B-Instruct-v0.2'</span></em>, <em class="sig-param"><span class="n">sep</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">steps</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">temp</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">top_p</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">raw</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">padding</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">multivariate_allowed_symbols</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/forecasting/huggingface.html#HF"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.forecasting.huggingface.HF" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Prompt Pretrained models on HuggingFace to forecast a time series.</p>
+<dt id="sigllm.primitives.formatting.persistence_control.PersistenceControl">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.persistence_control.</code><code class="sig-name descname">PersistenceControl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/persistence_control.html#PersistenceControl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.persistence_control.PersistenceControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html#sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod" title="sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod</span></code></a></p>
+<p>Formatting method using persistence control strategy.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.persistence_control.PersistenceControl.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/persistence_control.html#PersistenceControl.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.persistence_control.PersistenceControl.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse string representation back to integer array (last value only).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<em>str</em>) – Model name. Default to <cite>‘mistralai/Mistral-7B-Instruct-v0.2’</cite>.</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – String to separate each element in values. Default to <cite>‘,’</cite>.</p></li>
-<li><p><strong>steps</strong> (<em>int</em>) – Number of steps ahead to forecast. Default <cite>1</cite>.</p></li>
-<li><p><strong>temp</strong> (<em>float</em>) – The value used to modulate the next token probabilities. Default to <cite>1</cite>.</p></li>
-<li><p><strong>top_p</strong> (<em>float</em>) – If set to float &lt; 1, only the smallest set of most probable tokens with
-probabilities that add up to <cite>top_p</cite> or higher are kept for generation.
-Default to <cite>1</cite>.</p></li>
-<li><p><strong>raw</strong> (<em>bool</em>) – Whether to return the raw output or not. Defaults to <cite>False</cite>.</p></li>
-<li><p><strong>samples</strong> (<em>int</em>) – Number of forecasts to generate for each input message. Default to <cite>1</cite>.</p></li>
-<li><p><strong>padding</strong> (<em>int</em>) – Additional padding token to forecast to reduce short horizon predictions.
-Default to <cite>0</cite>.</p></li>
-<li><p><strong>multivariate_allowed_symbols</strong> (<em>list</em>) – List of token strings to allow in addition to digits when generating.
-Default to <cite>[]</cite>.</p></li>
+<li><p><strong>X</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of strings to parse.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – Separator between values.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Accepted for API consistency (default 0). The string already contains
+only the target dimension, so this parameter has no effect on parsing.</p></li>
 </ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt id="sigllm.primitives.forecasting.huggingface.HF.forecast">
-<code class="sig-name descname">forecast</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/forecasting/huggingface.html#HF.forecast"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.forecasting.huggingface.HF.forecast" title="Permalink to this definition">¶</a></dt>
-<dd><p>Use GPT to forecast a signal.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>ndarray</em>) – Input sequences of strings containing signal values.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>List of forecasted signal values.</p></li>
-<li><p>Optionally, a list of dictionaries for raw output.</p></li>
+<dd class="field-even"><p>np.ndarray that holds the last int value for each window.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.persistence_control.PersistenceControl.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/persistence_control.html#PersistenceControl.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.persistence_control.PersistenceControl.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string with persistence control.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input array with shape (num_windows, num_timestamps, num_dims).</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – Separator between values.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Which dimension to encode (default 0). Can also be set via config.</p></li>
 </ul>
-</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of strings, one per window, containing only
+the target dimension values.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list, list</p>
+<dd class="field-odd"><p>list[str]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -243,8 +244,8 @@ Default to <cite>[]</cite>.</p></li>
               
               <div class='prev-next-bottom'>
                 
-    <a class='left-prev' id="prev-link" href="sigllm.primitives.forecasting.gpt.html" title="previous page">sigllm.primitives.forecasting.gpt module</a>
-    <a class='right-next' id="next-link" href="sigllm.primitives.formatting.html" title="next page">sigllm.primitives.formatting package</a>
+    <a class='left-prev' id="prev-link" href="sigllm.primitives.formatting.multivariate_formatting.html" title="previous page">sigllm.primitives.formatting.multivariate_formatting module</a>
+    <a class='right-next' id="next-link" href="sigllm.primitives.formatting.univariate_control.html" title="next page">sigllm.primitives.formatting.univariate_control module</a>
 
               </div>
               

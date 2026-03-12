@@ -1,0 +1,7 @@
+sigllm.primitives.formatting.multivariate\_formatting module
+============================================================
+
+.. automodule:: sigllm.primitives.formatting.multivariate_formatting
+   :members:
+   :undoc-members:
+   :show-inheritance:

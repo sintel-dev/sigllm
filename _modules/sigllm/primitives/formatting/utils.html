@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sigllm.primitives.formatting.utils &#8212; sigllm 0.1.1.dev0 documentation</title>
+    
+  <link rel="stylesheet" href="../../../../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../../../../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../../../../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../../../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../../../../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/dai-logo-white.ico"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="../../../../index.html">
+    
+      <img src="../../../../_static/dai-logo-white-200.png" class="logo" alt="logo" />
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../../../readme.html">SigLLM</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../../../api/sigllm.html">API Reference</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../../../contributing.html">Contributing</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../../../authors.html">Credits</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../../../../history.html">History</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/sintel-dev/sigllm" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../../../../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <h1>Source code for sigllm.primitives.formatting.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mlblocks</span><span class="w"> </span><span class="kn">import</span> <span class="n">MLPipeline</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_test_data"><a class="viewcode-back" href="../../../../api/sigllm.primitives.formatting.utils.html#sigllm.primitives.formatting.utils.create_test_data">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">create_test_data</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">25</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create test data for formatting validation.&quot;&quot;&quot;</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span> <span class="o">+</span> <span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)])</span>
+    <span class="n">x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+        <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3600</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">N</span><span class="p">),</span>
+        <span class="s1">&#39;x1&#39;</span><span class="p">:</span> <span class="n">x1</span><span class="p">,</span>
+        <span class="s1">&#39;x2&#39;</span><span class="p">:</span> <span class="n">x2</span><span class="p">,</span>
+        <span class="s1">&#39;x3&#39;</span><span class="p">:</span> <span class="n">x3</span><span class="p">,</span>
+    <span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="run_pipeline"><a class="viewcode-back" href="../../../../api/sigllm.primitives.formatting.utils.html#sigllm.primitives.formatting.utils.run_pipeline">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">run_pipeline</span><span class="p">(</span>
+    <span class="n">method</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">interval</span><span class="o">=</span><span class="mi">3600</span><span class="p">,</span>
+    <span class="n">window_size</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">samples</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+    <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">temp</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">multivariate_allowed_symbols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">pipeline_name</span><span class="o">=</span><span class="s1">&#39;mistral_detector&#39;</span><span class="p">,</span>
+    <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">n_clusters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;scaling&#39;</span><span class="p">,</span>
+    <span class="n">steps_ahead</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the forecasting pipeline.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        method (subclass of MultivariateFormattingMethod):</span>
+<span class="sd">            The method to run the pipeline for.</span>
+<span class="sd">        data (pd.DataFrame):</span>
+<span class="sd">            The data to run the pipeline on.</span>
+<span class="sd">        interval (int):</span>
+<span class="sd">            The interval between timestamps in the data.</span>
+<span class="sd">        window_size (int):</span>
+<span class="sd">            The context length for each prediction window.</span>
+<span class="sd">        samples (int):</span>
+<span class="sd">            The number of times to run the LLM on each window.</span>
+<span class="sd">        normalize (bool):</span>
+<span class="sd">            Whether to normalize the data before running.</span>
+<span class="sd">        multivariate_allowed_symbols (list):</span>
+<span class="sd">            The allowed symbols for LLMs to output aside from digits.</span>
+<span class="sd">        pipeline_name (str):</span>
+<span class="sd">            The name of the pipeline we are wrapping (choice of</span>
+<span class="sd">            `mistral_detector` and `gpt_detector`).</span>
+<span class="sd">        stride (int):</span>
+<span class="sd">            The gap between consecutive prediction windows.</span>
+<span class="sd">        n_clusters (int):</span>
+<span class="sd">            Not yet supported. Will be used with the `binning`</span>
+<span class="sd">            pre-processing strategy in the future.</span>
+<span class="sd">        strategy (str):</span>
+<span class="sd">            For now, must be `scaling`. We will add option for</span>
+<span class="sd">            `binning` in the future.</span>
+<span class="sd">        steps_ahead (list, optional):</span>
+<span class="sd">            The amount of steps ahead to predict in each window.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The errors, y_hat, and y for the pipeline.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">create_test_data</span><span class="p">()</span>
+
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">MLPipeline</span><span class="p">(</span><span class="n">pipeline_name</span><span class="p">)</span>
+    <span class="n">digits_per_timestamp</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;digits_per_timestamp&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">num_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">steps_ahead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">max_steps</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">steps_ahead</span><span class="p">)</span>
+        <span class="n">hf_steps</span> <span class="o">=</span> <span class="n">max_steps</span> <span class="o">*</span> <span class="p">(</span><span class="n">num_dims</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># adding some padding here</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hf_steps</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="n">test_hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;mlstars.custom.timeseries_preprocessing.time_segments_aggregate#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;interval&#39;</span><span class="p">:</span> <span class="n">interval</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;mlstars.custom.timeseries_preprocessing.rolling_window_sequences#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;target_column&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s1">&#39;window_size&#39;</span><span class="p">:</span> <span class="n">window_size</span><span class="p">,</span>
+            <span class="s1">&#39;target_size&#39;</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="n">steps_ahead</span><span class="p">)</span> <span class="k">if</span> <span class="n">steps_ahead</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;step_size&#39;</span><span class="p">:</span> <span class="n">stride</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s1">&#39;sigllm.primitives.forecasting.huggingface.HF#1&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;samples&#39;</span><span class="p">:</span> <span class="n">samples</span><span class="p">,</span>
+            <span class="s1">&#39;temp&#39;</span><span class="p">:</span> <span class="n">temp</span><span class="p">,</span>
+            <span class="s1">&#39;multivariate_allowed_symbols&#39;</span><span class="p">:</span> <span class="p">(</span>
+                <span class="p">[]</span> <span class="k">if</span> <span class="n">multivariate_allowed_symbols</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">multivariate_allowed_symbols</span>
+            <span class="p">),</span>
+            <span class="s1">&#39;steps&#39;</span><span class="p">:</span> <span class="n">hf_steps</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;scaling&#39;</span><span class="p">:</span>
+        <span class="n">test_hyperparameters</span><span class="p">[</span><span class="s1">&#39;sigllm.primitives.transformation.Float2Scalar#1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;decimal&#39;</span><span class="p">:</span> <span class="n">digits_per_timestamp</span><span class="p">,</span>
+            <span class="s1">&#39;rescale&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="k">elif</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s1">&#39;binning&#39;</span><span class="p">:</span>
+        <span class="n">test_hyperparameters</span><span class="p">[</span><span class="s1">&#39;sigllm.primitives.transformation.Float2Scalar#1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;binning&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;n_clusters&#39;</span><span class="p">:</span> <span class="n">n_clusters</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Note that binning is not supported for now.&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Invalid strategy: </span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s1">. Note that only scaling is supported for now.&#39;</span>
+        <span class="p">)</span>
+
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">set_hyperparameters</span><span class="p">(</span><span class="n">test_hyperparameters</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">normalize</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">normalize_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">context</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">format_as_string</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">method</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">method_name</span> <span class="o">==</span> <span class="s1">&#39;persistence_control&#39;</span><span class="p">:</span>
+        <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;y_hat example: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">steps_ahead</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_process_multi_step_results</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">steps_ahead</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">format_as_integer</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">],</span> <span class="n">trunc</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;y_hat example: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">**</span><span class="n">context</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;errors&#39;</span><span class="p">],</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;y_hat: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;y: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;errors: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">errors</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">errors</span><span class="p">,</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">],</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span></div>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_multi_step_results</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">steps_ahead</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process results for multi-step-ahead prediction.</span>
+
+<span class="sd">    For multi-step predictions with stride &gt; 1, we skip aggregate_rolling_window</span>
+<span class="sd">    since there&#39;s no overlap between predictions. Each window gives one prediction</span>
+<span class="sd">    per step, indexed sequentially (0, 1, 2, ...) regardless of actual stride.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict {step : {&#39;errors&#39;: [...], &#39;y_hat&#39;: [...], &#39;y&#39;: [...]}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y_hat_by_step</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="n">format_as_integer</span><span class="p">(</span><span class="n">context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">],</span> <span class="n">steps_ahead</span><span class="o">=</span><span class="n">steps_ahead</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">steps_ahead</span><span class="p">:</span>
+        <span class="n">step_context</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">y_hat_step</span> <span class="o">=</span> <span class="n">y_hat_by_step</span><span class="p">[</span><span class="n">step</span><span class="p">]</span>
+        <span class="n">y_hat_float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="p">[[</span><span class="n">v</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">y_hat_step</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span>
+        <span class="n">step_context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">y_hat_float</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">step_context</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">**</span><span class="n">step_context</span><span class="p">,</span> <span class="n">start_</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">output_</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+        <span class="n">y_hat_agg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmedian</span><span class="p">(</span><span class="n">step_context</span><span class="p">[</span><span class="s1">&#39;y_hat&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="n">y_for_step</span> <span class="o">=</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">][:,</span> <span class="n">step</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">context</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span>
+        <span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">y_hat_agg</span> <span class="o">-</span> <span class="n">y_for_step</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s1">&#39;Step </span><span class="si">%s</span><span class="s1"> - y_hat shape: </span><span class="si">%s</span><span class="s1">, errors shape: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">y_hat_agg</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">errors</span><span class="o">.</span><span class="n">shape</span>
+            <span class="p">)</span>
+
+        <span class="n">results</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;errors&#39;</span><span class="p">:</span> <span class="n">errors</span><span class="p">,</span>
+            <span class="s1">&#39;y_hat&#39;</span><span class="p">:</span> <span class="n">y_hat_agg</span><span class="p">,</span>
+            <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">y_for_step</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">results</span>
+</pre></div>
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="../../../../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, MIT Data To AI Lab.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

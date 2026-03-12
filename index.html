@@ -282,16 +282,10 @@ We provide two types of pipelines for anomaly detection:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sigllm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SigLLM</span>
 
 <span class="n">hyperparameters</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;orion.primitives.timeseries_anomalies.find_anomalies#1&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;fixed_threshold&quot;</span><span class="p">:</span> <span class="kc">False</span>
-    <span class="p">}</span>
+    <span class="s1">&#39;orion.primitives.timeseries_anomalies.find_anomalies#1&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;fixed_threshold&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">sigllm</span> <span class="o">=</span> <span class="n">SigLLM</span><span class="p">(</span>
-    <span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;gpt_detector&#39;</span><span class="p">,</span>
-    <span class="n">decimal</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-    <span class="n">hyperparameters</span><span class="o">=</span><span class="n">hyperparameters</span>
-<span class="p">)</span>
+<span class="n">sigllm</span> <span class="o">=</span> <span class="n">SigLLM</span><span class="p">(</span><span class="n">pipeline</span><span class="o">=</span><span class="s1">&#39;gpt_detector&#39;</span><span class="p">,</span> <span class="n">decimal</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="n">hyperparameters</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now that we have initialized the pipeline, we are ready to use it to detect anomalies:</p>

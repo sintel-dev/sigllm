@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    sigllm.primitives.forecasting
+   sigllm.primitives.formatting
    sigllm.primitives.prompting
 
 Submodules

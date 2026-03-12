@@ -1,0 +1,25 @@
+sigllm.primitives.formatting package
+====================================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   sigllm.primitives.formatting.digit_interleave
+   sigllm.primitives.formatting.json_format
+   sigllm.primitives.formatting.multivariate_formatting
+   sigllm.primitives.formatting.persistence_control
+   sigllm.primitives.formatting.univariate_control
+   sigllm.primitives.formatting.utils
+   sigllm.primitives.formatting.value_concatenation
+   sigllm.primitives.formatting.value_interleave
+
+Module contents
+---------------
+
+.. automodule:: sigllm.primitives.formatting
+   :members:
+   :undoc-members:
+   :show-inheritance:

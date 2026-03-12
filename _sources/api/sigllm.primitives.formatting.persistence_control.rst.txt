@@ -1,0 +1,7 @@
+sigllm.primitives.formatting.persistence\_control module
+========================================================
+
+.. automodule:: sigllm.primitives.formatting.persistence_control
+   :members:
+   :undoc-members:
+   :show-inheritance:

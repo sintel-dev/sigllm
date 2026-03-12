@@ -1,0 +1,536 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>sigllm.primitives.formatting package &#8212; sigllm 0.1.1.dev0 documentation</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sigllm.primitives.formatting.digit_interleave module" href="sigllm.primitives.formatting.digit_interleave.html" />
+    <link rel="prev" title="sigllm.primitives.forecasting.huggingface module" href="sigllm.primitives.forecasting.huggingface.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <nav class="navbar navbar-light navbar-expand-lg bg-light fixed-top bd-navbar" id="navbar-main">
+<div class="container-xl">
+
+    <a class="navbar-brand" href="../index.html">
+    
+      <img src="../_static/dai-logo-white-200.png" class="logo" alt="logo" />
+    
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar-menu" class="col-lg-9 collapse navbar-collapse">
+      <ul id="navbar-main-elements" class="navbar-nav mr-auto">
+        
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../readme.html">SigLLM</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href=""></a>
+        </li>
+        
+        <li class="nav-item active">
+            <a class="nav-link" href="sigllm.html">API Reference</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../contributing.html">Contributing</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../authors.html">Credits</a>
+        </li>
+        
+        <li class="nav-item ">
+            <a class="nav-link" href="../history.html">History</a>
+        </li>
+        
+        
+      </ul>
+
+
+      
+
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/sintel-dev/sigllm" target="_blank" rel="noopener">
+              <span><i class="fab fa-github-square"></i></span>
+            </a>
+          </li>
+        
+        
+      </ul>
+    </div>
+</div>
+    </nav>
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+          <div class="col-12 col-md-3 bd-sidebar"><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+
+    <div class="bd-toc-item active">
+    
+  
+    <ul class="nav bd-sidenav">
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+          
+        
+        
+        
+        
+        
+        
+        
+        
+      </ul>
+  
+  </nav>
+          </div>
+          
+
+          
+          <div class="d-none d-xl-block col-xl-2 bd-toc">
+              
+<div class="tocsection onthispage pt-5 pb-3">
+    <i class="fas fa-list"></i> On this page
+</div>
+
+<nav id="bd-toc-nav">
+    <ul class="nav section-nav flex-column">
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#submodules" class="nav-link">Submodules</a>
+        </li>
+    
+        <li class="nav-item toc-entry toc-h2">
+            <a href="#module-sigllm.primitives.formatting" class="nav-link">Module contents</a>
+        </li>
+    
+    </ul>
+</nav>
+
+
+              
+          </div>
+          
+
+          
+          <main class="col-12 col-md-9 col-xl-7 py-md-5 pl-md-5 pr-md-4 bd-content" role="main">
+              
+              <div>
+                
+  <section id="sigllm-primitives-formatting-package">
+<h1>sigllm.primitives.formatting package<a class="headerlink" href="#sigllm-primitives-formatting-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.digit_interleave.html">sigllm.primitives.formatting.digit_interleave module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.json_format.html">sigllm.primitives.formatting.json_format module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html">sigllm.primitives.formatting.multivariate_formatting module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.persistence_control.html">sigllm.primitives.formatting.persistence_control module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.univariate_control.html">sigllm.primitives.formatting.univariate_control module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.utils.html">sigllm.primitives.formatting.utils module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.value_concatenation.html">sigllm.primitives.formatting.value_concatenation module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sigllm.primitives.formatting.value_interleave.html">sigllm.primitives.formatting.value_interleave module</a></li>
+</ul>
+</div>
+</section>
+<section id="module-sigllm.primitives.formatting">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sigllm.primitives.formatting" title="Permalink to this headline">¶</a></h2>
+<p>Multivariate formatting methods for time series data.</p>
+<dl class="py class">
+<dt id="sigllm.primitives.formatting.DigitInterleave">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.</code><code class="sig-name descname">DigitInterleave</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/digit_interleave.html#DigitInterleave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.DigitInterleave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html#sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod" title="sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod</span></code></a></p>
+<p>Formatting method that interleaves digits from multiple values.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.DigitInterleave.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">digits_per_timestamp</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/digit_interleave.html#DigitInterleave.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.DigitInterleave.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse interleaved digit strings back to integer arrays for the target column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – list of strings, each string is a concatenation of
+interleaved digit values separated by separator.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – separator between values</p></li>
+<li><p><strong>trunc</strong> (<em>int</em>) – Number of timestamps to extract from each sample.
+If None, all timestamps are extracted.</p></li>
+<li><p><strong>digits_per_timestamp</strong> (<em>int</em>) – Number of digits to extract from each timestamp.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Which column to extract (default 0). Can also be set via config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array that holds int values for the target column
+for each sample in each window.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.DigitInterleave.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">digits_per_timestamp</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/digit_interleave.html#DigitInterleave.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.DigitInterleave.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string with interleaved digits.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sigllm.primitives.formatting.JSONFormat">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.</code><code class="sig-name descname">JSONFormat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/json_format.html#JSONFormat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.JSONFormat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html#sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod" title="sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod</span></code></a></p>
+<p>Formatting method that uses JSON-like format with dimension prefixes.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.JSONFormat.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">steps_ahead</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/json_format.html#JSONFormat.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.JSONFormat.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse model output and extract values for the target column for specified steps ahead.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>str</em>) – Model output containing tokens like “d0:1,d1:2,d0:3,d1:4…”</p></li>
+<li><p><strong>trunc</strong> (<em>int</em><em>, </em><em>optional</em>) – Legacy parameter for truncation (used when steps_ahead is None)</p></li>
+<li><p><strong>steps_ahead</strong> (<em>list</em>) – List of step indices to extract (e.g., [1,3,5,10])
+If None, trunc is used to determine the number of values to extract.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Which dimension to extract (default 0). Can also be set via config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>np.array of shape (batch, samples) with truncated flat values
+If steps_ahead is provided:</p>
+<blockquote>
+<div><p>dict mapping step -&gt; np.array of target_column values at that step</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>If steps_ahead is None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.JSONFormat.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/json_format.html#JSONFormat.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.JSONFormat.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string with dimension prefixes.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sigllm.primitives.formatting.MultivariateFormattingMethod">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.</code><code class="sig-name descname">MultivariateFormattingMethod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">method_name</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/multivariate_formatting.html#MultivariateFormattingMethod"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.MultivariateFormattingMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for multivariate formatting methods.</p>
+<p>Subclasses implement format_as_string and format_as_integer to convert
+between numpy arrays and string representations for LLM input/output.</p>
+<p>The target_column parameter (default 0) can be passed to subclass methods
+or set via config to specify which dimension to extract. This should
+match the target_column parameter used in rolling_window_sequences.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.MultivariateFormattingMethod.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/multivariate_formatting.html#MultivariateFormattingMethod.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.MultivariateFormattingMethod.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse string representation back to integer array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.MultivariateFormattingMethod.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/multivariate_formatting.html#MultivariateFormattingMethod.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.MultivariateFormattingMethod.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string representation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.MultivariateFormattingMethod.normalize_data">
+<code class="sig-name descname">normalize_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/multivariate_formatting.html#MultivariateFormattingMethod.normalize_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.MultivariateFormattingMethod.normalize_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize data by subtracting mean and dividing by std.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sigllm.primitives.formatting.PersistenceControl">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.</code><code class="sig-name descname">PersistenceControl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/persistence_control.html#PersistenceControl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.PersistenceControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html#sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod" title="sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod</span></code></a></p>
+<p>Formatting method using persistence control strategy.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.PersistenceControl.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/persistence_control.html#PersistenceControl.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.PersistenceControl.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse string representation back to integer array (last value only).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of strings to parse.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – Separator between values.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Accepted for API consistency (default 0). The string already contains
+only the target dimension, so this parameter has no effect on parsing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray that holds the last int value for each window.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.PersistenceControl.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/persistence_control.html#PersistenceControl.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.PersistenceControl.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string with persistence control.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input array with shape (num_windows, num_timestamps, num_dims).</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – Separator between values.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Which dimension to encode (default 0). Can also be set via config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of strings, one per window, containing only
+the target dimension values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sigllm.primitives.formatting.UnivariateControl">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.</code><code class="sig-name descname">UnivariateControl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/univariate_control.html#UnivariateControl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.UnivariateControl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html#sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod" title="sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod</span></code></a></p>
+<p>Formatting method using univariate control strategy.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.UnivariateControl.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/univariate_control.html#UnivariateControl.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.UnivariateControl.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse string representation back to integer array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of strings to parse.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – Separator between values.</p></li>
+<li><p><strong>trunc</strong> (<em>int</em>) – Number of values to extract. If None, all values are extracted.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Accepted for API consistency (default 0). The string already contains
+only the target dimension, so this parameter has no effect on parsing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray that holds int values for each sample in each window.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.UnivariateControl.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/univariate_control.html#UnivariateControl.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.UnivariateControl.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string with univariate control.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – Input array with shape (num_windows, num_timestamps, num_dims).</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – Separator between values.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Which dimension to encode (default 0). Can also be set via config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of strings, one per window, containing only
+the target dimension values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sigllm.primitives.formatting.ValueConcatenation">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.</code><code class="sig-name descname">ValueConcatenation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/value_concatenation.html#ValueConcatenation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.ValueConcatenation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html#sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod" title="sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod</span></code></a></p>
+<p>Formatting method that concatenates values directly.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.ValueConcatenation.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">num_dims</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/value_concatenation.html#ValueConcatenation.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.ValueConcatenation.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract values for the target dimension from each sample in each window as ints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – list of strings, each string is a concatenation of num_dims values
+separated by separator.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – separator between values</p></li>
+<li><p><strong>trunc</strong> (<em>int</em>) – Number of values to extract from each sample. If None, all values are extracted.</p></li>
+<li><p><strong>num_dims</strong> (<em>int</em>) – Number of dimensions (mandatory if num_dims is not provided in config)</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Which dimension to extract (default 0). Can also be set via config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array that holds int values for the target column
+for each sample in each window.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.ValueConcatenation.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/value_concatenation.html#ValueConcatenation.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.ValueConcatenation.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string with concatenated values.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="sigllm.primitives.formatting.ValueInterleave">
+<em class="property">class </em><code class="sig-prename descclassname">sigllm.primitives.formatting.</code><code class="sig-name descname">ValueInterleave</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/value_interleave.html#ValueInterleave"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.ValueInterleave" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="sigllm.primitives.formatting.multivariate_formatting.html#sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod" title="sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod"><code class="xref py py-class docutils literal notranslate"><span class="pre">sigllm.primitives.formatting.multivariate_formatting.MultivariateFormattingMethod</span></code></a></p>
+<p>Formatting method that interleaves values from multiple dimensions.</p>
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.ValueInterleave.format_as_integer">
+<code class="sig-name descname">format_as_integer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="n">trunc</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">digits_per_timestamp</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">target_column</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/value_interleave.html#ValueInterleave.format_as_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.ValueInterleave.format_as_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse interleaved value strings back to integer arrays for the target dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – list of strings, each string is a concatenation of
+num_dims values separated by separator.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – separator between values</p></li>
+<li><p><strong>trunc</strong> (<em>int</em>) – Number of values to extract from each sample. If None, all values are extracted.</p></li>
+<li><p><strong>digits_per_timestamp</strong> (<em>int</em>) – Number of digits to extract from each timestamp.</p></li>
+<li><p><strong>target_column</strong> (<em>int</em>) – Which dimension to extract (default 0). Can also be set via config.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array that holds int values for the target column
+for each sample in each window.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="sigllm.primitives.formatting.ValueInterleave.format_as_string">
+<code class="sig-name descname">format_as_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">X</span></em>, <em class="sig-param"><span class="n">digits_per_timestamp</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">separator</span><span class="o">=</span><span class="default_value">','</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sigllm/primitives/formatting/value_interleave.html#ValueInterleave.format_as_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#sigllm.primitives.formatting.ValueInterleave.format_as_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format array as string with interleaved values.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+              </div>
+              
+              
+              <div class='prev-next-bottom'>
+                
+    <a class='left-prev' id="prev-link" href="sigllm.primitives.forecasting.huggingface.html" title="previous page">sigllm.primitives.forecasting.huggingface module</a>
+    <a class='right-next' id="next-link" href="sigllm.primitives.formatting.digit_interleave.html" title="next page">sigllm.primitives.formatting.digit_interleave module</a>
+
+              </div>
+              
+          </main>
+          
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
+
+
+    <footer class="footer mt-5 mt-md-0">
+  <div class="container">
+    <p>
+          &copy; Copyright 2023, MIT Data To AI Lab.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.2.1.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+sigllm.primitives.formatting.digit\_interleave module
+=====================================================
+
+.. automodule:: sigllm.primitives.formatting.digit_interleave
+   :members:
+   :undoc-members:
+   :show-inheritance:
