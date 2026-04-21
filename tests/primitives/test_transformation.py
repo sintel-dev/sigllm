@@ -5,8 +5,8 @@ import pytest
 
 from sigllm.primitives.transformation import (
     Cluster2Float,
-    Float2Scalar,
     Float2Cluster,
+    Float2Scalar,
     Scalar2Float,
     _from_string_to_integer,
     format_as_integer,
