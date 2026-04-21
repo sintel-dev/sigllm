@@ -1,4 +1,5 @@
 import logging
+import os
 
 import numpy as np
 import pandas as pd
@@ -79,6 +80,8 @@ def run_pipeline(
     n_clusters=2,
     strategy='scaling',
     steps_ahead=None,
+    cache_dir=None,
+    max_retries=None,
 ):
     """Run the forecasting pipeline.
 
@@ -110,6 +113,12 @@ def run_pipeline(
             `binning` in the future.
         steps_ahead (list, optional):
             The amount of steps ahead to predict in each window.
+        cache_dir (str or pathlib.Path, optional):
+            Directory for HuggingFace forecast checkpoints (per-window then combined).
+            If ``validate_window`` is set on HF below, it runs after each window
+            before that window is saved. If omitted, uses ``SIGLLM_CACHE_DIR`` when set.
+        max_retries (int, optional):
+            Passed to the HF forecaster; overrides the default when set.
 
     Returns:
         The errors, y_hat, and y for the pipeline.
@@ -147,6 +156,12 @@ def run_pipeline(
             'steps': hf_steps,
         },
     }
+
+    effective_cache = cache_dir or os.getenv('SIGLLM_CACHE_DIR')
+    if effective_cache:
+        test_hyperparameters[HF_BLOCK_NAME]['cache_dir'] = effective_cache
+    if max_retries is not None:
+        test_hyperparameters[HF_BLOCK_NAME]['max_retries'] = max_retries
 
     if strategy == 'scaling':
         test_hyperparameters['sigllm.primitives.transformation.Float2Scalar#1'] = {
