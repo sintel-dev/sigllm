@@ -67,8 +67,15 @@
             "multivariate_allowed_symbols": {
                 "type": "list",
                 "default": []
+            },
+            "cache_dir": {
+                "type": "str",
+                "default": null
+            },
+            "max_retries": {
+                "type": "int",
+                "default": 3
             }
         }
     }
 }
-

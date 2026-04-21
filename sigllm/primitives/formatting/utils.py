@@ -6,6 +6,49 @@ from mlblocks import MLPipeline
 
 logger = logging.getLogger(__name__)
 
+HF_BLOCK_NAME = 'sigllm.primitives.forecasting.huggingface.HF#1'
+
+
+def window_validator_from_method(method, steps_ahead=None):
+    """Build validate_window(responses) -> bool using method.format_as_integer.
+
+    ``trunc``, ``target_column``, and (when not overridden here) ``steps_ahead``
+    are read from ``method.config`` inside ``format_as_integer``. Pass
+    ``steps_ahead`` only for a pipeline run horizon that should be applied
+    explicitly (same list as ``run_pipeline(..., steps_ahead=...)``).
+    """
+
+    def validate_window(responses):
+        try:
+            if steps_ahead is not None:
+                arr = method.format_as_integer([responses], steps_ahead=steps_ahead)
+            else:
+                arr = method.format_as_integer([responses])
+        except Exception:
+            return False
+        return _parsed_values_all_finite(arr)
+
+    return validate_window
+
+
+def _parsed_values_all_finite(arr):
+    if isinstance(arr, dict):
+        return all(_parsed_values_all_finite(v) for v in arr.values())
+
+    a = np.asarray(arr, dtype=object)
+    if a.size == 0:
+        return False
+    for x in a.ravel():
+        if x is None:
+            return False
+        try:
+            v = float(x)
+        except (TypeError, ValueError):
+            return False
+        if not np.isfinite(v):
+            return False
+    return True
+
 
 def create_test_data(N=25):
     """Create test data for formatting validation."""
@@ -122,6 +165,11 @@ def run_pipeline(
         )
 
     pipeline.set_hyperparameters(test_hyperparameters)
+
+    if method.method_name != 'persistence_control' and HF_BLOCK_NAME in pipeline.blocks:
+        hf_inst = pipeline.blocks[HF_BLOCK_NAME].instance
+        hf_inst.validate_window = window_validator_from_method(method, steps_ahead=steps_ahead)
+
     if normalize:
         data = method.normalize_data(data)
     context = pipeline.fit(data, start_=0, output_=3)
