@@ -2,13 +2,13 @@
     "primitives": [
         "mlstars.custom.timeseries_preprocessing.time_segments_aggregate",
         "sklearn.impute.SimpleImputer",
-        "sigllm.primitives.transformation.Scalar2Cluster",
+        "sigllm.primitives.transformation.Float2Cluster",
         "mlstars.custom.timeseries_preprocessing.rolling_window_sequences",
         "sigllm.primitives.transformation.format_as_string",
         "sigllm.primitives.forecasting.huggingface.HF",
         "sigllm.primitives.transformation.format_as_integer",
-        "sigllm.primitives.transformation.Cluster2Scalar",
-        "sigllm.primitives.transformation.Cluster2Scalar",
+        "sigllm.primitives.transformation.Cluster2Float",
+        "sigllm.primitives.transformation.Cluster2Float",
         "sigllm.primitives.postprocessing.aggregate_rolling_window",
         "numpy.reshape",
         "orion.primitives.timeseries_errors.regression_errors",
@@ -20,7 +20,7 @@
             "interval": 21600,
             "method": "mean"
         },
-        "sigllm.primitives.transformation.Scalar2Cluster#1": {
+        "sigllm.primitives.transformation.Float2Cluster#1": {
             "n_clusters": 100,
             "fit_fraction": 1.0
         },
@@ -50,16 +50,16 @@
         }
     },
     "input_names": {
-        "sigllm.primitives.transformation.Scalar2Cluster#1": {
+        "sigllm.primitives.transformation.Float2Cluster#1": {
             "X": "y"
         },
-        "sigllm.primitives.transformation.Cluster2Scalar#1": {
+        "sigllm.primitives.transformation.Cluster2Float#1": {
             "X": "y"
         },
         "sigllm.primitives.transformation.format_as_integer#1": {
             "X": "y_hat"
         },
-        "sigllm.primitives.transformation.Cluster2Scalar#2": {
+        "sigllm.primitives.transformation.Cluster2Float#2": {
             "X": "y_hat"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
@@ -82,10 +82,10 @@
         "sigllm.primitives.transformation.format_as_integer#1": {
             "X": "y_hat"
         },
-        "sigllm.primitives.transformation.Cluster2Scalar#1": {
+        "sigllm.primitives.transformation.Cluster2Float#1": {
             "X": "y"
         },
-        "sigllm.primitives.transformation.Cluster2Scalar#2": {
+        "sigllm.primitives.transformation.Cluster2Float#2": {
             "X": "y_hat"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {

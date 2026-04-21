@@ -191,7 +191,7 @@ class Scalar2Float:
         return values + minimum
 
 
-class Scalar2Cluster:
+class Float2Cluster:
     """Convert an array of float values to cluster indices using K-means.
 
     Fits K-means on the input data and maps each value to the index of
@@ -226,7 +226,7 @@ class Scalar2Cluster:
         n_samples = X.shape[0]
         n_fit = max(1, int(n_samples * self.fit_fraction))
         X_fit = X[:n_fit]
-        
+
         centroids_list = []
         for col in X_fit.T:
             n_unique = len(np.unique(col))
@@ -265,11 +265,11 @@ class Scalar2Cluster:
         return labels, self.centroids
 
 
-class Cluster2Scalar:
+class Cluster2Float:
     """Convert cluster indices back to float values using centroids.
 
     Maps an array of integer cluster indices to the corresponding
-    centroid values produced by Scalar2Cluster.
+    centroid values produced by Float2Cluster.
     """
 
     def transform(self, X, centroids):
@@ -279,7 +279,7 @@ class Cluster2Scalar:
             X (ndarray):
                 Integer cluster labels.
             centroids (list of ndarray):
-                Sorted centroid arrays from Scalar2Cluster.
+                Sorted centroid arrays from Float2Cluster.
 
         Returns:
             ndarray:

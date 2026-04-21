@@ -1,5 +1,5 @@
 {
-    "name": "sigllm.primitives.transformation.Cluster2Scalar",
+    "name": "sigllm.primitives.transformation.Cluster2Float",
     "contributors": [
         "Allen Baranov <baranov@mit.edu>"
     ],
@@ -9,7 +9,7 @@
         "subtype": "transformer"
     },
     "modalities": [],
-    "primitive": "sigllm.primitives.transformation.Cluster2Scalar",
+    "primitive": "sigllm.primitives.transformation.Cluster2Float",
     "produce": {
         "method": "transform",
         "args": [
