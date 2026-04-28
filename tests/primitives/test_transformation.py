@@ -4,6 +4,8 @@ import numpy as np
 import pytest
 
 from sigllm.primitives.transformation import (
+    Cluster2Float,
+    Float2Cluster,
     Float2Scalar,
     Scalar2Float,
     _from_string_to_integer,
@@ -341,3 +343,86 @@ def test_float2scalar_scalar2float_integration():
     output = scalar2float.transform(transformed, minimum, decimal)
 
     np.testing.assert_allclose(output, expected, rtol=1e-2)
+
+
+class Float2ClusterTest(unittest.TestCase):
+    """Tests for Float2Cluster (K-means binning)"""
+
+    def test_fit_transform_single_column(self):
+        f2c = Float2Cluster(n_clusters=3)
+        X = np.array([[1.0], [2.0], [3.0], [10.0], [11.0], [12.0]])
+        f2c.fit(X)
+        labels, centroids = f2c.transform(X)
+        self.assertIsInstance(centroids, list)
+        self.assertEqual(len(centroids), 1)
+        np.testing.assert_array_equal(np.sort(centroids[0]), centroids[0])
+        self.assertEqual(labels.shape, (6, 1))
+
+    def test_fit_transform_multi_column(self):
+        f2c = Float2Cluster(n_clusters=2)
+        X = np.array([[1.0, 0.0], [2.0, 1.0], [10.0, 10.0], [11.0, 11.0]])
+        f2c.fit(X)
+        labels, centroids = f2c.transform(X)
+        self.assertEqual(len(centroids), 2)
+        self.assertEqual(labels.shape, (4, 2))
+        for i in range(2):
+            np.testing.assert_array_equal(np.sort(centroids[i]), centroids[i])
+            self.assertTrue(np.all(labels[:, i] >= 0))
+            self.assertTrue(np.all(labels[:, i] < 2))
+
+    def test_n_clusters_uses_unique_values(self):
+        f2c = Float2Cluster(n_clusters=10)
+        X = np.array([[1.0], [2.0], [3.0]])
+        f2c.fit(X)
+        labels, centroids = f2c.transform(X)
+        np.testing.assert_array_equal(centroids[0], np.array([1.0, 2.0, 3.0]))
+        np.testing.assert_array_equal(labels.ravel(), np.array([0, 1, 2]))
+
+    def test_labels_in_valid_range(self):
+        f2c = Float2Cluster(n_clusters=5)
+        np.random.seed(42)
+        X = np.random.randn(100, 1) * 10
+        f2c.fit(X)
+        labels, _ = f2c.transform(X)
+        self.assertTrue(np.all(labels >= 0))
+        self.assertTrue(np.all(labels < 5))
+        self.assertTrue(np.all(labels == labels.astype(int)))
+
+
+class Cluster2FloatTest(unittest.TestCase):
+    """Tests for Cluster2Float (transforming clusters back to floats)"""
+
+    def test_transform_basic(self):
+        c2f = Cluster2Float()
+        centroids = [np.array([0.0, 1.0, 2.0])]
+        labels = np.array([[0], [1], [2], [1], [0]])
+        out = c2f.transform(labels, centroids)
+        np.testing.assert_array_equal(out, np.array([[0.0], [1.0], [2.0], [1.0], [0.0]]))
+
+    def test_transform_boundary_labels(self):
+        c2f = Cluster2Float()
+        centroids = [np.array([-1.0, 0.0, 1.0])]
+        labels = np.array([[0], [2]])
+        out = c2f.transform(labels, centroids)
+        np.testing.assert_array_equal(out, np.array([[-1.0], [1.0]]))
+
+    def test_transform_clips_out_of_range(self):
+        c2f = Cluster2Float()
+        centroids = [np.array([0.0, 1.0])]
+        labels = np.array([[0], [1], [5], [-1]])
+        out = c2f.transform(labels, centroids)
+        np.testing.assert_array_equal(out, np.array([[0.0], [1.0], [1.0], [0.0]]))
+
+
+def test_float2cluster_cluster2float_roundtrip():
+    """Round-trip: Float2Cluster -> Cluster2Float recovers centroid values."""
+    f2c = Float2Cluster(n_clusters=4)
+    np.random.seed(0)
+    X = np.random.rand(50, 1) * 10
+    f2c.fit(X)
+    labels, centroids = f2c.transform(X)
+
+    c2f = Cluster2Float()
+    recovered = c2f.transform(labels, centroids)
+    expected = np.array([[centroids[0][label]] for label in labels.ravel()])
+    np.testing.assert_allclose(recovered, expected)
