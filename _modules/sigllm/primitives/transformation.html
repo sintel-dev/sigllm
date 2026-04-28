@@ -188,6 +188,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.cluster</span><span class="w"> </span><span class="kn">import</span> <span class="n">KMeans</span>
 
 
 <div class="viewcode-block" id="format_as_string"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.format_as_string">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">format_as_string</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">single</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -280,7 +281,7 @@
 <span class="sd">            to `&#39;ignore&#39;`.</span>
 <span class="sd">            - If &#39;ignore&#39;, then invalid values will be ignored in the result.</span>
 <span class="sd">            - If &#39;filter&#39;, then invalid values will be filtered out of the string.</span>
-<span class="sd">            - If &#39;raise&#39;, then encountering invalud values will raise an exception.</span>
+<span class="sd">            - If &#39;raise&#39;, then encountering invalid values will raise an exception.</span>
 <span class="sd">            - If &#39;coerce&#39;, then invalid values will be set as NaN.</span>
 
 <span class="sd">    Returns:</span>
@@ -372,6 +373,105 @@
         <span class="n">values</span> <span class="o">=</span> <span class="n">X</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">decimal</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">values</span> <span class="o">+</span> <span class="n">minimum</span></div></div>
+
+
+<div class="viewcode-block" id="Float2Cluster"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Cluster">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Float2Cluster</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an array of float values to cluster indices using K-means.</span>
+
+<span class="sd">    Fits K-means on the input data and maps each value to the index of</span>
+<span class="sd">    its nearest centroid. Centroids are sorted in ascending order so that</span>
+<span class="sd">    cluster index 0 corresponds to the smallest centroid value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_clusters (int):</span>
+<span class="sd">            Number of K-means clusters. Default to ``100``.</span>
+<span class="sd">        fit_fraction (float):</span>
+<span class="sd">            Fraction of data to use for fitting K-means (0 &lt; fit_fraction &lt;= 1).</span>
+<span class="sd">            If less than 1, only the first fit_fraction of rows are used for fitting.</span>
+<span class="sd">            Default to ``1.0`` (use all data).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">fit_fraction</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_fraction</span> <span class="o">=</span> <span class="n">fit_fraction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Float2Cluster.fit"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Cluster.fit">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fit K-means on the data and store sorted centroids.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X (ndarray):</span>
+<span class="sd">                2-D array of shape (n_samples, n_features)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            No output. The method stores the fitted centroids in the</span>
+<span class="sd">            class instance instead.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">n_fit</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_samples</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_fraction</span><span class="p">))</span>
+        <span class="n">X_fit</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="n">n_fit</span><span class="p">]</span>
+
+        <span class="n">centroids_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">X_fit</span><span class="o">.</span><span class="n">T</span><span class="p">:</span>
+            <span class="n">n_unique</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span> <span class="o">&gt;=</span> <span class="n">n_unique</span><span class="p">:</span>
+                <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">col</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_clusters</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span>
+            <span class="n">centroids_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">centroids</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="n">centroids_list</span></div>
+
+<div class="viewcode-block" id="Float2Cluster.transform"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Float2Cluster.transform">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Map each value to its nearest centroid index.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X (ndarray):</span>
+<span class="sd">                2-D array of shape ``(n_samples, n_features)``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            X (ndarray):</span>
+<span class="sd">                Integer cluster labels with the same shape as input.</span>
+<span class="sd">            centroids (list of ndarray):</span>
+<span class="sd">                Sorted centroid arrays, one per column.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">labels_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+            <span class="n">centroids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">col_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">col</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="n">centroids</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">labels_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_labels</span><span class="p">)</span>
+
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span><span class="n">labels_list</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">labels_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">labels</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span></div></div>
+
+
+<div class="viewcode-block" id="Cluster2Float"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Cluster2Float">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Cluster2Float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert cluster indices back to float values using centroids.</span>
+
+<span class="sd">    Maps an array of integer cluster indices to the corresponding</span>
+<span class="sd">    centroid values produced by Float2Cluster.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Cluster2Float.transform"><a class="viewcode-back" href="../../../api/sigllm.primitives.transformation.html#sigllm.primitives.transformation.Cluster2Float.transform">[docs]</a>    <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">centroids</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert cluster indices to centroid float values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X (ndarray):</span>
+<span class="sd">                Integer cluster labels.</span>
+<span class="sd">            centroids (list of ndarray):</span>
+<span class="sd">                Sorted centroid arrays from Float2Cluster.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ndarray:</span>
+<span class="sd">                Float values corresponding to the centroid of each label.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">base_centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">centroids</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">base_centroids</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">base_centroids</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span></div></div>
 </pre></div>
 
               </div>
