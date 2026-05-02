@@ -1,5 +1,16 @@
 # History
 
+## 0.2.0 – 2026-10-06
+
+New multivariate detector pipelines, and small bug fixes
+
+* Update docs test – [Issue #63](https://github.com/sintel-dev/sigllm/issues/63) by @sarahmish
+* Fixed all tests and float2scalar logic – [Issue #62](https://github.com/sintel-dev/sigllm/issues/62) by @abaranov25
+* Bug fix in Float2Scalar – [Issue #58](https://github.com/sintel-dev/sigllm/issues/58) by @abaranov25
+* Multivariate Detector Pipeline – [Issue #57](https://github.com/sintel-dev/sigllm/issues/57) by @abaranov25
+* Add a New K-Means Binning Primitive – [Issue #56](https://github.com/sintel-dev/sigllm/issues/56) by @abaranov25
+
+
 ## 0.1.0 – 2025-10-06
 
 New multivariate Prompter pipeline

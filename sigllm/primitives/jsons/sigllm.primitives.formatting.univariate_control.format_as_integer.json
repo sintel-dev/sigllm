@@ -1,0 +1,54 @@
+{
+    "name": "sigllm.primitives.formatting.univariate_control.format_as_integer",
+    "contributors": [
+        "Allen Baranov <baranov@mit.edu>"
+    ],
+    "description": "Parse univariate value strings back to integer arrays.",
+    "classifiers": {
+        "type": "preprocessor",
+        "subtype": "transformer"
+    },
+    "modalities": [],
+    "primitive": "sigllm.primitives.formatting.univariate_control.UnivariateControl",
+    "produce": {
+        "method": "format_as_integer",
+        "args": [
+            {
+                "name": "X",
+                "type": "list"
+            },
+            {
+                "name": "trunc",
+                "type": "int",
+                "default": null
+            },
+            {
+                "name": "target_column",
+                "type": "int",
+                "default": null
+            }
+        ],
+        "output": [
+            {
+                "name": "X",
+                "type": "ndarray"
+            }
+        ]
+    },
+    "hyperparameters": {
+        "fixed": {
+            "separator": {
+                "type": "string",
+                "default": ","
+            },
+            "trunc": {
+                "type": "int",
+                "default": null
+            },
+            "target_column": {
+                "type": "int",
+                "default": 0
+            }
+        }
+    }
+}

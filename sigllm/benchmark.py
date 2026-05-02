@@ -41,12 +41,14 @@ BENCHMARK_PATH = os.path.join(
 )
 
 BENCHMARK_DATA = (
-    pd.read_csv(S3_URL.format(BUCKET, 'datasets.csv'), index_col=0, header=None)
+    pd
+    .read_csv(S3_URL.format(BUCKET, 'datasets.csv'), index_col=0, header=None)
     .applymap(ast.literal_eval)
     .to_dict()[1]
 )
 BENCHMARK_PARAMS = (
-    pd.read_csv(S3_URL.format(BUCKET, 'parameters.csv'), index_col=0, header=None)
+    pd
+    .read_csv(S3_URL.format(BUCKET, 'parameters.csv'), index_col=0, header=None)
     .applymap(ast.literal_eval)
     .to_dict()[1]
 )
