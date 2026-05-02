@@ -1,6 +1,6 @@
 # History
 
-## 0.2.0 – 2026-10-06
+## 0.2.0 – 2026-05-02
 
 New multivariate detector pipelines, and small bug fixes
 
