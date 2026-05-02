@@ -5,7 +5,7 @@
         "sigllm.primitives.transformation.Float2Scalar",
         "sigllm.primitives.forecasting.custom.rolling_window_sequences",
         "sigllm.primitives.transformation.format_as_string",
-        "sigllm.primitives.forecasting.huggingface.HF",
+        "sigllm.primitives.forecasting.custom.CustomForecast",
         "sigllm.primitives.transformation.format_as_integer",
         "sigllm.primitives.transformation.Scalar2Float",
         "sigllm.primitives.postprocessing.aggregate_rolling_window",
@@ -29,10 +29,9 @@
             "target_size": 1
         },
         "sigllm.primitives.transformation.format_as_string#1": {
-            "space": false
+            "space": true
         },
-        "sigllm.primitives.forecasting.huggingface.HF#1": {
-            "name": "mistralai/Mistral-7B-Instruct-v0.2",
+        "sigllm.primitives.forecasting.custom.CustomForecast#1": {
             "steps": 5
         },
         "sigllm.primitives.transformation.format_as_integer#1": {
@@ -40,7 +39,8 @@
             "errors": "coerce"
         },
         "sigllm.primitives.postprocessing.aggregate_rolling_window#1": {
-            "agg": "median"
+            "agg": "median",
+            "remove_outliers": true
         },
         "orion.primitives.timeseries_anomalies.find_anomalies#1": {
             "window_size_portion": 0.3,
@@ -72,7 +72,7 @@
         "sklearn.impute.SimpleImputer#1": {
             "X": "y"
         },
-        "sigllm.primitives.forecasting.huggingface.HF#1": {
+        "sigllm.primitives.forecasting.custom.CustomForecast#1": {
             "y": "y_hat"
         },
         "sigllm.primitives.transformation.format_as_integer#1": {
